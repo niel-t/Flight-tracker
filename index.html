@@ -13,7 +13,7 @@
     color-scheme: light;
     --bg: #eef3fa;
     --blob-1: rgba(66,133,244,.30); --blob-2: rgba(129,201,149,.24); --blob-3: rgba(251,188,4,.16);
-    --glass: rgba(255,255,255,.62); --glass-strong: rgba(255,255,255,.82); --glass-soft: rgba(255,255,255,.40);
+    --glass: rgba(255,255,255,.62); --glass-strong: rgba(255,255,255,.82); --menu: rgba(255,255,255,.97); --glass-soft: rgba(255,255,255,.40);
     --edge: rgba(255,255,255,.75); --line: rgba(15,23,42,.08); --line-2: rgba(15,23,42,.14);
     --ink: #0f172a; --ink-2: #475467; --muted: #8a94a6;
     --accent: #1a73e8; --accent-ink: #ffffff; --accent-wash: rgba(26,115,232,.12);
@@ -31,7 +31,7 @@
       color-scheme: dark;
       --bg: #0a0e16;
       --blob-1: rgba(66,133,244,.26); --blob-2: rgba(52,168,83,.14); --blob-3: rgba(161,66,244,.14);
-      --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --glass-soft: rgba(28,33,44,.36);
+      --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --menu: rgba(32,38,50,.98); --glass-soft: rgba(28,33,44,.36);
       --edge: rgba(255,255,255,.10); --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
       --ink: #eef2f8; --ink-2: #b4bdcc; --muted: #7d8799;
       --accent: #8ab4f8; --accent-ink: #0b1a33; --accent-wash: rgba(138,180,248,.16);
@@ -48,7 +48,7 @@
     color-scheme: dark;
     --bg: #0a0e16;
     --blob-1: rgba(66,133,244,.26); --blob-2: rgba(52,168,83,.14); --blob-3: rgba(161,66,244,.14);
-    --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --glass-soft: rgba(28,33,44,.36);
+    --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --menu: rgba(32,38,50,.98); --glass-soft: rgba(28,33,44,.36);
     --edge: rgba(255,255,255,.10); --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
     --ink: #eef2f8; --ink-2: #b4bdcc; --muted: #7d8799;
     --accent: #8ab4f8; --accent-ink: #0b1a33; --accent-wash: rgba(138,180,248,.16);
@@ -169,7 +169,7 @@
   .hero-art { display: block; width: 100%; height: 120px; margin: 0 auto 8px; max-width: 520px; }
   .hero h1 { font-size: clamp(30px, 5vw, 48px); font-weight: 700; letter-spacing: -.035em; }
   .hero p { color: var(--ink-2); margin-top: 6px; }
-  .search { position: relative; margin: 24px auto 0; max-width: 980px; padding: 16px 16px 40px; text-align: left; }
+  .search { position: relative; z-index: 5; margin: 24px auto 0; max-width: 980px; padding: 16px 16px 40px; text-align: left; }
   .search-opts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
   .search-opts select { width: auto; min-height: 36px; padding: 6px 30px 6px 12px; border-radius: 999px; font-size: 14px; }
   .stepper { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 999px; background: var(--glass-soft); padding: 2px; font-size: 14px; }
@@ -185,9 +185,16 @@
   .loc-chip { display: inline-flex; align-items: center; gap: 2px; padding: 3px 4px 3px 10px; border-radius: 999px; background: var(--accent-wash); color: var(--accent); font-size: 14px; font-weight: 600; white-space: nowrap; }
   .loc-chip button { min-height: 22px; width: 22px; padding: 0; border: none; background: none; color: inherit; }
   .loc-input { flex: 1; min-width: 110px; border: none !important; background: none !important; padding: 4px; min-height: 30px; }
-  .loc-menu { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 100%; width: max-content; max-width: min(420px, calc(100vw - 32px)); max-height: 340px; overflow: auto; padding: 6px; border-radius: 18px; background: var(--glass-strong); box-shadow: var(--shadow-lg); }
+  .loc-menu { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 100%; width: max-content; max-width: min(440px, calc(100vw - 32px)); max-height: min(420px, 60vh); overflow: auto; padding: 6px; border-radius: 18px; background: var(--menu); box-shadow: var(--shadow-lg); }
   .loc-opt { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 12px; cursor: pointer; }
   .loc-opt.hi { background: var(--accent-wash); }
+  .loc-opt:focus { outline: none; }
+  .loc-opt.sub { padding: 6px 10px 6px 30px; position: relative; }
+  .loc-opt.sub::before { content: ""; position: absolute; left: 25px; top: 0; bottom: 50%; width: 10px; border-left: 1.5px solid var(--line-2); border-bottom: 1.5px solid var(--line-2); border-bottom-left-radius: 6px; }
+  .loc-opt.sub .loc-ic { width: 26px; height: 26px; border-radius: 8px; margin-left: 12px; }
+  .loc-opt.sub b { font-weight: 500; }
+  .loc-opt.taken { opacity: .5; }
+  .loc-code { font-size: 12px; font-weight: 700; color: var(--ink-2); padding: 2px 8px; border-radius: 6px; background: var(--glass-soft); border: 1px solid var(--line); white-space: nowrap; }
   .loc-ic { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--glass-soft); border: 1px solid var(--line); color: var(--ink-2); flex: none; }
   .loc-empty { padding: 10px; }
 
@@ -533,27 +540,41 @@ const CITIES = Object.values(AIRPORTS.reduce((m, a) => { (m[a.city + "|" + a.cc]
 const COUNTRIES = Object.values(AIRPORTS.reduce((m, a) => { (m[a.cc] ||= { cc: a.cc, name: regionName(a.cc), codes: [] }).codes.push(a.code); return m; }, {}));
 const MAX_AIRPORTS = 7; // Google Flights searches at most 7 airports per side
 
+/**
+ * Dropdown rows for a search, grouped like Google Flights: a city ("all airports") with its airports
+ * indented under it. Countries come first when the query names one, followed by their cities.
+ * Returns { opts, hi } where hi is the row to highlight (the airport itself when a code is typed).
+ */
 function locationOptions(q) {
-  const n = norm(q); if (!n) return [];
-  const score = (text, base) => { const t = norm(text); return t === n ? base : t.startsWith(n) ? base + 1 : t.includes(" " + n) ? base + 2 : t.includes(n) ? base + 4 : null; };
-  const out = [];
-  const exact = AP[q.trim().toUpperCase()];
-  if (exact) out.push({ s: -1, kind: "airport", label: `${exact.city} ${exact.name !== exact.city ? exact.name : ""}`.trim(), sub: regionName(exact.cc), codes: [exact.code] });
-  const aliasCc = COUNTRY_ALIAS[n];
-  for (const c of COUNTRIES) {
-    const s = aliasCc === c.cc ? 0 : score(c.name, 3);
-    if (s != null && c.codes.length > 1) out.push({ s, kind: "country", label: c.name, sub: `All airports · ${c.codes.slice(0, MAX_AIRPORTS).join(", ")}${c.codes.length > MAX_AIRPORTS ? " (largest 7)" : ""}`, codes: c.codes.slice(0, MAX_AIRPORTS) });
+  const n = norm(q), code = q.trim().toUpperCase();
+  if (!n) return { opts: [], hi: 0 };
+  const score = (text, base) => { const t = norm(text); return t === n ? base : t.startsWith(n) ? base + 1 : t.includes(" " + n) || t.includes("-" + n) ? base + 2 : n.length > 3 && t.includes(n) ? base + 4 : null; };
+  const cityOfAirport = a => CITIES.find(c => c.city === a.city && c.cc === a.cc);
+  const groups = new Map(); // city -> best score
+  const hit = (city, sc) => { if (sc != null && (!groups.has(city) || sc < groups.get(city))) groups.set(city, sc); };
+  for (const c of CITIES) hit(c, score(c.city, 1));
+  for (const a of AIRPORTS) hit(cityOfAirport(a), a.code === code ? 0 : score(a.name, 3));
+  const countries = COUNTRIES.filter(c => c.codes.length > 1 && (COUNTRY_ALIAS[n] === c.cc || [0, 2].includes(score(c.name, 0)) || score(c.name, 0) === 1));
+  const opts = [];
+  for (const c of countries.slice(0, 1)) {
+    opts.push({ kind: "country", level: 0, label: c.name, sub: `All airports · ${c.codes.slice(0, MAX_AIRPORTS).join(", ")}${c.codes.length > MAX_AIRPORTS ? " (largest 7)" : ""}`, codes: c.codes.slice(0, MAX_AIRPORTS) });
+    CITIES.filter(x => x.cc === c.cc).slice(0, 6).forEach((x, i) => hit(x, 10 + i));
   }
-  for (const c of CITIES) {
-    const s = score(c.city, 0);
-    if (s != null && c.codes.length > 1) out.push({ s, kind: "city", label: c.city, sub: `All airports · ${regionName(c.cc)}`, codes: c.codes });
+  const cities = [...groups].sort((a, b) => a[1] - b[1] || b[0].codes.length - a[0].codes.length).slice(0, countries.length ? 7 : 6).map(([c]) => c);
+  for (const c of cities) {
+    const country = regionName(c.cc);
+    if (c.codes.length > 1) {
+      opts.push({ kind: "city", level: 0, label: c.city, sub: `All airports · ${country}`, codes: c.codes });
+      for (const x of c.codes) opts.push({ kind: "airport", level: 1, label: AP[x].name, sub: `${c.city}, ${country}`, codes: [x] });
+    } else {
+      const a = AP[c.codes[0]];
+      opts.push({ kind: "airport", level: 0, label: a.city, sub: `${a.name !== a.city ? a.name + " · " : ""}${country}`, codes: [a.code] });
+    }
   }
-  for (const a of AIRPORTS) {
-    if (a === exact) continue;
-    const s = Math.min(...[score(a.city, 1), score(a.name, 5), a.code.toLowerCase() === n ? 0 : null, score(regionName(a.cc), 8)].filter(x => x != null));
-    if (isFinite(s)) out.push({ s, kind: "airport", label: `${a.city}${a.name !== a.city ? " " + a.name : ""}`, sub: regionName(a.cc), codes: [a.code] });
-  }
-  return out.sort((a, b) => a.s - b.s || a.codes.length < b.codes.length).slice(0, 8);
+  // highlight the row that matches what was typed: an airport code, else the first row whose own name starts with it
+  const exactAt = opts.findIndex(o => o.kind === "airport" && o.codes[0] === code);
+  const nameAt = opts.findIndex(o => norm(o.label).split(/[\s-]+/).some(w => w.startsWith(n)) || norm(o.label).startsWith(n));
+  return { opts, hi: exactAt >= 0 ? exactAt : nameAt >= 0 ? nameAt : 0 };
 }
 
 /** Codes string -> chips: whole cities/countries collapse into one chip. */
@@ -586,12 +607,14 @@ function initLoc(root) {
   input.dataset.ph = input.placeholder;
   const close = () => { menu.hidden = true; input.setAttribute("aria-expanded", "false"); };
   const show = () => {
-    opts = locationOptions(input.value); hi = 0;
+    ({ opts, hi } = locationOptions(input.value));
     if (!input.value.trim()) return close();
-    menu.innerHTML = opts.length ? opts.map((o, i) => `<div class="loc-opt ${i === hi ? "hi" : ""}" role="option" data-i="${i}" aria-selected="${i === hi}">
+    const taken = new Set(chips.flatMap(c => c.codes));
+    menu.innerHTML = opts.length ? opts.map((o, i) => `<div class="loc-opt ${o.level ? "sub" : ""} ${i === hi ? "hi" : ""} ${o.codes.every(c => taken.has(c)) ? "taken" : ""}" role="option" tabindex="-1" data-i="${i}" aria-selected="${i === hi}">
         <span class="loc-ic">${o.kind === "airport" ? icon("plane", "i\" style=\"width:16px;height:16px") : o.kind === "city" ? icon("city") : icon("globe")}</span>
-        <span class="grow"><b>${esc(o.label)}</b><br><span class="tiny ink2">${esc(o.sub)}</span></span><span class="tiny muted">${o.codes.length === 1 ? o.codes[0] : o.codes.length + " airports"}</span></div>`).join("")
-      : /^[a-z]{3}$/i.test(input.value.trim()) ? `<div class="loc-opt hi" data-raw="1"><span class="loc-ic">${icon("plane", "i\" style=\"width:16px;height:16px")}</span><span class="grow"><b>Use airport code ${esc(input.value.trim().toUpperCase())}</b></span></div>`
+        <span class="grow"><b>${esc(o.label)}</b><br><span class="tiny ink2">${esc(o.sub)}</span></span>
+        <span class="loc-code">${o.codes.length === 1 ? o.codes[0] : o.codes.length + " airports"}</span></div>`).join("")
+      : /^[a-z]{3}$/i.test(input.value.trim()) ? `<div class="loc-opt hi" role="option" tabindex="-1" data-raw="1"><span class="loc-ic">${icon("plane", "i\" style=\"width:16px;height:16px")}</span><span class="grow"><b>Use airport code ${esc(input.value.trim().toUpperCase())}</b></span></div>`
       : `<div class="loc-empty small ink2">No match. Type a city, airport, country or 3-letter code.</div>`;
     menu.hidden = false; input.setAttribute("aria-expanded", "true");
   };
@@ -599,6 +622,8 @@ function initLoc(root) {
     if (!o) { const raw = input.value.trim().toUpperCase(); if (!/^[A-Z]{3}$/.test(raw)) return; o = { label: AP[raw] ? `${AP[raw].city} ${raw}` : raw, codes: [raw] }; }
     const total = new Set([...chips.flatMap(c => c.codes), ...o.codes]).size;
     if (total > MAX_AIRPORTS) return toast(`Google Flights searches up to ${MAX_AIRPORTS} airports at once.`);
+    // picking a whole city replaces chips for its single airports, and vice versa
+    chips = chips.filter(c => !c.codes.every(x => o.codes.includes(x)) && !o.codes.every(x => c.codes.includes(x)));
     chips.push({ label: o.kind === "city" ? `${o.label} (all)` : o.kind === "airport" && AP[o.codes[0]] ? `${AP[o.codes[0]].city} ${o.codes[0]}` : o.label, codes: o.codes });
     input.value = ""; close(); sync(); input.focus();
   };
@@ -611,11 +636,15 @@ function initLoc(root) {
     else if (e.key === "Escape") close();
     else if (e.key === "Backspace" && !input.value && chips.length) { chips.pop(); sync(); }
   });
-  menu.addEventListener("mousedown", e => { e.preventDefault(); const el = e.target.closest(".loc-opt"); if (el) pick(el.dataset.raw ? null : opts[+el.dataset.i]); });
+  menu.addEventListener("mousedown", e => e.preventDefault()); // keep focus (and the keyboard) in the input
+  menu.addEventListener("click", e => { const el = e.target.closest(".loc-opt"); if (el) pick(el.dataset.raw ? null : opts[+el.dataset.i]); });
+  menu.addEventListener("pointermove", e => { const el = e.target.closest(".loc-opt"); if (el && !el.dataset.raw && +el.dataset.i !== hi) move(+el.dataset.i - hi); });
   chipsEl.addEventListener("click", e => { const b = e.target.closest("[data-rm]"); if (b) { chips.splice(+b.dataset.rm, 1); sync(); input.focus(); } });
   root.querySelector(".loc-box").addEventListener("click", e => { if (e.target === e.currentTarget || e.target === chipsEl) input.focus(); });
-  input.addEventListener("blur", () => setTimeout(close, 120));
-  input.addEventListener("focus", () => { if (innerWidth < 760) setTimeout(() => root.scrollIntoView({ behavior: "smooth", block: "start" }), 250); });
+  input.addEventListener("blur", () => setTimeout(() => { if (!root.contains(document.activeElement)) close(); }, 150));
+  document.addEventListener("pointerdown", e => { if (!root.contains(e.target)) close(); });
+  // on phones, lift the field to just below the top bar so the list has room under it
+  input.addEventListener("focus", () => { if (innerWidth < 760 && !root.closest("dialog")) setTimeout(() => scrollBy({ top: root.getBoundingClientRect().top - 96, behavior: "smooth" }), 250); });
   root._set = v => { chips = chipsFromCodes(v); sync(); };
   sync();
 }
