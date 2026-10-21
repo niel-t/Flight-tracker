@@ -1,0 +1,85 @@
+name: Deploy search API
+
+# Deploys worker/ to Cloudflare and publishes its address in api.json, which the dashboard reads.
+# Needs repository secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID (see README),
+# and passes SERPAPI_KEY, SEARCH_PASSCODE and TRACKER_GITHUB_TOKEN on to the worker.
+
+on:
+  push:
+    branches: [main]
+    paths: [worker/**, .github/workflows/deploy-worker.yml]
+  workflow_dispatch:      # run again after adding or changing a secret
+
+permissions:
+  contents: write
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Test
+        working-directory: worker
+        run: npm test
+
+      - name: Check Cloudflare secrets
+        id: cf
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::notice::Live search is not set up: add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID secrets (see README)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy worker
+        if: steps.cf.outputs.ready == 'true'
+        working-directory: worker
+        run: |
+          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          npx --yes wrangler@4 deploy \
+            --var "GITHUB_REPO:${{ github.repository }}" \
+            --var "ALLOWED_ORIGIN:https://${owner}.github.io" 2>&1 | tee deploy.log
+
+      - name: Set worker secrets
+        if: steps.cf.outputs.ready == 'true'
+        working-directory: worker
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          SEARCH_PASSCODE: ${{ secrets.SEARCH_PASSCODE }}
+          TRACKER_GITHUB_TOKEN: ${{ secrets.TRACKER_GITHUB_TOKEN }}
+        run: |
+          for name in SERPAPI_KEY SEARCH_PASSCODE TRACKER_GITHUB_TOKEN; do
+            if [ -n "${!name}" ]; then
+              printf '%s' "${!name}" | npx --yes wrangler@4 secret put "$name" >/dev/null && echo "$name set"
+            else
+              echo "$name not set (skipped)"
+            fi
+          done
+
+      - name: Publish the API address for the dashboard
+        if: steps.cf.outputs.ready == 'true'
+        run: |
+          url=$(grep -oE 'https://[a-zA-Z0-9.-]+\.workers\.dev' worker/deploy.log | head -1)
+          if [ -z "$url" ]; then echo "::error::Could not find the workers.dev address in the deploy output"; exit 1; fi
+          echo "{\"search_api\": \"$url\"}" > api.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add api.json
+          if git diff --cached --quiet; then echo "api.json unchanged ($url)"; exit 0; fi
+          git commit -m "Publish search API address"
+          git pull --rebase
+          git push

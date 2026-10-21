@@ -37,9 +37,36 @@ Laid out like Google Flights, in a light/dark "glass" style that works on phone 
 2. **Phone alerts (optional).** Install the [ntfy](https://ntfy.sh) app, subscribe to a hard-to-guess topic name,
    and add it as secret `NTFY_TOPIC`.
 3. **Dashboard.** *Settings → Pages*: deploy from branch `main`, folder `/ (root)`.
-4. **Connect the dashboard to GitHub** so you can add routes from it: *⚙ Settings* on the dashboard explains the token
-   (fine-grained, this repo only, Contents + Actions read/write; it stays in your browser).
-5. **＋ Add route**, or edit [`routes.json`](routes.json) directly. Saving a route starts a search right away.
+4. **Live search** (recommended): set up the search service below, so the dashboard's Search button works and
+   routes can be tracked straight from the site. Without it you can still connect a GitHub token in *⚙ Settings*.
+5. **Search** a route and click **Track prices**, or edit [`routes.json`](routes.json) directly.
+
+## Live search
+
+The **Search** button on the dashboard searches Google Flights right away and shows the flights like Google
+does (best flights, other flights, layovers, CO₂, *Book on Google Flights*). **Track prices** on the results then
+keeps watching that route. Searching goes through a tiny [Cloudflare Worker](worker/) so your SerpApi key never
+reaches the browser, and a passcode keeps strangers from using your credits. One-time setup (~5 minutes, free):
+
+1. Create a free account at [cloudflare.com](https://dash.cloudflare.com/sign-up). Open **Workers & Pages** once so
+   Cloudflare gives you a `workers.dev` subdomain.
+2. **API token:** *My Profile → API Tokens → Create Token →* template **Edit Cloudflare Workers** → create and copy it.
+3. **Account ID:** shown on the right of *Workers & Pages* (or in the address bar after `dash.cloudflare.com/`).
+4. In this repository: *Settings → Secrets and variables → Actions*, add:
+
+   | Secret | Value |
+   |---|---|
+   | `CLOUDFLARE_API_TOKEN` | the token from step 2 |
+   | `CLOUDFLARE_ACCOUNT_ID` | the ID from step 3 |
+   | `SEARCH_PASSCODE` | a passcode you make up; the dashboard asks for it once per browser |
+   | `TRACKER_GITHUB_TOKEN` | a [fine-grained token](https://github.com/settings/personal-access-tokens/new) for this repository only, with **Contents** and **Actions** set to *Read and write*; lets the site save routes without a token in the browser |
+
+   (`SERPAPI_KEY` is already there and is passed on to the worker.)
+5. *Actions →* **Deploy search API** *→ Run workflow*. It deploys the worker and writes its address to `api.json`;
+   a minute later the dashboard's Search works. Run it again whenever you change one of these secrets.
+
+Each live search is one SerpApi credit per class and date. Flexible dates check 5 dates spread over the window
+(5 credits), and identical searches within 30 minutes are served from a cache.
 
 ## How searching works
 
@@ -103,6 +130,8 @@ Each trip × class is one search, so check the trip count the dashboard shows wh
 | `flights/providers.py` | Google Flights (SerpApi) and demo data |
 | `flights/planner.py` | which dates to search within the budget |
 | `index.html` | the dashboard (static, no build step) |
+| `worker/` | the live search API (Cloudflare Worker) |
+| `api.json` | the live search API's address (written by the *Deploy search API* workflow) |
 
 ## Running locally
 

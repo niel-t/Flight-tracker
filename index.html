@@ -330,6 +330,16 @@
   .alert:hover { background: var(--glass-soft); }
   .alert .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--good-wash); color: var(--good); }
 
+  /* live search */
+  .dstrip { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
+  .dcell { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; border-radius: 14px; padding: 8px 12px; min-height: 56px; white-space: normal; text-align: left; line-height: 1.25; }
+  .dcell b { font-size: 16px; font-variant-numeric: tabular-nums; }
+  .dcell.on { background: var(--accent-wash); border-color: var(--accent); }
+  .sk { display: block; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--line) 25%, var(--line-2) 50%, var(--line) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .skel-row { display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
+  .layover { margin: 8px 0 8px -14px; padding: 8px 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+
   .empty { text-align: center; padding: 40px 20px; color: var(--ink-2); }
   .empty .em { font-size: 40px; }
   .banner { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 18px; margin-top: 48px; background: var(--warn-wash); border: 1px solid var(--edge); font-size: 14px; }
@@ -378,6 +388,7 @@
   <symbol id="i-city" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V8l5-3v16"/><path d="M10 21V10h9v11"/><path d="M13 13h3M13 16h3M7 10h1M7 13h1M7 16h1"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
   <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
 </svg>
 
@@ -390,7 +401,7 @@
       <a href="#/alerts" data-nav="alerts"><svg class="i"><use href="#i-bell"/></svg>Price drops <span class="count hidden" id="nav-count"></span></a>
     </nav>
     <span class="status" id="status"><span class="dot"></span><span class="label">Loading…</span></span>
-    <button class="plain icon" id="btn-run" title="Search now" aria-label="Search now"><svg class="i"><use href="#i-refresh"/></svg></button>
+    <button class="plain icon" id="btn-run" title="Update all tracked prices now" aria-label="Update all tracked prices now"><svg class="i"><use href="#i-refresh"/></svg></button>
     <button class="plain icon" id="btn-settings" title="Settings" aria-label="Settings"><svg class="i"><use href="#i-gear"/></svg></button>
   </div>
 </header>
@@ -431,14 +442,32 @@
   </form>
 </dialog>
 
+<!-- Passcode prompt -->
+<dialog id="dlg-pass" aria-labelledby="p-title" style="width:min(420px, calc(100vw - 24px))">
+  <form id="pass-form">
+    <div class="sheet-head"><h2 id="p-title">Passcode</h2><button type="button" class="plain icon" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-body">
+      <p class="small ink2" id="pass-msg"></p>
+      <label class="field"><span>Passcode</span><input name="pass" type="password" autocomplete="current-password" required></label>
+      <p class="tiny muted">It's the <code>SEARCH_PASSCODE</code> secret of the repository. This browser remembers it.</p>
+      <div class="row" style="justify-content:flex-end"><button type="button" data-close>Cancel</button><button class="primary">Continue</button></div>
+    </div>
+  </form>
+</dialog>
+
 <!-- Settings sheet -->
 <dialog id="dlg-settings" aria-labelledby="s-title">
   <form id="settings-form" novalidate>
     <div class="sheet-head"><h2 id="s-title">Settings</h2><button type="button" class="plain icon" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
     <div class="sheet-body">
       <section>
-        <h3>GitHub connection</h3>
-        <p class="small ink2" style="margin:4px 0 10px">Needed to add or edit routes and to start a search from here. Create a
+        <h3>Live search</h3>
+        <p class="small ink2" style="margin:4px 0 10px" id="s-live"></p>
+        <label class="field" id="s-pass-field"><span>Passcode</span><input name="passcode" type="password" autocomplete="off" placeholder="SEARCH_PASSCODE"></label>
+      </section>
+      <section>
+        <h3>GitHub connection <span class="muted" style="font-weight:400">(optional)</span></h3>
+        <p class="small ink2" style="margin:4px 0 10px">Only needed when the search service can't save routes (no <code>TRACKER_GITHUB_TOKEN</code>). Create a
           <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
           for this repository only, with <b>Contents</b> and <b>Actions</b> set to <i>Read and write</i>. It stays in this browser.</p>
         <div class="grid2">
@@ -768,20 +797,21 @@ async function load() {
     getJSON("data/history.json", {}), getJSON("data/alerts.json", []),
   ]);
   config.settings ||= {}; config.routes ||= []; latest.routes ||= {};
+  await loadLive();
   route();
 }
 
 // ---------- router ----------
 function route() {
   const [view, id, cabin] = location.hash.replace(/^#\/?/, "").split("/").map(decodeURIComponent);
-  const nav = view === "route" ? "tracked" : (view || "explore");
+  const nav = view === "route" ? "tracked" : view === "search" ? "explore" : (view || "explore");
   document.querySelectorAll("[data-nav]").forEach(a => a.dataset.nav === nav ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
   renderStatus();
   const app = $("#app");
   if (view === "settings") { openSettings(); return; }
-  const html = view === "tracked" ? viewTracked() : view === "alerts" ? viewAlerts() : view === "route" ? viewRoute(id, cabin) : viewExplore();
+  const html = view === "tracked" ? viewTracked() : view === "alerts" ? viewAlerts() : view === "route" ? viewRoute(id, cabin) : view === "search" ? viewSearch() : viewExplore();
   app.innerHTML = `<div class="view">${html}</div>`;
-  if (view === "route") afterRoute(); else if (!view || view === "explore") afterExplore();
+  if (view === "route") afterRoute(); else if (view === "search") afterSearch(); else if (!view || view === "explore") afterExplore();
   if (route._last !== location.hash) { scrollTo({ top: 0 }); route._last = location.hash; }
 }
 addEventListener("hashchange", route);
@@ -819,7 +849,7 @@ function viewExplore() {
       ${locPicker("to", "Where to?", "", "City, airport or country")}
     </div>
     ${dateFields()}
-    <button class="primary go" id="search-go">${icon("track")} Track prices</button>
+    <button class="primary go" id="search-go">${icon("search")} Search</button>
   </form>
 
   ${latest.demo ? `<div class="banner">⚠️ <span><b>Demo data.</b> Add a <code>SERPAPI_KEY</code> repository secret to get real Google Flights prices.</span></div>` : ""}
@@ -889,15 +919,7 @@ function afterExplore() {
     const r = buildRoute({ from: f.from.value, to: f.to.value, trip: f.trip.value, adults: $("#pax").textContent, max_stops: f.max_stops.value, cabins }, null, f);
     if (typeof r === "string") return toast(r);
     store.set("lastFrom", r.from);
-    const sig = x => JSON.stringify([x.from, x.to, x.trip, x.depart_from, x.depart_to, x.return_from, x.return_to, x.nights, x.nights_min, x.nights_max, x.weekdays]);
-    const same = config.routes.find(x => sig(x) === sig(r));
-    if (same) { location.hash = `#/route/${encodeURIComponent(same.id)}`; return toast("You already track this route."); }
-    const btn = $("#search-go"); btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Saving…`;
-    try {
-      await saveConfig(c => { c.routes = (c.routes || []).concat(r); }, `Track ${r.from} → ${r.to}`);
-      location.hash = `#/route/${encodeURIComponent(r.id)}`;
-      toast("Tracking started. The first prices arrive in a few minutes.");
-    } catch (err) { toast(err.message); btn.disabled = false; btn.innerHTML = `${icon("track")} Track prices`; }
+    startSearch(r);
   };
 }
 
@@ -1196,10 +1218,197 @@ function drawHistory(r) {
 }
 let resizeT; addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { const r = config.routes.find(x => x.id === cur?.id); if (r && location.hash.startsWith("#/route/")) { drawChart(r); drawHistory(r); } }, 150); });
 
+// ---------- live search (Cloudflare Worker, see worker/) ----------
+let liveApi = null, liveStatus = null;
+async function loadLive() {
+  const cfg = await getJSON("api.json", {});
+  liveApi = (cfg.search_api || "").replace(/\/$/, "") || null;
+  if (!liveApi) return;
+  try { liveStatus = await (await fetch(liveApi + "/status")).json(); } catch { liveStatus = null; }
+  renderStatus();
+}
+async function live(path, opts = {}) {
+  if (!liveApi) throw new Error("Live search isn't set up yet.");
+  let r;
+  try { r = await fetch(liveApi + path, { ...opts, headers: { "Content-Type": "application/json", "X-Passcode": store.get("passcode", ""), ...(opts.headers || {}) } }); }
+  catch { throw new Error("Can't reach the search service. Check your connection and try again."); }
+  const body = await r.json().catch(() => ({}));
+  if (r.status === 401) { const e = new Error(body.message || "Enter the passcode to search."); e.code = "passcode"; throw e; }
+  if (!r.ok) throw new Error(body.message || `Search service error (HTTP ${r.status})`);
+  return body;
+}
+const liveWrite = () => Boolean(liveApi && liveStatus?.write);
+
+/** The trips a live search checks: the chosen dates, or up to 5 dates spread over a flexible window. */
+function liveTrips(r) {
+  if (r.date_mode === "exact") { const v = dateValues(r); return [{ date: v.depart, ret: r.trip === "oneway" ? null : v.ret }]; }
+  const tomorrow = addDays(new Date().toISOString().slice(0, 10), 1);
+  const all = tripsOf(r).filter(t => t.date >= tomorrow), dates = [...new Set(all.map(t => t.date))];
+  const ns = [...new Set(all.map(t => t.n))], mid = ns[Math.floor((ns.length - 1) / 2)];
+  const pick = dates.length <= 5 ? dates : [0, 1, 2, 3, 4].map(i => dates[Math.round(i * (dates.length - 1) / 4)]);
+  return pick.map(d => all.find(t => t.date === d && t.n === mid) || all.find(t => t.date === d));
+}
+
+function startSearch(r) {
+  ui.search = { r, cabin: r.cabins[0], results: {}, sel: null };
+  try { sessionStorage.setItem("ft.search", JSON.stringify(ui.search)); } catch {}
+  location.hash = "#/search";
+  if (location.hash === "#/search") route();
+}
+function restoreSearch() {
+  if (ui.search) return ui.search;
+  try { ui.search = JSON.parse(sessionStorage.getItem("ft.search")); } catch {}
+  return ui.search;
+}
+function saveSearchState() { try { sessionStorage.setItem("ft.search", JSON.stringify(ui.search)); } catch {} }
+const tripKey = (t, cabin) => `${cabin}|${t.date}|${t.ret || ""}`;
+
+function viewSearch() {
+  const s = restoreSearch();
+  if (!s) return `<div class="glass empty" style="margin-top:24px"><div class="em">🔎</div><p>Start a search on Explore.</p><p style="margin-top:12px"><a class="btn primary" href="#/">Explore</a></p></div>`;
+  const r = s.r, sig = routeSig(r), tracked = config.routes.find(x => routeSig(x) === sig);
+  return `
+  <a class="crumb" href="#/">${icon("back")} Change search</a>
+  <div class="detail-head">
+    <div><h1>${esc(cityOf(r.from))} → ${esc(cityOf(r.to))}</h1>
+      <div class="row small ink2" style="margin-top:6px"><span class="chip">${esc(r.from)} → ${esc(r.to)}</span><span class="chip">${r.trip === "oneway" ? "One way" : "Round trip"}</span>
+        <span class="chip">${icon("cal", "i\" style=\"width:14px;height:14px")} ${datesTxt(r)}</span><span class="chip">${icon("person", "i\" style=\"width:14px;height:14px")} ${r.adults || 1}</span>
+        ${r.max_stops != null ? `<span class="chip">${r.max_stops === 0 ? "Non-stop" : `≤ ${r.max_stops} stop${r.max_stops > 1 ? "s" : ""}`}</span>` : ""}</div></div>
+    ${tracked ? `<a class="btn" href="#/route/${encodeURIComponent(tracked.id)}">${icon("track")} Tracking · view prices</a>`
+      : `<button class="primary" id="s-track">${icon("bell")} Track prices</button>`}
+  </div>
+  ${segmented("s-cabin", CABINS.map(c => [c, CABIN_NAME[c]]), s.cabin, "Class")}
+  <div id="s-body" style="margin-top:14px"></div>`;
+}
+
+function afterSearch() {
+  const s = ui.search; if (!s) return;
+  $("#s-cabin").onclick = e => { const b = e.target.closest("button"); if (!b || b.dataset.v === s.cabin) return; s.cabin = b.dataset.v; s.sel = null; saveSearchState(); route(); };
+  $("#s-track")?.addEventListener("click", trackSearch);
+  runLiveSearch();
+}
+
+async function runLiveSearch() {
+  const s = ui.search, body = $("#s-body");
+  if (!liveApi) { body.innerHTML = liveSetupPanel(); return; }
+  if (liveStatus?.passcode && !store.get("passcode", "")) return askPasscode(runLiveSearch);
+  const trips = liveTrips(s.r);
+  if (!trips.length) { body.innerHTML = `<div class="glass empty"><p>These dates are in the past.</p></div>`; return; }
+  const todo = trips.filter(t => !s.results[tripKey(t, s.cabin)]);
+  if (todo.length) {
+    body.innerHTML = skeleton(trips.length > 1);
+    const p = new URLSearchParams({ from: s.r.from, to: s.r.to, cabin: s.cabin, adults: s.r.adults || 1, stops: s.r.max_stops ?? "", currency: config.settings.currency || "EUR" });
+    const out = await Promise.allSettled(todo.map(t => live(`/search?${p}&depart=${t.date}${t.ret ? `&return=${t.ret}` : ""}`)));
+    if (ui.search !== s || !$("#s-body")) return; // navigated away meanwhile
+    const pass = out.find(o => o.status === "rejected" && o.reason.code === "passcode");
+    if (pass) { store.set("passcode", ""); return askPasscode(runLiveSearch, "That passcode didn't work. Try again."); }
+    const failed = out.find(o => o.status === "rejected");
+    if (failed && out.every(o => o.status === "rejected")) { $("#s-body").innerHTML = `<div class="glass empty"><div class="em">⚠️</div><p>${esc(failed.reason.message)}</p><p style="margin-top:12px"><button class="primary" id="s-retry">Try again</button></p></div>`; $("#s-retry").onclick = runLiveSearch; return; }
+    out.forEach((o, i) => { if (o.status === "fulfilled") s.results[tripKey(todo[i], s.cabin)] = o.value; });
+    saveSearchState();
+  }
+  drawSearch(trips);
+}
+
+function drawSearch(trips) {
+  const s = ui.search, body = $("#s-body");
+  const res = trips.map(t => ({ t, v: s.results[tripKey(t, s.cabin)] })).filter(x => x.v);
+  const cheapestOf = v => v.options?.length ? Math.min(...v.options.map(o => o.price)) : null;
+  if (!s.sel || !res.find(x => x.t.date === s.sel)) {
+    const ok = res.filter(x => cheapestOf(x.v) != null).sort((a, b) => cheapestOf(a.v) - cheapestOf(b.v));
+    s.sel = (ok[0] || res[0])?.t.date;
+  }
+  const cur = res.find(x => x.t.date === s.sel);
+  const strip = trips.length > 1 ? `<div class="glass panel" style="margin-bottom:14px">
+      <div class="row between" style="margin-bottom:10px"><h3>Sampled dates</h3><span class="tiny ink2">Checked ${trips.length} of ${windowDates(s.r).length} departure dates. <b>Track prices</b> to check every date, every few hours.</span></div>
+      <div class="dstrip">${res.map(({ t, v }) => { const c = cheapestOf(v), best = c != null && c === Math.min(...res.map(x => cheapestOf(x.v)).filter(x => x != null));
+        return `<button class="dcell ${t.date === s.sel ? "on" : ""}" data-d="${t.date}"><span class="tiny ink2">${fmtDate(t.date, { weekday: "short", day: "numeric", month: "short" })}${t.ret ? `<br>→ ${fmtDate(t.ret)}` : ""}</span><b class="${best ? "down" : ""}">${c != null ? money(c) : "–"}</b></button>`; }).join("")}</div></div>` : "";
+  if (!cur) { body.innerHTML = strip + `<div class="glass empty"><p>No results.</p></div>`; return; }
+  const v = cur.v, opts = (v.options || []).slice().sort((a, b) => a.price - b.price);
+  const bestOpts = (v.options || []).filter(o => o.best), other = opts.filter(o => !o.best);
+  const best = opts[0];
+  body.innerHTML = strip + (opts.length ? `
+    <div class="glass panel">
+      <div class="row between" style="align-items:start">
+        <div><div class="small ink2">Cheapest ${CABIN_NAME[s.cabin].toLowerCase()} · ${fmtDay(cur.t.date)}${cur.t.ret ? ` – ${fmtDay(cur.t.ret)}` : ""}</div>
+          <div class="row" style="align-items:baseline;gap:12px"><span class="big-price">${money(best.price)}</span>${levelBadge(v)}</div></div>
+        <span class="tiny muted">${v.cached ? "From the last 30 min" : "Live"} · ${ago(v.searched_at)}</span>
+      </div>
+      ${insight({ ...v, price: best.price })}
+    </div>
+    ${bestOpts.length ? `<section class="section"><div class="section-head"><div><h2>Top departing flights</h2><p class="small ink2">Ranked by Google on price and convenience. Prices include taxes and fees for ${s.r.adults || 1} passenger${s.r.adults > 1 ? "s" : ""}${cur.t.ret ? ", round trip" : ""}.</p></div></div>
+      <div class="glass results">${bestOpts.map(o => liveRow(o, v, best)).join("")}</div></section>` : ""}
+    ${other.length ? `<section class="section"><div class="section-head"><div><h2>${bestOpts.length ? "Other departing flights" : "Departing flights"}</h2></div></div>
+      <div class="glass results">${other.map(o => liveRow(o, v, best)).join("")}</div></section>` : ""}`
+    : `<div class="glass empty"><div class="em">🛬</div><p>${esc(v.message || "No flights found for this search.")}</p><p class="small ink2" style="margin-top:6px">Try other dates, more stops or nearby airports.</p></div>`);
+  body.querySelectorAll(".dcell").forEach(b => b.onclick = () => { s.sel = b.dataset.d; saveSearchState(); drawSearch(trips); });
+  body.querySelectorAll(".results").forEach(el => el.onclick = e => { const b = e.target.closest(".res > button"); if (!b) return; const row = b.parentElement; row.classList.toggle("open"); b.setAttribute("aria-expanded", row.classList.contains("open")); });
+}
+
+function liveRow(o, v, best) {
+  const legs = o.legs || [], first = legs[0] || {}, last = legs[legs.length - 1] || {};
+  const lay = (o.layovers || []).map(l => `${l.id} ${dur(l.duration)}`).join(", ");
+  return `<div class="res"><button type="button" aria-expanded="false">
+      ${airlineLogo(o)}
+      <span><span class="t">${hhmm(o.depart_time)} – ${hhmm(o.arrive_time)}${plusDays(o.depart_time, o.arrive_time)}</span><br><span class="s">${esc(o.airlines.join(", "))}</span></span>
+      <span class="c3"><span class="t" style="font-weight:500">${dur(o.duration)}</span><br><span class="s">${esc(first.from || "")}–${esc(last.to || "")}</span></span>
+      <span class="c4"><span class="t" style="font-weight:500">${stopsTxt(o.stops)}</span><br><span class="s">${esc(lay) || "&nbsp;"}</span></span>
+      <span class="pr"><span class="t ${o.price === best.price ? "down" : ""}">${money(o.price)}</span><br><span class="s">${o.co2_diff != null && o.co2_diff <= -5 ? `<span class="down">${o.co2_diff}% CO₂</span>` : v.query?.ret ? "round trip" : "one way"}</span></span>
+      <span class="chev">${icon("chev")}</span>
+    </button>
+    <div class="res-more">
+      <div class="legs">${legs.map((l, i) => `
+        <div><b>${hhmm(l.depart)}</b> ${esc(l.from_name || l.from)} (${esc(l.from)})</div>
+        <div class="tiny ink2" style="padding-left:12px">${dur(l.duration) ? `Travel time ${dur(l.duration)} · ` : ""}${esc(l.airline)} ${esc(l.flight)}${l.airplane ? ` · ${esc(l.airplane)}` : ""}${l.legroom ? ` · legroom ${esc(l.legroom)}` : ""}${l.overnight ? " · overnight" : ""}</div>
+        <div><b>${hhmm(l.arrive)}</b> ${esc(l.to_name || l.to)} (${esc(l.to)})</div>
+        ${o.layovers?.[i] ? `<div class="layover">${dur(o.layovers[i].duration)} layover · ${esc(o.layovers[i].name || o.layovers[i].id)}${o.layovers[i].overnight ? " · overnight" : ""}</div>` : ""}`).join("")}</div>
+      <div class="row between"><span class="small ink2">${o.co2 ? `${Math.round(o.co2 / 1000)} kg CO₂e${o.co2_diff != null ? ` (${o.co2_diff > 0 ? "+" : ""}${o.co2_diff}% vs typical)` : ""}` : ""}</span>
+        ${v.url ? `<a class="btn primary" href="${esc(v.url)}" target="_blank" rel="noopener">Book on Google Flights ${icon("ext", "i\" style=\"width:16px;height:16px")}</a>` : ""}</div>
+    </div></div>`;
+}
+
+function skeleton(withStrip) {
+  const row = `<div class="res"><div class="skel-row"><i class="sk" style="width:36px;height:36px;border-radius:10px"></i><span style="flex:1"><i class="sk" style="width:40%"></i><i class="sk" style="width:25%;margin-top:6px"></i></span><i class="sk" style="width:70px"></i></div></div>`;
+  return `${withStrip ? `<div class="glass panel" style="margin-bottom:14px"><i class="sk" style="width:30%"></i><div class="dstrip" style="margin-top:10px">${"<i class='sk' style='height:56px;border-radius:14px'></i>".repeat(5)}</div></div>` : ""}
+    <div class="glass panel"><i class="sk" style="width:25%"></i><i class="sk" style="width:35%;height:40px;margin-top:8px"></i><p class="small ink2" style="margin-top:12px"><span class="spin" style="width:12px;height:12px;vertical-align:-1px"></span> Searching Google Flights…</p></div>
+    <div class="glass results" style="margin-top:32px">${row.repeat(4)}</div>`;
+}
+
+function liveSetupPanel() {
+  return `<div class="glass panel">
+    <h2>Live search isn't set up yet</h2>
+    <p class="ink2" style="margin-top:6px">Searching straight from this page needs the small search service in <code>worker/</code>, which keeps your SerpApi key secret.
+      It's a one-time, ~5 minute setup with a free Cloudflare account; the steps are in the README under <b>Live search</b>.</p>
+    <p class="ink2" style="margin-top:10px">Meanwhile you can still <b>Track prices</b>: the route is checked automatically every few hours.</p>
+  </div>`;
+}
+
+function askPasscode(then, msg) {
+  const d = $("#dlg-pass"), f = $("#pass-form");
+  $("#pass-msg").textContent = msg || "This site's search is protected so nobody else can use your search credits.";
+  f.elements.pass.value = ""; d.showModal(); f.elements.pass.focus();
+  f.onsubmit = e => { e.preventDefault(); store.set("passcode", f.elements.pass.value.trim()); d.close(); then(); };
+  const body = $("#s-body"); if (body) body.innerHTML = `<div class="glass empty"><div class="em">🔒</div><p>Enter the passcode to search.</p><p style="margin-top:12px"><button class="primary" id="s-pass">Enter passcode</button></p></div>`;
+  $("#s-pass")?.addEventListener("click", () => askPasscode(then));
+}
+
+const routeSig = x => JSON.stringify([x.from, x.to, x.trip, x.depart_from, x.depart_to, x.return_from, x.return_to, x.nights, x.nights_min, x.nights_max, x.weekdays]);
+async function trackSearch() {
+  const r = ui.search.r, btn = $("#s-track");
+  btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Saving…`;
+  try {
+    await saveConfig(c => { c.routes = (c.routes || []).filter(x => routeSig(x) !== routeSig(r)).concat(r); }, `Track ${r.from} → ${r.to}`);
+    toast("Tracking started. Prices for every date fill in over the next runs.");
+  } catch (err) { toast(err.message); btn.disabled = false; btn.innerHTML = `${icon("bell")} Track prices`; }
+}
+
 // ---------- GitHub ----------
 async function api(path, opts = {}) {
   const { repo, token } = gh();
-  if (!repo || !token) { openSettings(); throw new Error("Connect to GitHub in Settings first."); }
+  if (!repo || !token) {
+    if (liveApi && liveStatus && !liveStatus.write) throw new Error("Saving needs SEARCH_PASSCODE and TRACKER_GITHUB_TOKEN on the search service (see README).");
+    openSettings(); throw new Error(liveApi ? "Saving isn't available yet." : "Set up live search (README), or connect GitHub in Settings.");
+  }
   const r = await fetch(`https://api.github.com/repos/${repo}${path}`, { ...opts, headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", ...(opts.headers || {}) } });
   if (!r.ok) throw new Error(`GitHub: ${r.status} ${(await r.json().catch(() => ({}))).message || ""}`);
   return r.status === 204 ? null : r.json();
@@ -1207,6 +1416,12 @@ async function api(path, opts = {}) {
 const b64 = s => { const b = new TextEncoder().encode(s); let out = ""; for (let i = 0; i < b.length; i += 0x8000) out += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(out); };
 const unb64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), c => c.charCodeAt(0)));
 async function saveConfig(mutate, message) {
+  if (liveWrite()) {
+    const file = await live("/config"), fresh = JSON.parse(file.content);
+    mutate(fresh);
+    await live("/config", { method: "POST", body: JSON.stringify({ message, sha: file.sha, content: JSON.stringify(fresh, null, 1) + "\n" }) });
+    config = fresh; route(); return;
+  }
   const file = await api("/contents/routes.json"), fresh = JSON.parse(unb64(file.content));
   mutate(fresh);
   await api("/contents/routes.json", { method: "PUT", body: JSON.stringify({ message, sha: file.sha, content: b64(JSON.stringify(fresh, null, 1) + "\n") }) });
@@ -1214,7 +1429,11 @@ async function saveConfig(mutate, message) {
 }
 $("#btn-run").onclick = async () => {
   const b = $("#btn-run"); b.disabled = true; b.innerHTML = `<span class="spin"></span>`;
-  try { const info = await api(""); await api("/actions/workflows/check-flights.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: info.default_branch }) }); toast("Search started. New prices appear in a few minutes."); }
+  try {
+    if (liveWrite()) await live("/run", { method: "POST" });
+    else { const info = await api(""); await api("/actions/workflows/check-flights.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: info.default_branch }) }); }
+    toast("Checking all tracked routes now. New prices appear in a few minutes.");
+  }
   catch (e) { toast(e.message); } finally { b.disabled = false; b.innerHTML = icon("refresh"); }
 };
 
@@ -1282,6 +1501,11 @@ function openSettings() {
   f.elements.repo.value = gh().repo; f.elements.token.value = gh().token;
   f.elements.currency.value = s.currency || "EUR"; f.elements.searches_per_run.value = s.searches_per_run ?? 8;
   f.elements.drop_threshold_pct.value = s.drop_threshold_pct ?? 5; f.elements.stale_days.value = s.stale_days ?? 14;
+  f.elements.passcode.value = store.get("passcode", "");
+  $("#s-live").innerHTML = !liveApi ? "Not set up yet. Follow <b>Live search</b> in the README to search Google Flights straight from this page."
+    : !liveStatus ? `Can't reach the search service at <code>${esc(liveApi)}</code>.`
+    : `Connected${liveStatus.search ? "" : ", but <b>SERPAPI_KEY</b> is missing"}. ${liveStatus.write ? "Saving routes works without a GitHub token." : "Add <b>SEARCH_PASSCODE</b> and <b>TRACKER_GITHUB_TOKEN</b> to save routes from here."}`;
+  $("#s-pass-field").hidden = !liveStatus?.passcode;
   const t = store.get("theme", "auto"); $("#s-theme").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
   monthly(); if (!$("#dlg-settings").open) $("#dlg-settings").showModal();
 }
@@ -1292,10 +1516,10 @@ $("#s-theme").onclick = e => { const b = e.target.closest("button"); if (!b) ret
 $("#settings-form").addEventListener("submit", async e => {
   e.preventDefault();
   const el = e.target.elements;
-  store.set("repo", el.repo.value.trim()); store.set("token", el.token.value.trim());
+  store.set("repo", el.repo.value.trim()); store.set("token", el.token.value.trim()); store.set("passcode", el.passcode.value.trim());
   const next = { currency: el.currency.value, searches_per_run: +el.searches_per_run.value || 8, drop_threshold_pct: +el.drop_threshold_pct.value || 5, stale_days: +el.stale_days.value || 14 };
   const changed = Object.keys(next).some(k => next[k] !== config.settings[k]);
-  try { if (changed && gh().token) await saveConfig(c => { c.settings = { ...(c.settings || {}), ...next }; }, "Update settings"); $("#dlg-settings").close(); toast(changed ? "Settings saved." : "Connection saved."); }
+  try { if (changed && (gh().token || liveWrite())) await saveConfig(c => { c.settings = { ...(c.settings || {}), ...next }; }, "Update settings"); $("#dlg-settings").close(); toast(changed ? "Settings saved." : "Connection saved."); }
   catch (err) { toast(err.message); }
 });
 $("#dlg-settings").addEventListener("close", () => { if (location.hash === "#/settings") location.hash = "#/"; });

@@ -2,3 +2,6 @@ __pycache__/
 .venv/
 .pytest_cache/
 local.json
+worker/node_modules/
+worker/deploy.log
+worker/.wrangler/
