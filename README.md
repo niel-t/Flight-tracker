@@ -14,7 +14,7 @@ Unlike Google Flights, which shows one search at a time, Flight Tracker keeps wa
 - **Book:** every price links straight to that search on Google Flights.
 - **Flexible airports:** `AMS,BRU` → `NRT,HND` searches all combinations at once.
 
-**Dashboard:** `https://<your-user>.github.io/flight-tracker/` (after enabling GitHub Pages, see below).
+**Dashboard:** https://niel-t.github.io/Flight-tracker/ (after enabling GitHub Pages, see below).
 
 ## Setup (10 minutes)
 
