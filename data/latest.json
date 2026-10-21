@@ -69,41 +69,107 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-02-22"
+     },
+     "2027-02-15": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE1KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wMSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       650,
+       1050
+      ],
+      "price": 868,
+      "airlines": [
+       "KLM",
+       "Korean Air"
+      ],
+      "stops": 1,
+      "duration": 985,
+      "depart_time": "2027-02-15 21:00",
+      "arrive_time": "2027-02-16 21:25",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "ICN",
+        "flight": "KL 855",
+        "airline": "KLM"
+       },
+       {
+        "from": "ICN",
+        "to": "NRT",
+        "flight": "KE 705",
+        "airline": "Korean Air"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-03-01"
+     },
+     "2027-02-22": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       650,
+       1050
+      ],
+      "price": 830,
+      "airlines": [
+       "China Southern"
+      ],
+      "stops": 1,
+      "duration": 2010,
+      "depart_time": "2027-02-22 20:35",
+      "arrive_time": "2027-02-24 14:05",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "PKX",
+        "flight": "CZ 346",
+        "airline": "China Southern"
+       },
+       {
+        "from": "PKX",
+        "to": "HND",
+        "flight": "CZ 647",
+        "airline": "China Southern"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-03-08"
      }
     },
     "cheapest": {
-     "date": "2027-02-08",
-     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yMigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+     "date": "2027-02-22",
+     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
      "level": "typical",
      "typical": [
       650,
       1050
      ],
-     "price": 863,
+     "price": 830,
      "airlines": [
-      "KLM",
-      "Korean Air"
+      "China Southern"
      ],
      "stops": 1,
-     "duration": 1070,
-     "depart_time": "2027-02-08 21:00",
-     "arrive_time": "2027-02-09 22:50",
+     "duration": 2010,
+     "depart_time": "2027-02-22 20:35",
+     "arrive_time": "2027-02-24 14:05",
      "legs": [
       {
        "from": "AMS",
-       "to": "ICN",
-       "flight": "KL 855",
-       "airline": "KLM"
+       "to": "PKX",
+       "flight": "CZ 346",
+       "airline": "China Southern"
       },
       {
-       "from": "ICN",
+       "from": "PKX",
        "to": "HND",
-       "flight": "KE 751",
-       "airline": "Korean Air"
+       "flight": "CZ 647",
+       "airline": "China Southern"
       }
      ],
-     "checked": "2026-10-21T04:46:14+00:00",
-     "return_date": "2027-02-22"
+     "checked": "2026-10-21T04:50:51+00:00",
+     "return_date": "2027-03-08"
     }
    },
    "premium": {
@@ -167,6 +233,66 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-02-22"
+     },
+     "2027-02-15": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE1KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wMSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 1564,
+      "airlines": [
+       "LOT"
+      ],
+      "stops": 1,
+      "duration": 2395,
+      "depart_time": "2027-02-15 19:45",
+      "arrive_time": "2027-02-17 19:40",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "WAW",
+        "flight": "LO 268",
+        "airline": "LOT"
+       },
+       {
+        "from": "WAW",
+        "to": "NRT",
+        "flight": "LO 79",
+        "airline": "LOT"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-03-01"
+     },
+     "2027-02-22": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 1564,
+      "airlines": [
+       "LOT"
+      ],
+      "stops": 1,
+      "duration": 2395,
+      "depart_time": "2027-02-22 19:45",
+      "arrive_time": "2027-02-24 19:40",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "WAW",
+        "flight": "LO 268",
+        "airline": "LOT"
+       },
+       {
+        "from": "WAW",
+        "to": "NRT",
+        "flight": "LO 79",
+        "airline": "LOT"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-03-08"
      }
     },
     "cheapest": {
@@ -234,40 +360,73 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-02-15"
+     },
+     "2027-02-08": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yMigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       2300,
+       3200
+      ],
+      "price": 2803,
+      "airlines": [
+       "China Southern"
+      ],
+      "stops": 1,
+      "duration": 1895,
+      "depart_time": "2027-02-08 21:40",
+      "arrive_time": "2027-02-10 13:15",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "CAN",
+        "flight": "CZ 308",
+        "airline": "China Southern"
+       },
+       {
+        "from": "CAN",
+        "to": "NRT",
+        "flight": "CZ 8101",
+        "airline": "China Southern"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-02-22"
      }
     },
     "cheapest": {
-     "date": "2027-02-01",
-     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTAxKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xNSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ",
+     "date": "2027-02-08",
+     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yMigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ",
      "level": "typical",
      "typical": [
       2300,
       3200
      ],
-     "price": 2863,
+     "price": 2803,
      "airlines": [
-      "LOT"
+      "China Southern"
      ],
      "stops": 1,
-     "duration": 2395,
-     "depart_time": "2027-02-01 19:45",
-     "arrive_time": "2027-02-03 19:40",
+     "duration": 1895,
+     "depart_time": "2027-02-08 21:40",
+     "arrive_time": "2027-02-10 13:15",
      "legs": [
       {
        "from": "AMS",
-       "to": "WAW",
-       "flight": "LO 268",
-       "airline": "LOT"
+       "to": "CAN",
+       "flight": "CZ 308",
+       "airline": "China Southern"
       },
       {
-       "from": "WAW",
+       "from": "CAN",
        "to": "NRT",
-       "flight": "LO 79",
-       "airline": "LOT"
+       "flight": "CZ 8101",
+       "airline": "China Southern"
       }
      ],
-     "checked": "2026-10-21T04:46:14+00:00",
-     "return_date": "2027-02-15"
+     "checked": "2026-10-21T04:50:51+00:00",
+     "return_date": "2027-02-22"
     }
    },
    "first": {
@@ -305,6 +464,39 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-02-15"
+     },
+     "2027-02-08": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yMigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIBHABmAEB&tfu=EgIIAQ",
+      "level": "high",
+      "typical": [
+       8700,
+       13000
+      ],
+      "price": 14150,
+      "airlines": [
+       "Emirates"
+      ],
+      "stops": 1,
+      "duration": 1115,
+      "depart_time": "2027-02-08 10:35",
+      "arrive_time": "2027-02-09 13:10",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "DXB",
+        "flight": "EK 146",
+        "airline": "Emirates"
+       },
+       {
+        "from": "DXB",
+        "to": "NRT",
+        "flight": "EK 320",
+        "airline": "Emirates"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-02-22"
      }
     },
     "cheapest": {
@@ -375,6 +567,37 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-04-11"
+     },
+     "2027-04-08": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTA4agcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMThqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgBcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 466,
+      "airlines": [
+       "Vueling",
+       "LEVEL"
+      ],
+      "stops": 1,
+      "duration": 780,
+      "depart_time": "2027-04-08 15:00",
+      "arrive_time": "2027-04-08 22:00",
+      "legs": [
+       {
+        "from": "BRU",
+        "to": "BCN",
+        "flight": "VY 1093",
+        "airline": "Vueling"
+       },
+       {
+        "from": "BCN",
+        "to": "JFK",
+        "flight": "LL 2627",
+        "airline": "LEVEL"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-04-18"
      }
     },
     "cheapest": {
@@ -439,21 +662,51 @@
       ],
       "checked": "2026-10-21T04:46:14+00:00",
       "return_date": "2027-04-11"
+     },
+     "2027-04-08": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTA4agcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMThqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 1834,
+      "airlines": [
+       "Icelandair"
+      ],
+      "stops": 1,
+      "duration": 690,
+      "depart_time": "2027-04-08 13:50",
+      "arrive_time": "2027-04-08 19:20",
+      "legs": [
+       {
+        "from": "BRU",
+        "to": "KEF",
+        "flight": "FI 555",
+        "airline": "Icelandair"
+       },
+       {
+        "from": "KEF",
+        "to": "JFK",
+        "flight": "FI 615",
+        "airline": "Icelandair"
+       }
+      ],
+      "checked": "2026-10-21T04:50:51+00:00",
+      "return_date": "2027-04-18"
      }
     },
     "cheapest": {
-     "date": "2027-04-01",
-     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTAxagcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMTFqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ",
+     "date": "2027-04-08",
+     "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTA4agcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMThqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ",
      "level": null,
      "typical": null,
-     "price": 1926,
+     "price": 1834,
      "airlines": [
       "Icelandair"
      ],
      "stops": 1,
      "duration": 690,
-     "depart_time": "2027-04-01 13:50",
-     "arrive_time": "2027-04-01 19:20",
+     "depart_time": "2027-04-08 13:50",
+     "arrive_time": "2027-04-08 19:20",
      "legs": [
       {
        "from": "BRU",
@@ -468,13 +721,13 @@
        "airline": "Icelandair"
       }
      ],
-     "checked": "2026-10-21T04:46:14+00:00",
-     "return_date": "2027-04-11"
+     "checked": "2026-10-21T04:50:51+00:00",
+     "return_date": "2027-04-18"
     }
    }
   }
  },
- "updated": "2026-10-21T04:46:14+00:00",
+ "updated": "2026-10-21T04:50:51+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
