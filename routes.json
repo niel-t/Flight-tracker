@@ -1,0 +1,36 @@
+{
+ "settings": {
+  "currency": "EUR",
+  "searches_per_run": 8,
+  "drop_threshold_pct": 5,
+  "stale_days": 14
+ },
+ "routes": [
+  {
+   "id": "ams-nrt",
+   "from": "AMS",
+   "to": "NRT,HND",
+   "trip": "return",
+   "depart_from": "2027-02-01",
+   "depart_to": "2027-03-15",
+   "nights": 14,
+   "cabins": ["economy", "premium", "business", "first"],
+   "adults": 1,
+   "max_stops": 1,
+   "targets": {"economy": 650, "business": 2400}
+  },
+  {
+   "id": "ams-jfk",
+   "from": "AMS,BRU",
+   "to": "JFK,EWR",
+   "trip": "return",
+   "depart_from": "2027-04-01",
+   "depart_to": "2027-05-31",
+   "nights": 10,
+   "cabins": ["economy", "business"],
+   "adults": 1,
+   "max_stops": null,
+   "targets": {"economy": 450}
+  }
+ ]
+}
