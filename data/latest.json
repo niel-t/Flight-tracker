@@ -105,7 +105,7 @@
      },
      "2027-03-08": {
       "status": "ok",
-      "price": 727,
+      "price": 820,
       "airlines": [
        "Emirates"
       ],
@@ -120,7 +120,7 @@
        912
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-08%20returning%202027-03-22%20economy&curr=EUR",
-      "checked": "2026-10-17T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-03-22"
      },
      "2027-03-15": {
@@ -605,7 +605,7 @@
      },
      "2027-03-12": {
       "status": "ok",
-      "price": 981,
+      "price": 918,
       "airlines": [
        "Air France"
       ],
@@ -620,7 +620,7 @@
        912
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-12%20returning%202027-03-26%20economy&curr=EUR",
-      "checked": "2026-10-16T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-03-26"
      },
      "2027-02-06": {
@@ -989,7 +989,7 @@
      },
      "2027-03-08": {
       "status": "ok",
-      "price": 1586,
+      "price": 1418,
       "airlines": [
        "Lufthansa"
       ],
@@ -998,13 +998,13 @@
       "depart_time": "2027-03-08 10:25",
       "arrive_time": "",
       "legs": [],
-      "level": "high",
+      "level": "typical",
       "typical": [
        1228,
        1551
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-08%20returning%202027-03-22%20premium%20economy&curr=EUR",
-      "checked": "2026-10-17T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-03-22"
      },
      "2027-03-15": {
@@ -1489,7 +1489,7 @@
      },
      "2027-03-12": {
       "status": "ok",
-      "price": 1782,
+      "price": 1697,
       "airlines": [
        "Air France"
       ],
@@ -1504,7 +1504,7 @@
        1551
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-12%20returning%202027-03-26%20premium%20economy&curr=EUR",
-      "checked": "2026-10-16T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-03-26"
      },
      "2027-02-06": {
@@ -2373,7 +2373,7 @@
      },
      "2027-03-12": {
       "status": "ok",
-      "price": 4093,
+      "price": 3192,
       "airlines": [
        "SWISS"
       ],
@@ -2382,13 +2382,13 @@
       "depart_time": "2027-03-12 10:35",
       "arrive_time": "",
       "legs": [],
-      "level": "high",
+      "level": "typical",
       "typical": [
        2744,
        3466
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-12%20returning%202027-03-26%20business%20class&curr=EUR",
-      "checked": "2026-10-16T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-03-26"
      },
      "2027-02-06": {
@@ -2817,7 +2817,7 @@
      },
      "2027-02-09": {
       "status": "ok",
-      "price": 4066,
+      "price": 4511,
       "airlines": [
        "Delta"
       ],
@@ -2832,7 +2832,7 @@
        5929
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-09%20returning%202027-02-23%20first%20class&curr=EUR",
-      "checked": "2026-10-16T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-02-23"
      },
      "2027-02-16": {
@@ -3517,14 +3517,14 @@
      }
     },
     "cheapest": {
-     "date": "2027-02-09",
-     "price": 4066,
+     "date": "2027-02-17",
+     "price": 4425,
      "airlines": [
-      "Delta"
+      "Lufthansa"
      ],
-     "stops": 1,
-     "duration": 1005,
-     "depart_time": "2027-02-09 10:05",
+     "stops": 0,
+     "duration": 765,
+     "depart_time": "2027-02-17 10:55",
      "arrive_time": "",
      "legs": [],
      "level": "low",
@@ -3532,9 +3532,9 @@
       4694,
       5929
      ],
-     "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-09%20returning%202027-02-23%20first%20class&curr=EUR",
-     "checked": "2026-10-16T06:23:00+00:00",
-     "return_date": "2027-02-23"
+     "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-17%20returning%202027-03-03%20first%20class&curr=EUR",
+     "checked": "2026-10-17T06:23:00+00:00",
+     "return_date": "2027-03-03"
     }
    }
   },
@@ -4283,7 +4283,7 @@
      },
      "2027-04-12": {
       "status": "ok",
-      "price": 465,
+      "price": 564,
       "airlines": [
        "Emirates"
       ],
@@ -4292,13 +4292,13 @@
       "depart_time": "2027-04-12 10:15",
       "arrive_time": "",
       "legs": [],
-      "level": "low",
+      "level": "typical",
       "typical": [
        469,
        593
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20or%20BRU%20to%20JFK%20or%20EWR%20on%202027-04-12%20returning%202027-04-22%20economy&curr=EUR",
-      "checked": "2026-10-13T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-04-22"
      },
      "2027-04-19": {
@@ -5527,7 +5527,7 @@
      },
      "2027-04-12": {
       "status": "ok",
-      "price": 1897,
+      "price": 2273,
       "airlines": [
        "Emirates"
       ],
@@ -5536,13 +5536,13 @@
       "depart_time": "2027-04-12 10:55",
       "arrive_time": "",
       "legs": [],
-      "level": "typical",
+      "level": "high",
       "typical": [
        1783,
        2253
       ],
       "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20or%20BRU%20to%20JFK%20or%20EWR%20on%202027-04-12%20returning%202027-04-22%20business%20class&curr=EUR",
-      "checked": "2026-10-13T06:23:00+00:00",
+      "checked": "2026-10-21T04:28:20+00:00",
       "return_date": "2027-04-22"
      },
      "2027-04-19": {
@@ -6029,7 +6029,7 @@
    }
   }
  },
- "updated": "2026-10-21T04:10:19+00:00",
+ "updated": "2026-10-21T04:28:20+00:00",
  "source": "Demo data",
  "demo": true,
  "currency": "EUR"
