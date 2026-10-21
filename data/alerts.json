@@ -1,110 +1,14 @@
 [
  {
-  "time": "2026-10-17T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "economy",
-  "date": "2027-02-02",
-  "return_date": "2027-02-16",
-  "price": 650,
-  "previous": 666,
-  "reason": "below target",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-02%20returning%202027-02-16%20economy&curr=EUR"
- },
- {
-  "time": "2026-10-14T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "business",
-  "date": "2027-03-03",
-  "return_date": "2027-03-17",
-  "price": 2531,
-  "previous": 2684,
-  "reason": "dropped 6%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-03-03%20returning%202027-03-17%20business%20class&curr=EUR"
- },
- {
-  "time": "2026-10-10T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "first",
-  "date": "2027-02-02",
-  "return_date": "2027-02-16",
-  "price": 4019,
-  "previous": 4484,
-  "reason": "dropped 10%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-02%20returning%202027-02-16%20first%20class&curr=EUR"
- },
- {
-  "time": "2026-09-28T06:23:00+00:00",
+  "time": "2026-10-21T04:46:14+00:00",
   "route": "ams-jfk",
   "name": "AMS,BRU → JFK,EWR",
   "cabin": "economy",
-  "date": "2027-05-11",
-  "return_date": "2027-05-21",
-  "price": 431,
-  "previous": 459,
+  "date": "2027-04-01",
+  "return_date": "2027-04-11",
+  "price": 448,
+  "previous": null,
   "reason": "below target",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20or%20BRU%20to%20JFK%20or%20EWR%20on%202027-05-11%20returning%202027-05-21%20economy&curr=EUR"
- },
- {
-  "time": "2026-09-22T06:23:00+00:00",
-  "route": "ams-jfk",
-  "name": "AMS,BRU → JFK,EWR",
-  "cabin": "business",
-  "date": "2027-05-20",
-  "return_date": "2027-05-30",
-  "price": 1747,
-  "previous": 1871,
-  "reason": "dropped 7%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20or%20BRU%20to%20JFK%20or%20EWR%20on%202027-05-20%20returning%202027-05-30%20business%20class&curr=EUR"
- },
- {
-  "time": "2026-09-22T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "first",
-  "date": "2027-02-02",
-  "return_date": "2027-02-16",
-  "price": 4436,
-  "previous": 4769,
-  "reason": "dropped 7%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-02%20returning%202027-02-16%20first%20class&curr=EUR"
- },
- {
-  "time": "2026-09-22T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "business",
-  "date": "2027-02-23",
-  "return_date": "2027-03-09",
-  "price": 2538,
-  "previous": 2850,
-  "reason": "dropped 11%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-23%20returning%202027-03-09%20business%20class&curr=EUR"
- },
- {
-  "time": "2026-09-22T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "premium",
-  "date": "2027-02-10",
-  "return_date": "2027-02-24",
-  "price": 1158,
-  "previous": 1370,
-  "reason": "dropped 15%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-10%20returning%202027-02-24%20premium%20economy&curr=EUR"
- },
- {
-  "time": "2026-09-22T06:23:00+00:00",
-  "route": "ams-nrt",
-  "name": "AMS → NRT,HND",
-  "cabin": "economy",
-  "date": "2027-02-17",
-  "return_date": "2027-03-03",
-  "price": 665,
-  "previous": 802,
-  "reason": "dropped 17%",
-  "url": "https://www.google.com/travel/flights?q=Flights%20from%20AMS%20to%20NRT%20or%20HND%20on%202027-02-17%20returning%202027-03-03%20economy&curr=EUR"
+  "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTAxagcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMTFqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgBcAGYAQE&tfu=EgIIAQ"
  }
 ]
