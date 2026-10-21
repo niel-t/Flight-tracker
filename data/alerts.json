@@ -1,5 +1,17 @@
 [
  {
+  "time": "2026-10-21T13:04:26+00:00",
+  "route": "ams-nrt",
+  "name": "AMS → NRT,HND",
+  "cabin": "premium",
+  "date": "2027-02-02",
+  "return_date": "2027-02-16",
+  "price": 1319,
+  "previous": 1564,
+  "reason": "dropped 16%",
+  "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTAyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xNigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ"
+ },
+ {
   "time": "2026-10-21T07:06:01+00:00",
   "route": "ams-nrt",
   "name": "AMS → NRT,HND",
