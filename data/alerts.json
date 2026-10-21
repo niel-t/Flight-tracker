@@ -1,5 +1,17 @@
 [
  {
+  "time": "2026-10-21T18:59:44+00:00",
+  "route": "ams-nrt",
+  "name": "AMS → NRT,HND",
+  "cabin": "business",
+  "date": "2027-03-01",
+  "return_date": "2027-03-15",
+  "price": 2296,
+  "previous": 2803,
+  "reason": "below target",
+  "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTAxKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0xNSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ"
+ },
+ {
   "time": "2026-10-21T13:04:26+00:00",
   "route": "ams-nrt",
   "name": "AMS → NRT,HND",
