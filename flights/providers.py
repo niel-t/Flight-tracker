@@ -66,6 +66,7 @@ def parse_serpapi(data: dict, q: Query) -> dict:
     return row | {
         "price": best["price"],
         "airlines": airlines,
+        "logo": best.get("airline_logo") or (legs[0].get("airline_logo") if legs else None),
         "stops": max(len(legs) - 1, 0),
         "duration": best.get("total_duration"),
         "depart_time": _time(legs[0].get("departure_airport")) if legs else "",

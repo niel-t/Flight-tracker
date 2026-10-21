@@ -16,6 +16,18 @@ Unlike Google Flights, which shows one search at a time, Flight Tracker keeps wa
 
 **Dashboard:** https://niel-t.github.io/Flight-tracker/ (after enabling GitHub Pages, see below).
 
+## The dashboard
+
+Laid out like Google Flights, in a light/dark "glass" style that works on phone and desktop:
+
+- **Explore:** a search card (trip type, passengers, stops, classes, from/to, travel window) that starts tracking a route,
+  the cheapest fares right now, and your routes.
+- **Tracked:** every route with its cheapest fare and trend per class.
+- **Route page** (`#/route/<id>/<class>`): Google's price verdict (low/typical/high) on a range bar, a price graph or
+  calendar of every departure date, the cheapest flights as expandable rows with a *Book on Google Flights* link,
+  and the price history against your target.
+- **Price drops:** recent alerts. The same alerts go to your phone through ntfy.
+
 ## Setup (10 minutes)
 
 1. **Google Flights access.** Create a free account at [serpapi.com](https://serpapi.com) and copy your API key.

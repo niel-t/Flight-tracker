@@ -15,7 +15,7 @@ def test_parse_picks_cheapest():
         "search_metadata": {"google_flights_url": "https://g/x"},
         "best_flights": [{"price": 3100, "total_duration": 800, "flights": [leg("AMS", "HND", "KLM", "KL 861", "2027-02-01 14:00", "2027-02-02 09:00")]}],
         "other_flights": [
-            {"price": 2650, "total_duration": 1100, "flights": [
+            {"price": 2650, "airline_logo": "https://g/tk.png", "total_duration": 1100, "flights": [
                 leg("AMS", "IST", "Turkish Airlines", "TK 1952", "2027-02-01 06:00", "2027-02-01 10:30"),
                 leg("IST", "NRT", "Turkish Airlines", "TK 52", "2027-02-01 13:00", "2027-02-02 07:00")]},
             {"total_duration": 500, "flights": []},
@@ -25,7 +25,7 @@ def test_parse_picks_cheapest():
     r = parse_serpapi(data, Q)
     assert r["price"] == 2650 and r["stops"] == 1 and r["airlines"] == ["Turkish Airlines"]
     assert r["depart_time"] == "2027-02-01 06:00" and r["arrive_time"] == "2027-02-02 07:00"
-    assert r["level"] == "low" and r["url"] == "https://g/x"
+    assert r["level"] == "low" and r["url"] == "https://g/x" and r["logo"] == "https://g/tk.png"
 
 
 def test_parse_no_results():
