@@ -20,11 +20,12 @@ Unlike Google Flights, which shows one search at a time, Flight Tracker keeps wa
 
 Laid out like Google Flights, in a light/dark "glass" style that works on phone and desktop:
 
-- **Explore:** a search card (trip type, passengers, stops, classes, from/to, travel window) that starts tracking a route,
+- **Explore:** a search card (trip type, passengers, stops, classes, from/to by city, airport or country,
+  specific or flexible dates) that starts tracking a route,
   the cheapest fares right now, and your routes.
 - **Tracked:** every route with its cheapest fare and trend per class.
 - **Route page** (`#/route/<id>/<class>`): Google's price verdict (low/typical/high) on a range bar, a price graph or
-  calendar of every departure date, the cheapest flights as expandable rows with a *Book on Google Flights* link,
+  calendar of every departure date, a date grid (departure × return or nights) for flexible trips, the cheapest flights as expandable rows with a *Book on Google Flights* link,
   and the price history against your target.
 - **Price drops:** recent alerts. The same alerts go to your phone through ntfy.
 
@@ -55,29 +56,40 @@ Prices older than `stale_days` (default 14) don't count as "cheapest", and dates
 
 ## routes.json
 
+Every route has origin and destination airports (one or more IATA codes; the dashboard's location picker
+turns a city like "Tokyo" or a country like "Japan" into its airports, up to 7 per side), and one of two date modes:
+
+**Specific dates**: a departure and return date, optionally ± 1–3 days. Every departure/return combination
+within that flexibility is tracked, and shown in a date grid like Google Flights'.
+
 ```jsonc
 {
- "settings": { "currency": "EUR", "searches_per_run": 8, "drop_threshold_pct": 5, "stale_days": 14 },
- "routes": [
-  {
-   "id": "ams-nrt",
-   "name": "Tokyo spring trip",          // optional
-   "from": "AMS",                        // one or more IATA codes: "AMS,BRU"
-   "to": "NRT,HND",
-   "trip": "return",                     // or "oneway"
-   "depart_from": "2027-02-01",          // travel window: any departure date in between
-   "depart_to": "2027-03-15",
-   "nights": 14,                         // return trips only
-   "cabins": ["economy", "premium", "business", "first"],
-   "adults": 1,
-   "max_stops": 1,                       // null = any, 0 = non-stop only
-   "targets": { "economy": 650, "business": 2400 }   // optional: alert when below
-  }
- ]
+ "id": "ams-jfk", "name": "New York",
+ "from": "AMS", "to": "JFK,EWR,LGA", "trip": "return",
+ "date_mode": "exact", "flex": 2,                       // 10 Apr – 20 Apr, ±2 days
+ "depart_from": "2027-04-08", "depart_to": "2027-04-12",
+ "return_from": "2027-04-18", "return_to": "2027-04-22",
+ "cabins": ["economy", "premium", "business", "first"], "adults": 1, "max_stops": null,
+ "targets": { "economy": 450 }
 }
 ```
 
-(JSON has no comments; they're only here for explanation.)
+**Flexible dates**: any departure in a window, with a trip length: a fixed number of nights, a range, or weekends.
+
+```jsonc
+{
+ "id": "ams-bcn", "name": "Barcelona weekend",
+ "from": "AMS,RTM,EIN", "to": "BCN", "trip": "return",
+ "date_mode": "flexible", "depart_from": "2026-11-01", "depart_to": "2026-12-31",
+ "length": "weekend", "weekdays": [3, 4], "nights_min": 2, "nights_max": 3,   // leave Thu/Fri, 2–3 nights
+ // or: "nights": 7   or: "nights_min": 5, "nights_max": 9
+ "cabins": ["economy"], "adults": 2, "max_stops": 0, "targets": {}
+}
+```
+
+One-way trips use `"trip": "oneway"` and leave out the return/nights fields. Settings:
+`{ "currency": "EUR", "searches_per_run": 8, "drop_threshold_pct": 5, "stale_days": 14 }`.
+Each trip × class is one search, so check the trip count the dashboard shows when you save a route.
 
 ## Files
 

@@ -26,6 +26,7 @@ class Query:
     adults: int = 1
     max_stops: int | None = None
     currency: str = "EUR"
+    key: str = ""         # calendar key the result is stored under (see planner.trips)
 
 
 def google_flights_url(q: Query) -> str:

@@ -12,7 +12,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from flights.alerts import detect_drop, send_ntfy
-from flights.planner import depart_dates, plan, route_cabins
+from flights.planner import plan, route_cabins, trips
 from flights.providers import CABIN_LABEL, DemoProvider, SerpApiProvider
 
 ROOT = Path(__file__).parent
@@ -37,7 +37,7 @@ def prune(latest: dict, routes: list[dict], today: date):
     """Drops data for removed routes/cabins and for dates that passed or left the window."""
     kept = {}
     for route in routes:
-        valid = {d.isoformat() for d in depart_dates(route, today)}
+        valid = {key for key, _, _ in trips(route, today)}
         old = latest.get("routes", {}).get(route["id"], {})
         kept[route["id"]] = {}
         for cabin in route_cabins(route):
@@ -52,8 +52,8 @@ def cheapest(calendar: dict, now: datetime, stale_days: int) -> dict | None:
     rows = [(d, r) for d, r in calendar.items() if r.get("status") == "ok" and r.get("price") and r["checked"] >= cutoff]
     if not rows:
         return None
-    d, r = min(rows, key=lambda x: (x[1]["price"], x[0]))
-    return {"date": d} | {k: v for k, v in r.items() if k != "status"}
+    key, r = min(rows, key=lambda x: (x[1]["price"], x[0]))
+    return {"date": key.split("+")[0]} | {k: v for k, v in r.items() if k != "status"}
 
 
 def route_name(route: dict) -> str:
@@ -102,12 +102,12 @@ def main() -> int:
         row = provider.search(q)
         row |= {"checked": now.isoformat(), "return_date": q.return_.isoformat() if q.return_ else None}
         cal = latest["routes"][q.route_id][q.cabin]["calendar"]
-        if row["status"] == "error" and q.depart.isoformat() in cal:
+        if row["status"] == "error" and q.key in cal:
             # keep the last good price, but mark it so the next run doesn't retry it first
-            cal[q.depart.isoformat()] |= {"checked": row["checked"], "error": row.get("detail", "")}
+            cal[q.key] |= {"checked": row["checked"], "error": row.get("detail", "")}
         else:
-            cal[q.depart.isoformat()] = row
-        log.info("  %s %-8s %s: %s", q.route_id, q.cabin, q.depart, row.get("price") or row["status"] + " " + row.get("detail", ""))
+            cal[q.key] = row
+        log.info("  %s %-8s %s → %s: %s", q.route_id, q.cabin, q.depart, q.return_ or "one way", row.get("price") or row["status"] + " " + row.get("detail", ""))
 
     sent = 0
     for route in routes:
