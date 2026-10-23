@@ -1,5 +1,17 @@
 [
  {
+  "time": "2026-10-23T18:58:14+00:00",
+  "route": "ams-jfk",
+  "name": "AMS,BRU → JFK,EWR",
+  "cabin": "business",
+  "date": "2027-04-23",
+  "return_date": "2027-05-03",
+  "price": 1605,
+  "previous": 1722,
+  "reason": "dropped 7%",
+  "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTIzagcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDUtMDNqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ"
+ },
+ {
   "time": "2026-10-21T18:59:44+00:00",
   "route": "ams-nrt",
   "name": "AMS → NRT,HND",
