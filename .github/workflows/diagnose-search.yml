@@ -1,0 +1,41 @@
+name: Diagnose search API
+
+# Calls the live search API (the address in api.json) from GitHub and prints what it answers,
+# to find out why searching from the dashboard fails. Uses SEARCH_PASSCODE if it's also a repository secret.
+# Runs one real search (one SerpApi credit).
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PASSCODE: ${{ secrets.SEARCH_PASSCODE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Call the search API
+        run: |
+          api=$(python3 -c "import json; print(json.load(open('api.json')).get('search_api','').rstrip('/'))")
+          site="https://$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]').github.io"
+          echo "API:  $api"
+          echo "Site: $site"
+          show() {  # show <title> <curl args...>
+            echo; echo "=== $1"; shift
+            curl -sS -m 40 -D headers.txt -o body.txt -w "HTTP %{http_code} in %{time_total}s\n" "$@" || echo "curl failed (exit $?)"
+            grep -iE '^(access-control-allow-origin|content-type|cf-ray|server):' headers.txt || true
+            head -c 1500 body.txt; echo
+          }
+          show "status (no passcode)" -H "Origin: $site" "$api/status"
+          show "CORS preflight for a search" -X OPTIONS -H "Origin: $site" -H "Access-Control-Request-Method: GET" -H "Access-Control-Request-Headers: content-type,x-passcode" "$api/search"
+          if [ -n "$PASSCODE" ]; then
+            show "diagnose (with passcode)" -H "Origin: $site" -H "X-Passcode: $PASSCODE" "$api/diagnose"
+            depart=$(date -u -d '+45 days' +%Y-%m-%d); ret=$(date -u -d '+52 days' +%Y-%m-%d)
+            show "one search AMS-BCN $depart" -H "Origin: $site" -H "X-Passcode: $PASSCODE" -H "Content-Type: application/json" \
+              "$api/search?from=AMS&to=BCN&depart=$depart&return=$ret&cabin=economy&adults=1&stops=&currency=EUR"
+          else
+            show "search without passcode (expect 401 if a passcode is set)" -H "Origin: $site" "$api/search?from=AMS&to=BCN&depart=$(date -u -d '+45 days' +%Y-%m-%d)"
+            echo; echo "Tip: add SEARCH_PASSCODE as a repository secret too, so this check can run a real search."
+          fi
