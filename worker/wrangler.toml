@@ -1,12 +1,14 @@
 # Cloudflare Worker that runs live Google Flights searches (via SerpApi) for the dashboard,
 # and saves routes to routes.json, so the browser never needs your API key or a GitHub token.
-# Deployed by .github/workflows/deploy-worker.yml; see the README for the one-time setup.
+# Deployed either by Cloudflare Workers Builds (root directory: worker) or by
+# .github/workflows/deploy-worker.yml; see the README for the one-time setup.
 name = "flight-tracker"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 workers_dev = true
 
 [vars]
-# Overwritten on deploy with this repository and its GitHub Pages address.
-GITHUB_REPO = ""
-ALLOWED_ORIGIN = ""
+# This repository and the GitHub Pages site allowed to call the worker.
+# (The Deploy search API workflow passes the same values with --var, so forks work too.)
+GITHUB_REPO = "niel-t/Flight-tracker"
+ALLOWED_ORIGIN = "https://niel-t.github.io"
