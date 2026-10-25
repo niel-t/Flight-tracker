@@ -116,9 +116,22 @@ class SerpApiProvider:
             data = r.json()
         except ValueError:
             data = {}
+        fatal = fatal_error(r.status_code, data.get("error", ""))
+        if fatal:
+            return {"status": "error", "detail": fatal, "fatal": True, "url": google_flights_url(q)}
         if r.status_code != 200:
             return {"status": "error", "detail": data.get("error", f"HTTP {r.status_code}"), "url": google_flights_url(q)}
         return parse_serpapi(data, q)
+
+
+def fatal_error(status: int, message: str) -> str | None:
+    """Errors that make every further search fail too: a wrong key or no searches left."""
+    m = (message or "").lower()
+    if status == 401 or "invalid api key" in m:
+        return "SerpApi rejected the API key: check the SERPAPI_KEY repository secret"
+    if status == 429 or "run out of searches" in m:
+        return "No SerpApi searches left this month: upgrade the plan or lower searches_per_run"
+    return None
 
 
 # Rough price level per cabin relative to economy, used by the demo provider only.

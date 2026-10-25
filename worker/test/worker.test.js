@@ -86,3 +86,55 @@ test("saving routes.json sends base64 content to GitHub", async () => {
   assert.equal(new TextDecoder().decode(Uint8Array.from(atob(sent.content), c => c.charCodeAt(0))), content);
   assert.equal(sent.sha, "old");
 });
+
+import { serpError, githubError } from "../src/index.js";
+
+test("SerpApi failures become clear errors", () => {
+  assert.equal(serpError(200, "Google Flights hasn't returned any results for this query."), null);
+  assert.equal(serpError(401, "Invalid API key. Your API key should be here: https://serpapi.com/manage-api-key").code, "serpapi-key");
+  assert.equal(serpError(429, "Your account has run out of searches.").code, "serpapi-quota");
+  assert.equal(serpError(503, "").code, "serpapi-down");
+  assert.equal(serpError(200, undefined), null);
+});
+
+test("search returns the error code and message, not 'no flights'", async () => {
+  globalThis.fetch = async () => new Response(JSON.stringify({ error: "Invalid API key." }), { status: 401 });
+  const res = await worker.fetch(req("/search?from=AMS&to=NRT&depart=2027-02-01"), env, ctx);
+  const body = await res.json();
+  assert.equal(res.status, 502);
+  assert.equal(body.error, "serpapi-key");
+  assert.match(body.message, /SERPAPI_KEY/);
+});
+
+test("no results is a normal answer", async () => {
+  globalThis.fetch = async () => new Response(JSON.stringify({ error: "Google Flights hasn't returned any results for this query." }));
+  const res = await worker.fetch(req("/search?from=AMS&to=NRT&depart=2027-02-02"), env, ctx);
+  assert.equal(res.status, 200);
+  assert.equal((await res.json()).error, "no-flights");
+});
+
+test("bad search input is a 400", async () => {
+  const res = await worker.fetch(req("/search?from=AMS&to=NRT&depart=tomorrow"), env, ctx);
+  assert.equal(res.status, 400);
+  assert.equal((await res.json()).error, "bad-request");
+});
+
+test("missing key explains where to add it", async () => {
+  const res = await worker.fetch(req("/search?from=AMS&to=NRT&depart=2027-02-01"), { ...env, SERPAPI_KEY: "" }, ctx);
+  assert.equal(res.status, 503);
+  assert.match((await res.json()).message, /Variables and Secrets/);
+});
+
+test("GitHub token problems are explained", () => {
+  assert.equal(githubError(401).code, "github-token");
+  assert.equal(githubError(403, "Resource not accessible", { GITHUB_REPO: "o/r" }).code, "github-access");
+  assert.equal(githubError(409).code, "conflict");
+});
+
+test("diagnose reports SerpApi searches left and GitHub access", async () => {
+  globalThis.fetch = async u => String(u).includes("account.json")
+    ? new Response(JSON.stringify({ plan_name: "Free Plan", total_searches_left: 87 }))
+    : new Response(JSON.stringify({ content: "e30=", sha: "x" }));
+  const res = await worker.fetch(req("/diagnose"), env, ctx);
+  assert.deepEqual(await res.json(), { serpapi: { ok: true, plan: "Free Plan", searches_left: 87 }, github: { ok: true } });
+});

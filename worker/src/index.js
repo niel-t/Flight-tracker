@@ -6,6 +6,9 @@
  *   GET  /config   routes.json from the repository: { content, sha }
  *   POST /config   save routes.json: { content, sha, message }
  *   POST /run      start the "Check flights" workflow
+ *   GET  /diagnose checks the SerpApi key (free, uses no search) and GitHub access
+ *
+ * Errors are JSON: { error: <code>, message: <what to do> }, with a fitting HTTP status.
  *
  * Secrets: SERPAPI_KEY (searches), SEARCH_PASSCODE (required in X-Passcode when set),
  * TRACKER_GITHUB_TOKEN (fine-grained token for this repo: Contents + Actions read/write; needed for /config and /run).
@@ -13,6 +16,12 @@
  */
 const CABINS = { economy: 1, premium: 2, business: 3, first: 4 };
 const CACHE_SECONDS = 30 * 60;
+const TIMEOUT_MS = 25_000;
+
+/** An error with a code and a message meant for the dashboard user. */
+export class ApiError extends Error {
+  constructor(code, message, status = 502) { super(message); this.code = code; this.status = status; }
+}
 const CODES = /^[A-Z]{3}(,[A-Z]{3}){0,6}$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -32,19 +41,24 @@ export default {
     }
     try {
       if (url.pathname === "/search" && request.method === "GET") {
-        if (!env.SERPAPI_KEY) return json({ error: "no-key", message: "SERPAPI_KEY is not set on the worker." }, 503);
-        const result = await search(url.searchParams, env, ctx);
-        return json(result, result.error === "bad-request" ? 400 : 200);
+        if (!env.SERPAPI_KEY) throw new ApiError("no-key", "The search service has no SerpApi key. In Cloudflare: Workers → flight-tracker → Settings → Variables and Secrets, add the secret SERPAPI_KEY.", 503);
+        return json(await search(url.searchParams, env, ctx));
       }
+      if (url.pathname === "/diagnose" && request.method === "GET") return json(await diagnose(env));
       if (url.pathname === "/config" || url.pathname === "/run") {
         if (!canWrite) return json({ error: "write-disabled", message: "Saving from the site needs SEARCH_PASSCODE and TRACKER_GITHUB_TOKEN on the worker." }, 403);
         if (url.pathname === "/config" && request.method === "GET") return json(await readConfig(env));
-        if (url.pathname === "/config" && request.method === "POST") return json(await writeConfig(await request.json(), env));
+        if (url.pathname === "/config" && request.method === "POST") {
+          const body = await request.json().catch(() => { throw new ApiError("bad-request", "The request body isn't valid JSON.", 400); });
+          return json(await writeConfig(body, env));
+        }
         if (url.pathname === "/run" && request.method === "POST") return json(await runWorkflow(env));
       }
       return json({ error: "not-found" }, 404);
     } catch (e) {
-      return json({ error: "failed", message: e.message }, 502);
+      if (e instanceof ApiError) return json({ error: e.code, message: e.message }, e.status);
+      if (e?.name === "TimeoutError" || e?.name === "AbortError") return json({ error: "timeout", message: "Google Flights took too long to answer. Try again." }, 504);
+      return json({ error: "failed", message: `The search service hit an unexpected error: ${e?.message || e}` }, 500);
     }
   },
 };
@@ -77,7 +91,7 @@ export function searchParams(p) {
 
 async function search(params, env, ctx) {
   const q = searchParams(params);
-  if (typeof q === "string") return { error: "bad-request", message: q };
+  if (typeof q === "string") throw new ApiError("bad-request", `Invalid search: ${q}.`, 400);
   const serp = new URLSearchParams({
     engine: "google_flights", departure_id: q.from, arrival_id: q.to, outbound_date: q.depart,
     type: q.ret ? "1" : "2", travel_class: String(CABINS[q.cabin]), adults: String(q.adults),
@@ -90,12 +104,26 @@ async function search(params, env, ctx) {
   if (hit) return { ...(await hit.json()), cached: true };
 
   serp.set("api_key", env.SERPAPI_KEY);
-  const r = await fetch(`https://serpapi.com/search.json?${serp}`);
+  let r;
+  try { r = await fetch(`https://serpapi.com/search.json?${serp}`, { signal: AbortSignal.timeout(TIMEOUT_MS) }); }
+  catch (e) { if (e?.name === "TimeoutError" || e?.name === "AbortError") throw e; throw new ApiError("serpapi-down", "Couldn't reach SerpApi (the Google Flights source). Try again in a minute.", 502); }
   const data = await r.json().catch(() => ({}));
-  if (!r.ok && !data.error) throw new Error(`SerpApi HTTP ${r.status}`);
+  const problem = serpError(r.status, data.error);
+  if (problem) throw problem;
   const result = { query: q, ...normalize(data), searched_at: new Date().toISOString() };
   if (cache && !data.error) ctx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(result), { headers: { "Cache-Control": `max-age=${CACHE_SECONDS}` } })));
   return result;
+}
+
+/** SerpApi failures as user-facing errors; "no results" is not an error (normalize reports it). */
+export function serpError(status, message = "") {
+  const m = String(message || "");
+  if (/hasn't returned any results|no results/i.test(m)) return null;
+  if (status === 401 || /invalid api key|api key/i.test(m)) return new ApiError("serpapi-key", "SerpApi rejected the API key. Check the SERPAPI_KEY secret in Cloudflare (and in GitHub for the scheduled runs).", 502);
+  if (status === 429 || /run out of searches|searches? (left|limit)|plan/i.test(m)) return new ApiError("serpapi-quota", "You've used all your SerpApi searches for this month. Upgrade the plan or wait for the monthly reset.", 429);
+  if (status >= 500) return new ApiError("serpapi-down", "SerpApi (the Google Flights source) is having problems. Try again in a few minutes.", 502);
+  if (status >= 400 || m) return new ApiError("serpapi", `Google Flights search failed: ${m || `HTTP ${status}`}`, 502);
+  return null;
 }
 
 export function normalize(data) {
@@ -135,8 +163,16 @@ async function github(env, path, init = {}) {
     ...init,
     headers: { Authorization: `Bearer ${env.TRACKER_GITHUB_TOKEN}`, Accept: "application/vnd.github+json", "User-Agent": "flight-tracker-worker", ...(init.headers || {}) },
   });
-  if (!r.ok) throw new Error(`GitHub ${r.status}: ${(await r.json().catch(() => ({}))).message || ""}`);
+  if (!r.ok) throw githubError(r.status, (await r.json().catch(() => ({}))).message, env);
   return r.status === 204 ? null : r.json();
+}
+
+export function githubError(status, message = "", env = {}) {
+  const repo = env.GITHUB_REPO || "the repository";
+  if (status === 401) return new ApiError("github-token", "The TRACKER_GITHUB_TOKEN secret is invalid or expired. Create a new fine-grained token and update the secret in Cloudflare.", 502);
+  if (status === 403 || status === 404) return new ApiError("github-access", `TRACKER_GITHUB_TOKEN can't access ${repo}. Give it access to that repository with Contents and Actions set to Read and write.`, 502);
+  if (status === 409 || (status === 422 && /sha/i.test(message))) return new ApiError("conflict", "routes.json changed in the meantime. Try again.", 409);
+  return new ApiError("github", `GitHub error ${status}${message ? `: ${message}` : ""}`, 502);
 }
 const toBase64 = s => { const b = new TextEncoder().encode(s); let out = ""; for (let i = 0; i < b.length; i += 0x8000) out += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(out); };
 const fromBase64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), c => c.charCodeAt(0)));
@@ -159,7 +195,7 @@ export function validConfig(text) {
 
 async function writeConfig(body, env) {
   const problem = validConfig(body?.content);
-  if (problem) throw new Error(problem);
+  if (problem) throw new ApiError("bad-request", `Not saved: ${problem}.`, 400);
   const message = String(body.message || "Update routes").slice(0, 100);
   const res = await github(env, "/contents/routes.json", { method: "PUT", body: JSON.stringify({ message, sha: body.sha, content: toBase64(body.content) }) });
   return { ok: true, sha: res.content.sha };
@@ -169,4 +205,26 @@ async function runWorkflow(env) {
   const repo = await github(env, "");
   await github(env, "/actions/workflows/check-flights.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: repo.default_branch }) });
   return { ok: true };
+}
+
+async function diagnose(env) {
+  const out = { serpapi: null, github: null };
+  if (!env.SERPAPI_KEY) out.serpapi = { ok: false, message: "SERPAPI_KEY is not set." };
+  else {
+    try {
+      const r = await fetch(`https://serpapi.com/account.json?api_key=${encodeURIComponent(env.SERPAPI_KEY)}`, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+      const a = await r.json().catch(() => ({}));
+      out.serpapi = r.ok && !a.error
+        ? { ok: (a.total_searches_left ?? a.plan_searches_left ?? 1) > 0, plan: a.plan_name || null, searches_left: a.total_searches_left ?? a.plan_searches_left ?? null,
+            message: (a.total_searches_left ?? a.plan_searches_left) === 0 ? "No searches left this month." : undefined }
+        : { ok: false, message: serpError(r.status, a.error || "invalid api key")?.message || a.error };
+    } catch { out.serpapi = { ok: false, message: "Couldn't reach SerpApi." }; }
+  }
+  if (!env.TRACKER_GITHUB_TOKEN) out.github = { ok: false, message: "TRACKER_GITHUB_TOKEN is not set, so routes can't be saved from the site." };
+  else if (!env.SEARCH_PASSCODE) out.github = { ok: false, message: "Set SEARCH_PASSCODE too: saving from the site is only allowed with a passcode." };
+  else {
+    try { await github(env, "/contents/routes.json"); out.github = { ok: true }; }
+    catch (e) { out.github = { ok: false, message: e.message }; }
+  }
+  return out;
 }

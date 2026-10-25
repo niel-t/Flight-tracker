@@ -98,8 +98,13 @@ def main() -> int:
 
     queries = plan(routes, latest, today, budget, currency)
     log.info("%s: %d searches", provider.name, len(queries))
+    fatal = None
     for q in queries:
         row = provider.search(q)
+        if row.get("fatal"):
+            fatal = row["detail"]
+            log.error("%s. Stopping this run.", fatal)
+            break
         row |= {"checked": now.isoformat(), "return_date": q.return_.isoformat() if q.return_ else None}
         cal = latest["routes"][q.route_id][q.cabin]["calendar"]
         if row["status"] == "error" and q.key in cal:
@@ -145,6 +150,10 @@ def main() -> int:
     save(DATA / "history.json", history)
     save(DATA / "alerts.json", alerts[:MAX_ALERTS])
     log.info("Done. %d notifications sent.", sent)
+    if fatal:
+        # a red run makes GitHub email you, and shows the reason in the Actions tab
+        print(f"::error title=Flight search failed::{fatal}")
+        return 1
     return 0
 
 

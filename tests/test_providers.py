@@ -48,3 +48,19 @@ def test_demo_is_stable_and_ordered_by_cabin():
     eco = Query("r", "AMS", "NRT", "economy", date(2027, 2, 2), None)
     first = Query("r", "AMS", "NRT", "first", date(2027, 2, 2), None)
     assert p.search(first)["price"] > 3 * p.search(eco)["price"]
+
+
+def test_fatal_serpapi_errors():
+    from flights.providers import fatal_error
+    assert "API key" in fatal_error(401, "Invalid API key. Your API key should be here: https://serpapi.com/manage-api-key")
+    assert "searches left" in fatal_error(429, "Your account has run out of searches.")
+    assert fatal_error(200, "Google Flights hasn't returned any results for this query.") is None
+    assert fatal_error(500, "") is None
+
+
+def test_serpapi_provider_flags_bad_key():
+    import httpx
+    from flights.providers import SerpApiProvider
+    client = httpx.Client(transport=httpx.MockTransport(lambda req: httpx.Response(401, json={"error": "Invalid API key."})))
+    row = SerpApiProvider("bad", client).search(Q)
+    assert row["status"] == "error" and row["fatal"] and "SERPAPI_KEY" in row["detail"]
