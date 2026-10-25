@@ -1265,6 +1265,74 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-02-21"
+     },
+     "2027-02-14": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       650,
+       1050
+      ],
+      "price": 769,
+      "airlines": [
+       "Korean Air"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+      "stops": 1,
+      "duration": 1075,
+      "depart_time": "2027-02-14 20:55",
+      "arrive_time": "2027-02-15 22:50",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "ICN",
+        "flight": "KE 926",
+        "airline": "Korean Air"
+       },
+       {
+        "from": "ICN",
+        "to": "HND",
+        "flight": "KE 751",
+        "airline": "Korean Air"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-02-28"
+     },
+     "2027-02-21": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIxKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wNygBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       650,
+       1050
+      ],
+      "price": 769,
+      "airlines": [
+       "Korean Air"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+      "stops": 1,
+      "duration": 1075,
+      "depart_time": "2027-02-21 20:55",
+      "arrive_time": "2027-02-22 22:50",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "ICN",
+        "flight": "KE 926",
+        "airline": "Korean Air"
+       },
+       {
+        "from": "ICN",
+        "to": "HND",
+        "flight": "KE 751",
+        "airline": "Korean Air"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-03-07"
      }
     },
     "cheapest": {
@@ -2482,6 +2550,68 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-02-21"
+     },
+     "2027-02-14": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 1926,
+      "airlines": [
+       "Cathay Pacific"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CX.png",
+      "stops": 1,
+      "duration": 1010,
+      "depart_time": "2027-02-14 12:20",
+      "arrive_time": "2027-02-15 13:10",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "HKG",
+        "flight": "CX 270",
+        "airline": "Cathay Pacific"
+       },
+       {
+        "from": "HKG",
+        "to": "NRT",
+        "flight": "CX 526",
+        "airline": "Cathay Pacific"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-02-28"
+     },
+     "2027-02-21": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIxKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wNygBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 1604,
+      "airlines": [
+       "LOT"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/LO.png",
+      "stops": 1,
+      "duration": 955,
+      "depart_time": "2027-02-21 19:45",
+      "arrive_time": "2027-02-22 19:40",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "WAW",
+        "flight": "LO 268",
+        "airline": "LOT"
+       },
+       {
+        "from": "WAW",
+        "to": "NRT",
+        "flight": "LO 79",
+        "airline": "LOT"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-03-07"
      }
     },
     "cheapest": {
@@ -3146,6 +3276,37 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-03-24"
+     },
+     "2027-02-04": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 3179,
+      "airlines": [
+       "China Eastern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MU.png",
+      "stops": 1,
+      "duration": 1010,
+      "depart_time": "2027-02-04 20:00",
+      "arrive_time": "2027-02-05 20:50",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "PVG",
+        "flight": "MU 772",
+        "airline": "China Eastern"
+       },
+       {
+        "from": "PVG",
+        "to": "HND",
+        "flight": "MU 575",
+        "airline": "China Eastern"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-02-18"
      }
     },
     "cheapest": {
@@ -3817,6 +3978,40 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-03-24"
+     },
+     "2027-02-04": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTA0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIBHABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       8700,
+       13000
+      ],
+      "price": 12844,
+      "airlines": [
+       "British Airways"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/BA.png",
+      "stops": 1,
+      "duration": 995,
+      "depart_time": "2027-02-04 07:00",
+      "arrive_time": "2027-02-05 07:35",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "LHR",
+        "flight": "BA 449",
+        "airline": "British Airways"
+       },
+       {
+        "from": "LHR",
+        "to": "HND",
+        "flight": "BA 7",
+        "airline": "British Airways"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-02-18"
      }
     },
     "cheapest": {
@@ -4447,6 +4642,38 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-04-13"
+     },
+     "2027-04-10": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTEwagcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMjBqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgBcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 502,
+      "airlines": [
+       "Vueling",
+       "LEVEL"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "stops": 1,
+      "duration": 1940,
+      "depart_time": "2027-04-10 19:40",
+      "arrive_time": "2027-04-11 22:00",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "BCN",
+        "flight": "VY 1063",
+        "airline": "Vueling"
+       },
+       {
+        "from": "BCN",
+        "to": "JFK",
+        "flight": "LL 2627",
+        "airline": "LEVEL"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-04-20"
      }
     },
     "cheapest": {
@@ -5068,6 +5295,37 @@
       ],
       "checked": "2026-10-25T07:02:01+00:00",
       "return_date": "2027-04-13"
+     },
+     "2027-04-10": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTEwagcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDQtMjBqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 2223,
+      "airlines": [
+       "Icelandair"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/FI.png",
+      "stops": 1,
+      "duration": 665,
+      "depart_time": "2027-04-10 14:10",
+      "arrive_time": "2027-04-10 19:15",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "KEF",
+        "flight": "FI 501",
+        "airline": "Icelandair"
+       },
+       {
+        "from": "KEF",
+        "to": "EWR",
+        "flight": "FI 623",
+        "airline": "Icelandair"
+       }
+      ],
+      "checked": "2026-10-25T12:57:26+00:00",
+      "return_date": "2027-04-20"
      }
     },
     "cheapest": {
@@ -5104,7 +5362,7 @@
    }
   }
  },
- "updated": "2026-10-25T07:02:01+00:00",
+ "updated": "2026-10-25T12:57:26+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
