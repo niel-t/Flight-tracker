@@ -244,30 +244,30 @@
        650,
        990
       ],
-      "price": 866,
+      "price": 789,
       "airlines": [
-       "Korean Air"
+       "Etihad"
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/EY.png",
       "stops": 1,
-      "duration": 1075,
-      "depart_time": "2027-02-02 20:55",
-      "arrive_time": "2027-02-03 22:50",
+      "duration": 1080,
+      "depart_time": "2027-02-02 09:40",
+      "arrive_time": "2027-02-03 11:40",
       "legs": [
        {
         "from": "AMS",
-        "to": "ICN",
-        "flight": "KE 926",
-        "airline": "Korean Air"
+        "to": "AUH",
+        "flight": "EY 44",
+        "airline": "Etihad"
        },
        {
-        "from": "ICN",
-        "to": "HND",
-        "flight": "KE 751",
-        "airline": "Korean Air"
+        "from": "AUH",
+        "to": "NRT",
+        "flight": "EY 800",
+        "airline": "Etihad"
        }
       ],
-      "checked": "2026-10-21T13:04:26+00:00",
+      "checked": "2026-10-26T21:14:07+00:00",
       "return_date": "2027-02-16"
      },
      "2027-02-09": {
@@ -1694,7 +1694,7 @@
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTAyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xNigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
       "level": null,
       "typical": null,
-      "price": 1319,
+      "price": 1360,
       "airlines": [
        "ITA"
       ],
@@ -1717,7 +1717,7 @@
         "airline": "ITA"
        }
       ],
-      "checked": "2026-10-21T13:04:26+00:00",
+      "checked": "2026-10-26T21:14:07+00:00",
       "return_date": "2027-02-16"
      },
      "2027-02-09": {
@@ -2818,7 +2818,7 @@
      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTAyKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xNigBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
      "level": null,
      "typical": null,
-     "price": 1319,
+     "price": 1360,
      "airlines": [
       "ITA"
      ],
@@ -2841,7 +2841,7 @@
        "airline": "ITA"
       }
      ],
-     "checked": "2026-10-21T13:04:26+00:00",
+     "checked": "2026-10-26T21:14:07+00:00",
      "return_date": "2027-02-16"
     }
    },
@@ -6206,7 +6206,7 @@
    }
   }
  },
- "updated": "2026-10-26T19:06:10+00:00",
+ "updated": "2026-10-26T21:14:07+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
