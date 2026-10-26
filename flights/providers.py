@@ -29,6 +29,10 @@ class Query:
     max_stops: int | None = None
     currency: str = "EUR"
     key: str = ""         # calendar key the result is stored under (see planner.trips)
+    min_layover: int | None = None  # minutes: skip connections shorter than this
+    max_layover: int | None = None  # minutes: skip layovers longer than this
+    no_overnight: bool = False      # skip overnight layovers
+    avoid: str = ""                 # connecting airports to avoid, comma-separated
 
 
 def google_flights_url(q: Query) -> str:
@@ -48,6 +52,22 @@ def serpapi_stops(max_stops: int | None) -> int:
     return max_stops + 1
 
 
+def layover_ok(option: dict, q: Query) -> bool:
+    """Whether an itinerary's layovers fit the route's limits (Google may not apply all of them)."""
+    avoid = set(filter(None, q.avoid.split(",")))
+    for lay in option.get("layovers") or []:
+        minutes = lay.get("duration") or 0
+        if q.min_layover and minutes and minutes < q.min_layover:
+            return False
+        if q.max_layover and minutes > q.max_layover:
+            return False
+        if q.no_overnight and lay.get("overnight"):
+            return False
+        if lay.get("id") in avoid:
+            return False
+    return True
+
+
 def _time(airport: dict) -> str:
     return (airport or {}).get("time", "")
 
@@ -55,11 +75,12 @@ def _time(airport: dict) -> str:
 def parse_serpapi(data: dict, q: Query) -> dict:
     """Picks the cheapest itinerary from a SerpApi google_flights response."""
     url = data.get("search_metadata", {}).get("google_flights_url") or google_flights_url(q)
-    options = [o for o in data.get("best_flights", []) + data.get("other_flights", []) if o.get("price")]
+    found = [o for o in data.get("best_flights", []) + data.get("other_flights", []) if o.get("price")]
+    options = [o for o in found if layover_ok(o, q)]
     insights = data.get("price_insights", {})
     row = {"status": "ok", "url": url, "level": insights.get("price_level"), "typical": insights.get("typical_price_range")}
     if not options:
-        return row | {"status": "none", "detail": data.get("error", "No flights found")}
+        return row | {"status": "none", "detail": "No flights match the layover limits" if found else data.get("error", "No flights found")}
     best = min(options, key=lambda o: (o["price"], o.get("total_duration", 0)))
     legs = best.get("flights", [])
     airlines = []
@@ -74,6 +95,10 @@ def parse_serpapi(data: dict, q: Query) -> dict:
         "duration": best.get("total_duration"),
         "depart_time": _time(legs[0].get("departure_airport")) if legs else "",
         "arrive_time": _time(legs[-1].get("arrival_airport")) if legs else "",
+        "layovers": [
+            {"id": lay.get("id", ""), "name": lay.get("name", ""), "duration": lay.get("duration"), "overnight": bool(lay.get("overnight"))}
+            for lay in best.get("layovers") or []
+        ],
         "legs": [
             {
                 "from": (leg.get("departure_airport") or {}).get("id", ""),
@@ -110,6 +135,10 @@ class SerpApiProvider:
         }
         if q.return_:
             params["return_date"] = q.return_.isoformat()
+        if q.min_layover or q.max_layover:
+            params["layover_duration"] = f"{q.min_layover or 0},{q.max_layover or 1440}"
+        if q.avoid:
+            params["exclude_conns"] = q.avoid
         try:
             r = self.client.get("https://serpapi.com/search.json", params=params)
         except httpx.HTTPError as e:
@@ -202,6 +231,10 @@ class DemoProvider:
         if q.max_stops is not None:
             stops = min(stops, q.max_stops)
         airline = DEMO_AIRLINES[int(self._rand(q.depart, q.cabin, "a") * len(DEMO_AIRLINES))]
+        hubs = [h for h in ("IST", "DXB", "FRA", "CDG", "LHR", "DOH") if h not in q.avoid.split(",")]
+        lo, hi = q.min_layover or 50, q.max_layover or 600
+        layovers = [{"id": hubs[i % len(hubs)], "name": "", "overnight": False,
+                     "duration": round(lo + (max(hi, lo) - lo) * self._rand(q, "l", i))} for i in range(stops)]
         typical = [round(base * DEMO_FACTOR[q.cabin] * trip * q.adults * f) for f in (0.95, 1.2)]
         level = "low" if price < typical[0] else "high" if price > typical[1] else "typical"
         return {
@@ -212,6 +245,7 @@ class DemoProvider:
             "duration": 180 + 240 * stops + int(self._rand(q.origin, q.destination, "d") * 600),
             "depart_time": f"{q.depart.isoformat()} 10:{int(self._rand(q, 'm') * 6)}5",
             "arrive_time": "",
+            "layovers": layovers,
             "legs": [],
             "level": level,
             "typical": typical,

@@ -300,7 +300,7 @@ footer.foot .wrap { display: flex; gap: 16px; justify-content: space-between; fl
   .filters { display: none; }
   .filters-btn { display: inline-flex; }
 }
-.sort-tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); margin-bottom: 14px; }
+.sort-tabs { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); margin-bottom: 14px; }
 .sort-tabs button { border: none; border-radius: 0; background: none; min-height: 64px; flex-direction: column; align-items: flex-start; gap: 0; padding: 10px 16px; border-right: 1px solid var(--border); text-align: left; }
 .sort-tabs button:last-child { border-right: none; }
 .sort-tabs button b { font-size: 15px; }
@@ -328,6 +328,8 @@ footer.foot .wrap { display: flex; gap: 16px; justify-content: space-between; fl
 .legs { border-left: 2px dotted var(--border-strong); padding-left: 14px; margin: 2px 0 10px 6px; }
 .legs div { padding: 3px 0; font-size: 14px; }
 .layover { margin: 8px 0 8px -14px; padding: 8px 14px; background: var(--surface-2); border-radius: 8px; font-size: 13px; color: var(--ink-2); }
+.layover.warn { background: var(--warn-wash); color: var(--ink); }
+.lay-warn { font-size: 12px; color: var(--warn); }
 @media (max-width: 640px) {
   .flight-main { grid-template-columns: 1fr; gap: 10px; }
   .flight-info { grid-template-columns: 36px 1fr; gap: 10px; }
@@ -335,7 +337,8 @@ footer.foot .wrap { display: flex; gap: 16px; justify-content: space-between; fl
   .flight-info .co2 { display: none; }
   .flight-price { border-left: none; padding-left: 0; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .flight-price .btn { width: auto; margin: 0; }
-  .sort-tabs button { min-height: 56px; padding: 8px 10px; }
+  .sort-tabs { grid-template-columns: repeat(2, 1fr); }
+  .sort-tabs button { min-height: 56px; padding: 8px 10px; border-bottom: 1px solid var(--border); }
 }
 .insight-strip { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 14px 18px; margin-bottom: 14px; }
 .track-box { display: flex; gap: 12px; align-items: center; padding: 14px 18px; margin-bottom: 14px; }

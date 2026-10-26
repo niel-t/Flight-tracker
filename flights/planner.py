@@ -78,6 +78,10 @@ def make_query(route: dict, cabin: str, depart: date, ret: date | None, currency
         max_stops=route.get("max_stops"),
         currency=currency,
         key=key or depart.isoformat(),
+        min_layover=route.get("min_layover"),
+        max_layover=route.get("max_layover"),
+        no_overnight=bool(route.get("no_overnight")),
+        avoid=",".join(c.strip().upper() for c in str(route.get("avoid") or "").split(",") if c.strip()),
     )
 
 

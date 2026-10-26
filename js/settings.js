@@ -63,6 +63,9 @@ function openRoute(id) {
   const f = $("#route-form"); f.dataset.id = id;
   for (const k of ["name", "trip", "adults"]) f.elements[k].value = r[k] ?? "";
   f.elements.max_stops.value = r.max_stops ?? "";
+  const pick = (sel, v) => { if (v && ![...sel.options].some(o => +o.value === v)) sel.add(new Option(dur(v), v)); sel.value = v || ""; };
+  pick(f.elements.min_layover, r.min_layover); pick(f.elements.max_layover, r.max_layover);
+  f.elements.avoid.value = (r.avoid || "").replace(/,/g, ", "); f.elements.no_overnight.checked = !!r.no_overnight;
   $("#r-dates").innerHTML = dateFields(r);
   $("#r-locs").innerHTML = locPicker("from", "From", r.from, "City, airport or country") + locPicker("to", "To", r.to, "City, airport or country");
   f.querySelectorAll("[data-loc]").forEach(initLoc);
@@ -81,6 +84,7 @@ $("#route-form").addEventListener("submit", async e => {
   e.preventDefault();
   const f = e.target, el = f.elements, cabins = CABINS.filter(c => el["cab-" + c].checked);
   const r = buildRoute({ from: el.from.value, to: el.to.value, name: el.name.value, trip: el.trip.value, adults: el.adults.value, max_stops: el.max_stops.value, cabins,
+    min_layover: el.min_layover.value, max_layover: el.max_layover.value, no_overnight: el.no_overnight.checked, avoid: el.avoid.value,
     targets: Object.fromEntries(cabins.filter(c => +el["tgt-" + c].value > 0).map(c => [c, +el["tgt-" + c].value])) }, f.dataset.id, f);
   if (typeof r === "string") return toast(r);
   const btn = $("#r-save"); btn.disabled = true;

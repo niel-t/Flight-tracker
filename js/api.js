@@ -120,6 +120,12 @@ async function runChecksNow() {
 // ---------- routes ----------
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const routeSig = x => JSON.stringify([x.from, x.to, x.trip, x.depart_from, x.depart_to, x.return_from, x.return_to, x.nights, x.nights_min, x.nights_max, x.weekdays]);
+/** "max 1 stop · layovers 1h–5h · no overnight · avoiding LHR", or "" without limits. */
+const limitsTxt = r => [
+  r.max_stops != null && (r.max_stops === 0 ? "non-stop" : `max ${plural(r.max_stops, "stop")}`),
+  (r.min_layover || r.max_layover) && `layovers ${r.min_layover ? dur(r.min_layover) : "any"}–${r.max_layover ? dur(r.max_layover) : "any"}`,
+  r.no_overnight && "no overnight layovers", r.avoid && `avoiding ${r.avoid.replace(/,/g, ", ")}`,
+].filter(Boolean).join(" · ");
 const routeTitle = r => r.name || `${cityOf(r.from)} → ${cityOf(r.to)}`;
 const cabinsOf = r => CABINS.filter(c => (r.cabins || CABINS).includes(c));
 const entry = (id, c) => latest.routes?.[id]?.[c] || {};
@@ -137,7 +143,10 @@ function buildRoute(v, id, form) {
     ...(v.name?.trim() ? { name: v.name.trim() } : {}),
     from: codes(v.from), to: codes(v.to), trip: v.trip, ...dates,
     cabins: v.cabins, adults: +v.adults || 1, max_stops: v.max_stops === "" || v.max_stops == null ? null : +v.max_stops, targets: v.targets || {},
+    ...(+v.min_layover > 0 ? { min_layover: +v.min_layover } : {}), ...(+v.max_layover > 0 ? { max_layover: +v.max_layover } : {}),
+    ...(v.no_overnight ? { no_overnight: true } : {}), ...(codes(v.avoid) ? { avoid: codes(v.avoid) } : {}),
   };
+  if (r.min_layover && r.max_layover && r.min_layover > r.max_layover) return "The shortest connection can't be longer than the longest layover.";
   if (r.depart_to < today()) return "These dates are in the past.";
   if (tripsOf(r).length > 400) return "That's a lot of trips to search. Pick a shorter window or fewer trip lengths.";
   return r;

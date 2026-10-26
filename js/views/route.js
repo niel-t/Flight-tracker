@@ -17,7 +17,7 @@ function viewRoute(params) {
     <a class="crumb" href="#/tracked">${icon("back", "i sm")} Tracked flights</a>
     <div class="row between" style="align-items:flex-end">
       <div class="with-thumb">${routeImg(r, "thumb lg")}<div><h1>${esc(routeTitle(r))}</h1>
-        <p class="sub">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")}${r.max_stops != null ? ` · ${r.max_stops === 0 ? "non-stop" : `max ${plural(r.max_stops, "stop")}`}` : ""}</p></div></div>
+        <p class="sub">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")}${limitsTxt(r) ? ` · ${esc(limitsTxt(r))}` : ""}</p></div></div>
       <button class="btn" data-edit="${esc(r.id)}" style="background:transparent;color:var(--band-ink);border-color:var(--band-line)">${icon("edit", "i sm")} Edit</button>
     </div>
   </div></section>
@@ -27,7 +27,7 @@ function viewRoute(params) {
     <div class="card card-pad">
       <div class="small ink2">Cheapest ${CABIN_NAME[c].toLowerCase()} fare</div>
       <div class="row" style="align-items:baseline;gap:12px;margin-top:2px"><span class="big-price">${money(best?.price)}</span>${levelBadge(best)}</div>
-      <div class="ink2" style="margin-top:4px">${best ? `${fmtDay(best.date)}${best.return_date ? ` – ${fmtDay(best.return_date)}` : ""} · ${esc((best.airlines || []).join(", "))} · ${stopsTxt(best.stops)}` : "Not found yet. The first prices arrive after the next scheduled run."}</div>
+      <div class="ink2" style="margin-top:4px">${best ? `${fmtDay(best.date)}${best.return_date ? ` – ${fmtDay(best.return_date)}` : ""} · ${esc((best.airlines || []).join(", "))} · ${stopsTxt(best.stops)}${best.layovers?.length ? ` (${esc(layoverTxt(best.layovers))})` : ""}` : "Not found yet. The first prices arrive after the next scheduled run."}</div>
       ${insight(best)}
     </div>
     <div class="card card-pad stats">
@@ -121,7 +121,7 @@ function drawChart(r) {
   wrap.onpointermove = e => {
     const b = e.target.closest(".bar"); if (!b) { tip.style.display = "none"; return; }
     const v = cal[b.dataset.d], box = wrap.getBoundingClientRect(), bb = b.getBoundingClientRect();
-    tip.innerHTML = `<b>${singleStay(r) ? "" : "from "}${money(v.price)}</b><br><span class="ink2">${fmtDay(b.dataset.d)}${v.return_date ? ` – ${fmtDay(v.return_date)}` : ""}</span><br><span class="tiny muted">${esc((v.airlines || []).join(", "))} · ${stopsTxt(v.stops)}</span>`;
+    tip.innerHTML = `<b>${singleStay(r) ? "" : "from "}${money(v.price)}</b><br><span class="ink2">${fmtDay(b.dataset.d)}${v.return_date ? ` – ${fmtDay(v.return_date)}` : ""}</span><br><span class="tiny muted">${esc((v.airlines || []).join(", "))} · ${stopsTxt(v.stops)}${v.layovers?.length ? ` · ${esc(layoverTxt(v.layovers))}` : ""}</span>`;
     tip.style.display = "block";
     const left = bb.left - box.left + wrap.scrollLeft + bb.width / 2 - tip.offsetWidth / 2;
     tip.style.left = Math.max(wrap.scrollLeft, Math.min(left, wrap.scrollLeft + wrap.clientWidth - tip.offsetWidth)) + "px";
@@ -195,7 +195,7 @@ function drawResults(r) {
         <span><b class="num">${!hhmm(v.depart_time) ? fmtDay(d) : hhmm(v.arrive_time) ? `${hhmm(v.depart_time)} – ${hhmm(v.arrive_time)}${plusDays(v.depart_time, v.arrive_time)}` : `Departs ${hhmm(v.depart_time)}`}</b><br>
           <span class="small ink2">${fmtDay(d)}${v.return_date ? ` → ${fmtDay(v.return_date)}` : ""} · ${esc((v.airlines || []).join(", "))}</span></span>
         <span class="c3"><b>${dur(v.duration) || "–"}</b><br><span class="small ink2">${esc(from)}–${esc(to)}</span></span>
-        <span class="c4"><b>${stopsTxt(v.stops)}</b><br><span class="small ink2">${[legs.length > 1 ? esc(legs.slice(0, -1).map(l => l.to).join(", ")) : "", `checked ${ago(v.checked)}`].filter(Boolean).join(" · ")}</span></span>
+        <span class="c4"><b>${stopsTxt(v.stops)}</b><br><span class="small ink2">${[v.layovers?.length ? esc(layoverTxt(v.layovers)) : legs.length > 1 ? esc(legs.slice(0, -1).map(l => l.to).join(", ")) : "", `checked ${ago(v.checked)}`].filter(Boolean).join(" · ")}</span></span>
         <span style="text-align:right"><b class="num ${v.price === entry(r.id, cur.cabin).cheapest?.price ? "down" : ""}" style="font-size:18px">${money(v.price)}</b><br><span class="small ink2">${v.return_date ? `round trip · ${plural(nights, "night")}` : "one way"} ${icon("ext", "i xs")}</span></span>
       </a>`;
   }).join("");

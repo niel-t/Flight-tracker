@@ -96,3 +96,24 @@ def test_serpapi_explore_bad_key_is_fatal():
     from flights.providers import SerpApiProvider
     p = SerpApiProvider("bad", httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(401, json={"error": "Invalid API key."}))))
     assert p.explore(ExploreQuery("AMS", 0, "week", "economy"))["fatal"]
+
+
+def test_layover_limits_are_sent_and_applied():
+    import httpx
+    from datetime import date
+    from flights.providers import Query, SerpApiProvider
+    seen = {}
+    opt = lambda price, minutes, airport, overnight=False: {"price": price, "flights": [{}, {}],
+        "layovers": [{"id": airport, "duration": minutes, "overnight": overnight}]}
+
+    def handler(req):
+        seen.update(dict(req.url.params))
+        return httpx.Response(200, json={"best_flights": [opt(300, 35, "CDG"), opt(320, 900, "FRA"), opt(330, 120, "IST", True),
+                                                          opt(340, 120, "LHR"), opt(360, 150, "FRA")]})
+    p = SerpApiProvider("k", httpx.Client(transport=httpx.MockTransport(handler)))
+    q = Query("r", "AMS", "JFK", "economy", date(2027, 3, 1), None, min_layover=60, max_layover=480, no_overnight=True, avoid="LHR")
+    res = p.search(q)
+    assert seen["layover_duration"] == "60,480" and seen["exclude_conns"] == "LHR"
+    assert res["price"] == 360 and res["layovers"][0]["id"] == "FRA" and res["layovers"][0]["duration"] == 150
+    res = p.search(Query("r", "AMS", "JFK", "economy", date(2027, 3, 1), None, min_layover=600, max_layover=700))
+    assert res["status"] == "none" and "layover" in res["detail"]

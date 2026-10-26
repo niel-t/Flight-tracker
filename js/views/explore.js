@@ -16,7 +16,7 @@ const TRIP_TYPES = {
 const tripTypeChips = (id, value) => `<div class="chips" id="${id}" role="group" aria-label="Trip type">${[["", "✈️", "All trips"], ...Object.entries(TRIP_TYPES).map(([k, t]) => [k, t.emoji, t.label])]
   .map(([k, e, t]) => `<button type="button" class="chip" data-type="${k}" aria-pressed="${(value || "") === k}"><span aria-hidden="true">${e}</span>${t}</button>`).join("")}</div>`;
 const onTripType = (el, fn) => el?.addEventListener("click", e => { const b = e.target.closest("[data-type]"); if (b) fn(b.dataset.type); });
-let ex = { ...store.get("explore", {}), view: store.get("exView", "list"), region: "all", sort: "price", maxPrice: null };
+let ex = { ...store.get("explore", {}), view: store.get("exView", "list"), region: "all", sort: "price", maxPrice: null, stops: store.get("exStops", "any") };
 
 function goExplore(q) {
   location.hash = `#/explore/${q.origin}/${q.month ?? 0}/${q.duration || "week"}/${q.cabin || "economy"}${q.interest ? "/" + q.interest : ""}`;
@@ -102,7 +102,8 @@ function trackDest(d, ctx, btn) {
   const nights = d.end_date ? daysBetween(d.start_date, d.end_date) : null;
   const r = { id: slug(`${ctx.origin}-${d.code}-${Date.now().toString(36).slice(-4)}`), name: `${d.name} deal`, from: ctx.origin, to: d.code,
     trip: nights ? "return" : "oneway", date_mode: "flexible", depart_from: addDays(d.start_date, -3) < today() ? addDays(today(), 1) : addDays(d.start_date, -3),
-    depart_to: addDays(d.start_date, 3), ...(nights ? { length: "custom", nights } : {}), cabins: [ctx.cabin], adults: 1, max_stops: null, targets: {} };
+    depart_to: addDays(d.start_date, 3), ...(nights ? { length: "custom", nights } : {}), cabins: [ctx.cabin], adults: 1,
+    max_stops: ctx.stops && ctx.stops !== "any" ? +ctx.stops : null, targets: {} };
   trackRoute(r, btn);
 }
 
@@ -154,7 +155,7 @@ function drawExplore() {
   const all = slice.destinations, regions = [...new Set(all.map(d => d.region))].sort();
   const top = Math.max(...all.map(d => d.price));
   if (ex.maxPrice == null || ex.maxPrice > top) ex.maxPrice = top;
-  const shown = all.filter(d => (ex.region === "all" || d.region === ex.region) && d.price <= ex.maxPrice)
+  const shown = all.filter(d => (ex.region === "all" || d.region === ex.region) && d.price <= ex.maxPrice && (ex.stops === "any" || d.stops == null || d.stops <= +ex.stops))
     .sort(ex.sort === "deal" ? (a, b) => (b.drop_pct ?? -99) - (a.drop_pct ?? -99) || a.price - b.price
         : ex.sort === "duration" ? (a, b) => (a.duration ?? 9999) - (b.duration ?? 9999) : (a, b) => a.price - b.price);
   body.innerHTML = `
@@ -162,6 +163,7 @@ function drawExplore() {
       <div class="grow"><b>${plural(shown.length, "destination")}</b> <span class="muted">· from ${money(Math.min(...all.map(d => d.price)))} · ${TRIP_LENGTH[ex.duration].toLowerCase()} trips · ${CABIN_NAME[ex.cabin].toLowerCase()} · checked ${ago(slice.checked || slice.searched_at)}</span></div>
       <label class="price-filter">Max <input type="range" id="ex-max" min="${Math.min(...all.map(d => d.price))}" max="${top}" step="5" value="${ex.maxPrice}"><b class="num" id="ex-max-v">${money(ex.maxPrice)}</b></label>
       <select id="ex-sort" style="width:auto"><option value="price">Cheapest first</option><option value="deal" ${ex.sort === "deal" ? "selected" : ""}>Best deals first</option><option value="duration" ${ex.sort === "duration" ? "selected" : ""}>Shortest flight</option></select>
+      ${segmented("ex-stops", [["any", "Any stops"], ["0", "Non-stop"], ["1", "≤ 1 stop"]], ex.stops, "Stops")}
       ${segmented("ex-view", [["list", `${icon("list", "i sm")} List`], ["map", `${icon("map", "i sm")} Map`]], ex.view, "View")}
     </div>
     ${ex.interest ? `<p class="small ink2" style="margin:-4px 0 14px">${TRIP_TYPES[ex.interest].emoji} ${slice.inferred
@@ -170,12 +172,13 @@ function drawExplore() {
     <div class="chips" style="margin-bottom:18px">${[["all", "All regions"], ...regions.map(r => [r, r])].map(([v, t]) => `<button class="chip" data-region="${esc(v)}" aria-pressed="${ex.region === v}">${esc(t)}</button>`).join("")}</div>
     <div id="ex-results"></div>`;
   const results = $("#ex-results");
-  if (!shown.length) results.innerHTML = emptyState("🔎", "Nothing matches these filters", "Raise the maximum price or pick another region.");
+  if (!shown.length) results.innerHTML = emptyState("🔎", "Nothing matches these filters", "Raise the maximum price, allow more stops or pick another region.");
   else if (ex.view === "map") drawExploreMap(results, shown);
   else { results.innerHTML = `<div class="dest-grid">${shown.map((d, i) => destCard(d, ex, { i })).join("")}</div>`; wireDestCards(results, shown, { ...ex }); }
   $("#ex-max").oninput = e => { $("#ex-max-v").textContent = money(+e.target.value); };
   $("#ex-max").onchange = e => { ex.maxPrice = +e.target.value; drawExplore(); };
   $("#ex-sort").onchange = e => { ex.sort = e.target.value; drawExplore(); };
+  onSeg($("#ex-stops"), v => { ex.stops = v; store.set("exStops", v); drawExplore(); });
   onSeg($("#ex-view"), v => { ex.view = v; store.set("exView", v); drawExplore(); });
   body.querySelectorAll("[data-region]").forEach(b => b.onclick = () => { ex.region = b.dataset.region; drawExplore(); });
 }

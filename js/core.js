@@ -32,8 +32,11 @@ const fmtDate = (iso, o = { day: "numeric", month: "short" }) => iso ? new Date(
 const fmtDay = iso => fmtDate(iso, { weekday: "short", day: "numeric", month: "short" });
 const monthName = (m, style = "long") => new Date(Date.UTC(2020, m - 1, 1)).toLocaleDateString(undefined, { month: style, timeZone: "UTC" });
 const ago = iso => { const m = (Date.now() - new Date(iso)) / 60000; return m < 90 ? `${Math.max(1, Math.round(m))} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`; };
-const dur = m => m ? `${Math.floor(m / 60)}h ${m % 60 ? String(m % 60).padStart(2, "0") + "m" : ""}`.trim() : "";
+const dur = m => !m ? "" : m < 60 ? `${m}m` : `${Math.floor(m / 60)}h ${m % 60 ? String(m % 60).padStart(2, "0") + "m" : ""}`.trim();
 const stopsTxt = n => n == null ? "" : n === 0 ? "Non-stop" : `${n} stop${n > 1 ? "s" : ""}`;
+/** "2h 10m in IST" or "IST 1h 05m, DXB 3h" for an itinerary's layovers. */
+const layoverTxt = lays => !lays?.length ? "" : lays.length === 1 ? `${dur(lays[0].duration) || "?"} in ${lays[0].id}` : lays.map(l => `${l.id} ${dur(l.duration) || "?"}`).join(", ");
+const SHORT_LAYOVER = 60, LONG_LAYOVER = 360; // minutes: a tight connection / a long wait
 const hhmm = t => (t || "").slice(11, 16);
 const plusDays = (a, b) => { if (!a || !b) return ""; const d = (new Date(b.slice(0, 10)) - new Date(a.slice(0, 10))) / 864e5; return d > 0 ? `<sup>+${d}</sup>` : ""; };
 const compact = p => p >= 10000 ? Math.round(p / 1000) + "k" : p >= 1000 ? (p / 1000).toFixed(1).replace(/\.0$/, "") + "k" : String(p);

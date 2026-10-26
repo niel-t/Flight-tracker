@@ -87,6 +87,12 @@
         <label class="field"><span>Passengers</span><input type="number" name="adults" min="1" max="9" value="1"></label>
         <label class="field"><span>Stops</span><select name="max_stops"><option value="">Any number</option><option value="0">Non-stop only</option><option value="1">1 stop or fewer</option><option value="2">2 stops or fewer</option></select></label>
       </div>
+      <div class="grid3">
+        <label class="field"><span>Shortest connection</span><select name="min_layover"><option value="">Any</option><option value="60">1 hour</option><option value="90">1.5 hours</option><option value="120">2 hours</option><option value="180">3 hours</option></select></label>
+        <label class="field"><span>Longest layover</span><select name="max_layover"><option value="">Any</option><option value="120">2 hours</option><option value="180">3 hours</option><option value="300">5 hours</option><option value="480">8 hours</option><option value="720">12 hours</option></select></label>
+        <label class="field"><span>Avoid connecting in</span><input name="avoid" placeholder="e.g. LHR, CDG" autocapitalize="characters"></label>
+      </div>
+      <label class="fopt"><input type="checkbox" name="no_overnight"><span>No overnight layovers</span></label>
       <div id="r-dates"></div>
       <section>
         <h3>Classes &amp; target prices</h3>

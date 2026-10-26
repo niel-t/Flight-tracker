@@ -2,7 +2,11 @@
 
 const tripKey = (t, cabin) => `${cabin}|${t.date}|${t.ret || ""}`;
 const DEP_TIMES = [["night", "Night", 0, 5], ["morning", "Morning", 5, 12], ["afternoon", "Afternoon", 12, 18], ["evening", "Evening", 18, 24]];
-const blankFilters = () => ({ stops: null, airlinesOff: [], times: null, maxDur: null, maxPrice: null });
+const blankFilters = () => ({ stops: null, airlinesOff: [], times: null, maxDur: null, maxPrice: null, minLay: null, maxLay: null, noOvernight: false, viaOff: [] });
+const layMins = o => (o.layovers || []).map(l => l.duration).filter(Boolean);
+const shortestLay = o => layMins(o).length ? Math.min(...layMins(o)) : null;
+const longestLay = o => layMins(o).length ? Math.max(...layMins(o)) : null;
+const layTotal = o => layMins(o).reduce((a, b) => a + b, 0);
 
 /** The trips a live search checks: the chosen dates, or up to 5 dates spread over a flexible window. */
 function liveTrips(r) {
@@ -30,7 +34,7 @@ function viewResults() {
     <div class="wrap">
       <div class="summary-bar">
         <div><div class="what">${esc(cityOf(r.from))} → ${esc(cityOf(r.to))}</div>
-          <div class="meta">${r.trip === "oneway" ? "One way" : "Round trip"} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")} · ${CABIN_NAME[s.cabin]}${r.max_stops != null ? ` · ${r.max_stops === 0 ? "non-stop" : `max ${plural(r.max_stops, "stop")}`}` : ""}</div></div>
+          <div class="meta">${r.trip === "oneway" ? "One way" : "Round trip"} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")} · ${CABIN_NAME[s.cabin]}${limitsTxt(r) ? ` · ${esc(limitsTxt(r))}` : ""}</div></div>
         <button class="btn" id="s-modify">${icon("edit", "i sm")} Modify search</button>
       </div>
       <div id="s-modify-panel" hidden style="margin-top:18px">${searchPanel({ ...r, cabins: [s.cabin] })}</div>
@@ -60,7 +64,7 @@ function afterResults() {
   $("#s-modify").onclick = () => { const p = $("#s-modify-panel"); p.hidden = !p.hidden; };
   initSearchPanel($("#search-form"));
   onSeg($("#s-cabin"), v => { s.cabin = v; s.sel = null; s.filters = blankFilters(); saveSearchState(); route(); });
-  $("#s-track")?.addEventListener("click", e => trackRoute({ ...s.r, id: slug(`${s.r.from.split(",")[0]}-${s.r.to.split(",")[0]}-${Date.now().toString(36).slice(-4)}`), cabins: [s.cabin] }, e.currentTarget));
+  $("#s-track")?.addEventListener("click", e => trackRoute({ ...s.r, ...limitsFromFilters(s.filters, s.r), id: slug(`${s.r.from.split(",")[0]}-${s.r.to.split(",")[0]}-${Date.now().toString(36).slice(-4)}`), cabins: [s.cabin] }, e.currentTarget));
   $("#s-filters-btn").onclick = () => { $("#dlg-filters").showModal(); };
   runLiveSearch();
 }
@@ -94,13 +98,19 @@ function applyFilters(opts, f) {
     && !o.airlines.some(a => f.airlinesOff.includes(a))
     && (!f.times || f.times.includes(depBucket(o)))
     && (!f.maxDur || !o.duration || o.duration <= f.maxDur)
-    && (!f.maxPrice || o.price <= f.maxPrice));
+    && (!f.maxPrice || o.price <= f.maxPrice)
+    && (!f.minLay || !o.stops || (shortestLay(o) ?? f.minLay) >= f.minLay)
+    && (!f.maxLay || !o.stops || (longestLay(o) ?? 0) <= f.maxLay)
+    && (!f.noOvernight || !(o.layovers || []).some(l => l.overnight))
+    && !(o.layovers || []).some(l => (f.viaOff || []).includes(l.id)));
 }
 const SORTS = {
   best: (a, b) => (b.best - a.best) || (a.rank - b.rank),
   cheapest: (a, b) => a.price - b.price || (a.duration || 0) - (b.duration || 0),
   fastest: (a, b) => (a.duration || 9999) - (b.duration || 9999) || a.price - b.price,
+  layover: (a, b) => a.stops - b.stops || layTotal(a) - layTotal(b) || a.price - b.price,
 };
+const SORT_NAME = { best: "Best", cheapest: "Cheapest", fastest: "Fastest", layover: "Shortest stops" };
 
 function drawResultsPage(trips) {
   const s = ui.search, body = $("#s-body");
@@ -126,7 +136,7 @@ function drawResultsPage(trips) {
   const cheapest = Math.min(...all.map(o => o.price));
   body.innerHTML = `${failNote}${strip}
     ${v.typical ? `<div class="card insight-strip"><div class="grow" style="min-width:260px">${insight({ ...v, price: cheapest })}</div><div class="tiny muted">${v.cached ? "From the last 30 min" : "Live"} · ${ago(v.searched_at)}</div></div>` : ""}
-    <div class="sort-tabs" role="group" aria-label="Sort">${tabs.map(([k, top]) => `<button data-sort="${k}" aria-pressed="${s.sort === k}"><b>${{ best: "Best", cheapest: "Cheapest", fastest: "Fastest" }[k]}</b><span>${top ? `${money(top.price)} · ${dur(top.duration)}` : "–"}</span></button>`).join("")}</div>
+    <div class="sort-tabs" role="group" aria-label="Sort">${tabs.map(([k, top]) => `<button data-sort="${k}" aria-pressed="${s.sort === k}"><b>${SORT_NAME[k]}</b><span>${top ? k === "layover" ? `${money(top.price)} · ${top.stops ? `${dur(layTotal(top))} waiting` : "non-stop"}` : `${money(top.price)} · ${dur(top.duration)}` : "–"}</span></button>`).join("")}</div>
     <p class="small ink2" style="margin:0 0 10px">${plural(shown.length, "flight")}${shown.length < all.length ? ` of ${all.length}` : ""} · ${fmtDay(cur.t.date)}${cur.t.ret ? ` – ${fmtDay(cur.t.ret)}` : ""} · prices include taxes and fees for ${plural(+s.r.adults || 1, "passenger")}${cur.t.ret ? ", round trip" : ""}</p>
     <div id="s-list">${sorted.length ? sorted.slice(0, s.shown).map(o => flightCard(o, v, cheapest)).join("") : emptyState("🔎", "No flights match your filters", "", `<button class="btn" data-reset>Reset filters</button>`)}</div>
     ${sorted.length > s.shown ? `<p style="text-align:center"><button id="s-more">Show ${Math.min(15, sorted.length - s.shown)} more flights</button></p>` : ""}`;
@@ -149,14 +159,15 @@ function wireResultsBody(trips) {
 
 function flightCard(o, v, cheapest) {
   const legs = o.legs || [], first = legs[0] || {}, last = legs[legs.length - 1] || {};
-  const lay = (o.layovers || []).map(l => l.id).join(", ");
+  const lays = o.layovers || [], short = lays.some(l => l.duration && l.duration < SHORT_LAYOVER), long = lays.some(l => l.duration >= LONG_LAYOVER), night = lays.some(l => l.overnight);
+  const warn = [short && "short connection", long && "long layover", night && "overnight"].filter(Boolean);
   const dots = Array.from({ length: o.stops }, (_, i) => `<i style="left:${(i + 1) / (o.stops + 1) * 100}%"></i>`).join("");
   return `<article class="flight">
     <div class="flight-main">
       <div class="flight-info">
         ${airlineLogo(o)}
         <div><div class="times">${hhmm(o.depart_time)} – ${hhmm(o.arrive_time)}${plusDays(o.depart_time, o.arrive_time)}</div><div class="small ink2">${esc(o.airlines.join(", "))}</div></div>
-        <div class="route-line"><span>${dur(o.duration)}</span><div class="line">${dots}</div><span class="${o.stops ? "" : "stops0"}">${stopsTxt(o.stops)}${lay ? ` · ${esc(lay)}` : ""}</span></div>
+        <div class="route-line"><span>${dur(o.duration)}</span><div class="line">${dots}</div><span class="${o.stops ? "" : "stops0"}">${stopsTxt(o.stops)}${lays.length ? ` · ${esc(layoverTxt(lays))}` : ""}${warn.length ? `<br><span class="lay-warn">${warn.join(" · ")}</span>` : ""}</span></div>
         <div class="small ink2 co2" style="text-align:right">${esc(first.from || "")}–${esc(last.to || "")}${o.co2_diff != null && o.co2_diff <= -5 ? `<br><span class="down">${o.co2_diff}% CO₂</span>` : ""}</div>
       </div>
       <div class="flight-price">
@@ -170,14 +181,25 @@ function flightCard(o, v, cheapest) {
         <div><b>${hhmm(l.depart)}</b> ${esc(l.from_name || l.from)} (${esc(l.from)})</div>
         <div class="tiny ink2" style="padding-left:12px">${dur(l.duration) ? `Travel time ${dur(l.duration)} · ` : ""}${esc(l.airline)} ${esc(l.flight)}${l.airplane ? ` · ${esc(l.airplane)}` : ""}${l.legroom ? ` · legroom ${esc(l.legroom)}` : ""}${l.overnight ? " · overnight" : ""}</div>
         <div><b>${hhmm(l.arrive)}</b> ${esc(l.to_name || l.to)} (${esc(l.to)})</div>
-        ${o.layovers?.[i] ? `<div class="layover">${dur(o.layovers[i].duration)} layover · ${esc(o.layovers[i].name || o.layovers[i].id)}${o.layovers[i].overnight ? " · overnight" : ""}</div>` : ""}`).join("")}</div>
+        ${lays[i] ? `<div class="layover ${lays[i].duration < SHORT_LAYOVER ? "warn" : ""}">${dur(lays[i].duration)} layover · ${esc(lays[i].name || lays[i].id)}${lays[i].overnight ? " · overnight" : ""}${lays[i].duration < SHORT_LAYOVER ? " · tight connection" : lays[i].duration >= LONG_LAYOVER ? " · long wait" : ""}</div>` : ""}`).join("")}</div>
       ${o.co2 ? `<p class="small ink2">${Math.round(o.co2 / 1000)} kg CO₂e${o.co2_diff != null ? ` (${o.co2_diff > 0 ? "+" : ""}${o.co2_diff}% vs typical for this route)` : ""}</p>` : ""}
     </div>
   </article>`;
 }
 
 // ---------- filters ----------
-const activeFilters = f => [f.stops, f.airlinesOff.length, f.times, f.maxDur, f.maxPrice].filter(Boolean).length;
+/** The stop and layover filters as route limits, so tracking keeps them (see routes.json in the README). */
+function limitsFromFilters(f, r) {
+  const out = {};
+  const maxStops = f.stops?.length ? Math.max(...f.stops) : null;
+  if (maxStops != null && maxStops < 2) out.max_stops = r.max_stops != null ? Math.min(r.max_stops, maxStops) : maxStops;
+  if (f.minLay) out.min_layover = f.minLay;
+  if (f.maxLay) out.max_layover = f.maxLay;
+  if (f.noOvernight) out.no_overnight = true;
+  if (f.viaOff?.length) out.avoid = f.viaOff.join(",");
+  return out;
+}
+const activeFilters = f => [f.stops, f.airlinesOff.length, f.times, f.maxDur, f.maxPrice, f.minLay, f.maxLay, f.noOvernight, f.viaOff?.length].filter(Boolean).length;
 function filtersHtml(all, f) {
   const min = list => list.length ? money(Math.min(...list.map(o => o.price))) : "";
   const airlines = [...new Set(all.flatMap(o => o.airlines))].sort();
@@ -188,6 +210,7 @@ function filtersHtml(all, f) {
     <div class="fgroup"><div class="row between"><h3 style="margin:0">Filters</h3>${activeFilters(f) ? `<button class="btn-ghost btn-sm" data-freset>Reset</button>` : ""}</div></div>
     <div class="fgroup"><h3>Stops</h3>
       ${[[0, "Non-stop"], [1, "1 stop"], [2, "2+ stops"]].map(([n, t]) => opt("stops", n, t, all.filter(o => Math.min(o.stops, 2) === n), !f.stops || f.stops.includes(n))).join("")}</div>
+    ${layoverFilters(all, f, opt)}
     <div class="fgroup"><h3>Airlines</h3>
       ${airlines.map(a => opt("airline", a, a, all.filter(o => o.airlines.includes(a)), !f.airlinesOff.includes(a))).join("")}</div>
     <div class="fgroup"><h3>Departure time</h3>
@@ -197,6 +220,24 @@ function filtersHtml(all, f) {
     ${maxP > minP ? `<div class="fgroup"><h3>Max price</h3>
       <input type="range" data-f="maxPrice" min="${minP}" max="${maxP}" step="5" value="${f.maxPrice || maxP}"><div class="small ink2">Up to <b data-out="maxPrice">${money(f.maxPrice || maxP)}</b></div></div>` : ""}`;
 }
+/** Layover filters: connection time, longest wait, overnight layovers and connecting airports. */
+function layoverFilters(all, f, opt) {
+  const withStops = all.filter(o => o.stops && layMins(o).length);
+  if (!withStops.length) return "";
+  const shortest = Math.min(...withStops.map(shortestLay)), longest = Math.max(...withStops.map(longestLay));
+  const minTop = Math.min(180, Math.max(...withStops.map(shortestLay)));
+  const via = [...new Set(withStops.flatMap(o => o.layovers.map(l => l.id)).filter(Boolean))].sort();
+  const name = id => AP[id]?.city || withStops.flatMap(o => o.layovers).find(l => l.id === id && l.name)?.name || id;
+  return `<div class="fgroup"><h3>Layovers</h3>
+      ${minTop > shortest ? `<div class="small ink2" style="margin-top:2px">Connection time at least <b data-out="minLay">${f.minLay ? dur(f.minLay) : "any"}</b></div>
+      <input type="range" data-f="minLay" min="0" max="${Math.ceil(minTop / 15) * 15}" step="15" value="${f.minLay || 0}" aria-label="Minimum connection time">` : ""}
+      ${longest > shortest ? `<div class="small ink2" style="margin-top:8px">Longest layover at most <b data-out="maxLay">${dur(f.maxLay || longest)}</b></div>
+      <input type="range" data-f="maxLay" min="${Math.floor(shortest / 15) * 15}" max="${longest}" step="15" value="${f.maxLay || longest}" aria-label="Maximum layover">` : ""}
+      ${withStops.some(o => o.layovers.some(l => l.overnight)) ? `<label class="fopt" style="margin-top:6px"><input type="checkbox" data-f="overnight" ${f.noOvernight ? "checked" : ""}><span>No overnight layovers</span></label>` : ""}
+    </div>
+    ${via.length ? `<div class="fgroup"><h3>Connecting airports</h3>
+      ${via.map(id => opt("via", id, `${name(id)} (${id})`, withStops.filter(o => o.layovers.some(l => l.id === id)), !(f.viaOff || []).includes(id))).join("")}</div>` : ""}`;
+}
 function wireFilters(root, trips) {
   const s = ui.search, f = s.filters, redraw = () => { s.shown = 15; saveSearchState(); drawResultsPage(trips); };
   root.querySelector("[data-freset]")?.addEventListener("click", () => { s.filters = blankFilters(); redraw(); });
@@ -205,12 +246,14 @@ function wireFilters(root, trips) {
     if (cb.dataset.f === "stops") { const v = vals("stops").map(Number); f.stops = v.length === 3 ? null : v; }
     if (cb.dataset.f === "time") { const v = vals("time"); f.times = v.length === DEP_TIMES.length ? null : v; }
     if (cb.dataset.f === "airline") f.airlinesOff = [...root.querySelectorAll("input[data-f=airline]:not(:checked)")].map(x => x.value);
+    if (cb.dataset.f === "via") f.viaOff = [...root.querySelectorAll("input[data-f=via]:not(:checked)")].map(x => x.value);
+    if (cb.dataset.f === "overnight") f.noOvernight = cb.checked;
     redraw();
   });
   root.querySelectorAll("input[type=range][data-f]").forEach(r => {
     const k = r.dataset.f, out = root.querySelector(`[data-out=${k}]`);
-    r.oninput = () => { out.textContent = k === "maxDur" ? dur(+r.value) : money(+r.value); };
-    r.onchange = () => { f[k] = +r.value >= +r.max ? null : +r.value; redraw(); };
+    r.oninput = () => { out.textContent = k === "maxPrice" ? money(+r.value) : k === "minLay" && !+r.value ? "any" : dur(+r.value); };
+    r.onchange = () => { f[k] = k === "minLay" ? +r.value || null : +r.value >= +r.max ? null : +r.value; redraw(); };
   });
 }
 

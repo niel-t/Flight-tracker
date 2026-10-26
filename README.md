@@ -111,9 +111,14 @@ within that flexibility is tracked, and shown in a date grid like Google Flights
  "date_mode": "flexible", "depart_from": "2026-11-01", "depart_to": "2026-12-31",
  "length": "weekend", "weekdays": [3, 4], "nights_min": 2, "nights_max": 3,   // leave Thu/Fri, 2–3 nights
  // or: "nights": 7   or: "nights_min": 5, "nights_max": 9
- "cabins": ["economy"], "adults": 2, "max_stops": 0, "targets": {}
+ "cabins": ["economy"], "adults": 2, "max_stops": 0, "targets": {},
+ // optional layover limits (minutes), sent to Google and checked again on the results:
+ "min_layover": 60, "max_layover": 300, "no_overnight": true, "avoid": "LHR,CDG"
 }
 ```
+
+The results page filters on the same things without a new search: stops, connection time, longest layover,
+overnight layovers and connecting airports. Tracking a search from there keeps those filters as the route's limits.
 
 One-way trips use `"trip": "oneway"` and leave out the return/nights fields. Settings:
 

@@ -29,7 +29,7 @@ function routesTable() {
       const per = Object.fromEntries(cabinsOf(r).map(c => [c, entry(r.id, c).cheapest]));
       const low = Object.entries(per).filter(([, b]) => b).sort((a, b) => a[1].price - b[1].price)[0];
       return `<tr class="click" data-route="${esc(r.id)}">
-        <td><div class="with-thumb">${routeImg(r)}<div><b>${esc(routeTitle(r))}</b><br><span class="small ink2">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)}</span></div></div></td>
+        <td><div class="with-thumb">${routeImg(r)}<div><b>${esc(routeTitle(r))}</b><br><span class="small ink2">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)}${limitsTxt(r) ? ` · ${esc(limitsTxt(r))}` : ""}</span></div></div></td>
         ${CABINS.map(c => {
           if (!(c in per)) return `<td class="r hide-sm muted">–</td>`;
           const b = per[c], tgt = r.targets?.[c];
