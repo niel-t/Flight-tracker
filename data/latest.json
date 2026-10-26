@@ -11,29 +11,30 @@
        650,
        1050
       ],
-      "price": 919,
+      "price": 846,
       "airlines": [
-       "Turkish Airlines"
+       "Etihad"
       ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/EY.png",
       "stops": 1,
-      "duration": 1240,
-      "depart_time": "2027-02-01 14:30",
-      "arrive_time": "2027-02-02 19:10",
+      "duration": 1080,
+      "depart_time": "2027-02-01 09:40",
+      "arrive_time": "2027-02-02 11:40",
       "legs": [
        {
         "from": "AMS",
-        "to": "IST",
-        "flight": "TK 1958",
-        "airline": "Turkish Airlines"
+        "to": "AUH",
+        "flight": "EY 44",
+        "airline": "Etihad"
        },
        {
-        "from": "IST",
+        "from": "AUH",
         "to": "NRT",
-        "flight": "TK 300",
-        "airline": "Turkish Airlines"
+        "flight": "EY 800",
+        "airline": "Etihad"
        }
       ],
-      "checked": "2026-10-21T04:46:14+00:00",
+      "checked": "2026-10-26T01:13:29+00:00",
       "return_date": "2027-02-15"
      },
      "2027-02-08": {
@@ -1401,6 +1402,40 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-03-21"
+     },
+     "2027-03-14": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTE0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0yOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       660,
+       1350
+      ],
+      "price": 963,
+      "airlines": [
+       "China Southern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+      "stops": 1,
+      "duration": 1915,
+      "depart_time": "2027-03-14 21:40",
+      "arrive_time": "2027-03-16 13:35",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "CAN",
+        "flight": "CZ 308",
+        "airline": "China Southern"
+       },
+       {
+        "from": "CAN",
+        "to": "HND",
+        "flight": "CZ 385",
+        "airline": "China Southern"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-03-28"
      }
     },
     "cheapest": {
@@ -1442,10 +1477,11 @@
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTAxKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0xNSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
       "level": null,
       "typical": null,
-      "price": 1570,
+      "price": 1425,
       "airlines": [
        "ITA"
       ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/AZ.png",
       "stops": 1,
       "duration": 2005,
       "depart_time": "2027-02-01 17:55",
@@ -1464,7 +1500,7 @@
         "airline": "ITA"
        }
       ],
-      "checked": "2026-10-21T04:46:14+00:00",
+      "checked": "2026-10-26T01:13:29+00:00",
       "return_date": "2027-02-15"
      },
      "2027-02-08": {
@@ -2742,6 +2778,37 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-03-21"
+     },
+     "2027-03-14": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTE0KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0yOCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAnABmAEB&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 2185,
+      "airlines": [
+       "China Southern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+      "stops": 1,
+      "duration": 1915,
+      "depart_time": "2027-03-14 21:40",
+      "arrive_time": "2027-03-16 13:35",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "CAN",
+        "flight": "CZ 308",
+        "airline": "China Southern"
+       },
+       {
+        "from": "CAN",
+        "to": "HND",
+        "flight": "CZ 385",
+        "airline": "China Southern"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-03-28"
      }
     },
     "cheapest": {
@@ -3471,6 +3538,40 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-02-25"
+     },
+     "2027-02-18": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wNCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIA3ABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       2300,
+       3200
+      ],
+      "price": 2804,
+      "airlines": [
+       "China Southern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+      "stops": 1,
+      "duration": 2010,
+      "depart_time": "2027-02-18 20:35",
+      "arrive_time": "2027-02-20 14:05",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "PKX",
+        "flight": "CZ 346",
+        "airline": "China Southern"
+       },
+       {
+        "from": "PKX",
+        "to": "HND",
+        "flight": "CZ 647",
+        "airline": "China Southern"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-03-04"
      }
     },
     "cheapest": {
@@ -4210,6 +4311,40 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-02-25"
+     },
+     "2027-02-18": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE4KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wNCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIBHABmAEB&tfu=EgIIAQ",
+      "level": "typical",
+      "typical": [
+       8700,
+       13000
+      ],
+      "price": 9805,
+      "airlines": [
+       "Lufthansa"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/LH.png",
+      "stops": 1,
+      "duration": 950,
+      "depart_time": "2027-02-18 10:55",
+      "arrive_time": "2027-02-19 10:45",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "FRA",
+        "flight": "LH 995",
+        "airline": "Lufthansa"
+       },
+       {
+        "from": "FRA",
+        "to": "HND",
+        "flight": "LH 716",
+        "airline": "Lufthansa"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-03-04"
      }
     },
     "cheapest": {
@@ -4904,6 +5039,38 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-04-27"
+     },
+     "2027-04-24": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTI0agcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDUtMDRqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgBcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 526,
+      "airlines": [
+       "Vueling",
+       "LEVEL"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "stops": 1,
+      "duration": 1810,
+      "depart_time": "2027-04-24 21:50",
+      "arrive_time": "2027-04-25 22:00",
+      "legs": [
+       {
+        "from": "BRU",
+        "to": "BCN",
+        "flight": "VY 1099",
+        "airline": "Vueling"
+       },
+       {
+        "from": "BCN",
+        "to": "JFK",
+        "flight": "LL 2627",
+        "airline": "LEVEL"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-05-04"
      }
     },
     "cheapest": {
@@ -5587,6 +5754,37 @@
       ],
       "checked": "2026-10-25T18:52:34+00:00",
       "return_date": "2027-04-27"
+     },
+     "2027-04-24": {
+      "status": "ok",
+      "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhowEgoyMDI3LTA0LTI0agcIARIDQU1TagcIARIDQlJVcgcIARIDSkZLcgcIARIDRVdSGjASCjIwMjctMDUtMDRqBwgBEgNKRktqBwgBEgNFV1JyBwgBEgNBTVNyBwgBEgNCUlVAAUgDcAGYAQE&tfu=EgIIAQ",
+      "level": null,
+      "typical": null,
+      "price": 2167,
+      "airlines": [
+       "Air Serbia"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/JU.png",
+      "stops": 1,
+      "duration": 810,
+      "depart_time": "2027-04-24 10:00",
+      "arrive_time": "2027-04-24 17:30",
+      "legs": [
+       {
+        "from": "AMS",
+        "to": "BEG",
+        "flight": "JU 261",
+        "airline": "Air Serbia"
+       },
+       {
+        "from": "BEG",
+        "to": "JFK",
+        "flight": "JU 500",
+        "airline": "Air Serbia"
+       }
+      ],
+      "checked": "2026-10-26T01:13:29+00:00",
+      "return_date": "2027-05-04"
      }
     },
     "cheapest": {
@@ -5623,7 +5821,7 @@
    }
   }
  },
- "updated": "2026-10-25T18:52:34+00:00",
+ "updated": "2026-10-26T01:13:29+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
