@@ -301,7 +301,7 @@
         "airline": "Korean Air"
        }
       ],
-      "checked": "2026-10-21T18:59:44+00:00",
+      "checked": "2026-10-26T21:43:36+00:00",
       "return_date": "2027-02-23"
      },
      "2027-02-16": {
@@ -6206,7 +6206,7 @@
    }
   }
  },
- "updated": "2026-10-26T21:14:07+00:00",
+ "updated": "2026-10-26T21:43:36+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
