@@ -1,7 +1,7 @@
 {
  "settings": {
   "currency": "EUR",
-  "searches_per_run": 8,
+  "searches_per_run": 2,
   "drop_threshold_pct": 5,
   "stale_days": 14
  },

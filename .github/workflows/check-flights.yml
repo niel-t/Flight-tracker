@@ -2,7 +2,7 @@ name: Check flights
 
 on:
   schedule:
-    - cron: "23 */6 * * *"  # 4x a day (GitHub may delay scheduled runs by some minutes)
+    - cron: "23 */12 * * *"  # 2x a day (GitHub may delay scheduled runs by some minutes)
   workflow_dispatch:        # "Run workflow" button, and "Search now" on the dashboard
   push:
     branches: [main]
