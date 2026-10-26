@@ -10,6 +10,8 @@ from urllib.parse import quote
 
 import httpx
 
+from flights.explore import DURATIONS, ExploreQuery, demo_explore, parse_explore
+
 CABINS = ["economy", "premium", "business", "first"]
 CABIN_LABEL = {"economy": "economy", "premium": "premium economy", "business": "business class", "first": "first class"}
 SERPAPI_CLASS = {"economy": 1, "premium": 2, "business": 3, "first": 4}
@@ -124,6 +126,38 @@ class SerpApiProvider:
         return parse_serpapi(data, q)
 
 
+    def explore(self, q: ExploreQuery) -> dict:
+        """One Google Travel Explore search: the cheapest destinations from q.origin."""
+        params = {
+            "engine": "google_travel_explore",
+            "departure_id": q.origin,
+            "travel_class": SERPAPI_CLASS[q.cabin],
+            "travel_duration": DURATIONS[q.duration],
+            "currency": q.currency,
+            "hl": "en",
+            "api_key": self.api_key,
+        }
+        if q.month:
+            params["month"] = q.month
+        try:
+            r = self.client.get("https://serpapi.com/search.json", params=params)
+        except httpx.HTTPError as e:
+            return {"status": "error", "detail": type(e).__name__}
+        try:
+            data = r.json()
+        except ValueError:
+            data = {}
+        fatal = fatal_error(r.status_code, data.get("error", ""))
+        if fatal:
+            return {"status": "error", "detail": fatal, "fatal": True}
+        dests = parse_explore(data)
+        if r.status_code != 200 or (data.get("error") and not dests):
+            return {"status": "error", "detail": data.get("error", f"HTTP {r.status_code}")}
+        # field names of the first raw destination, to spot API changes in the run log
+        first = (data.get("destinations") or [{}])[0]
+        return {"status": "ok", "destinations": dests, "raw_fields": sorted(first.keys())}
+
+
 def fatal_error(status: int, message: str) -> str | None:
     """Errors that make every further search fail too: a wrong key or no searches left."""
     m = (message or "").lower()
@@ -150,6 +184,9 @@ class DemoProvider:
     def _rand(self, *parts) -> float:
         h = hashlib.sha256("|".join(str(p) for p in parts).encode()).digest()
         return int.from_bytes(h[:4], "big") / 2**32
+
+    def explore(self, q: ExploreQuery) -> dict:
+        return {"status": "ok", "destinations": demo_explore(q, self.today)}
 
     def search(self, q: Query) -> dict:
         base = 250 + 600 * self._rand(q.origin, q.destination)

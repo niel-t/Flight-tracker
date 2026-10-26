@@ -3,388 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#eaf1fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0a0e16" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b1e3f">
+<meta name="description" content="Compare flight prices, explore cheap destinations and track fares in every cabin class.">
 <title>Flight Tracker</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
-<style>
-  /* ---------- tokens ---------- */
-  :root {
-    color-scheme: light;
-    --bg: #eef3fa;
-    --blob-1: rgba(66,133,244,.30); --blob-2: rgba(129,201,149,.24); --blob-3: rgba(251,188,4,.16);
-    --glass: rgba(255,255,255,.62); --glass-strong: rgba(255,255,255,.82); --menu: rgba(255,255,255,.97); --glass-soft: rgba(255,255,255,.40);
-    --edge: rgba(255,255,255,.75); --line: rgba(15,23,42,.08); --line-2: rgba(15,23,42,.14);
-    --ink: #0f172a; --ink-2: #475467; --muted: #8a94a6;
-    --accent: #1a73e8; --accent-ink: #ffffff; --accent-wash: rgba(26,115,232,.12);
-    --good: #188038; --good-wash: rgba(24,128,56,.12);
-    --warn: #b06000; --warn-wash: rgba(249,171,0,.18);
-    --crit: #c5221f; --crit-wash: rgba(217,48,37,.10);
-    --bar: #8ab4f8; --bar-hover: #1a73e8; --bar-empty: rgba(15,23,42,.08);
-    --seq-1: #d2e3fc; --seq-2: #aecbfa; --seq-3: #8ab4f8; --seq-4: #669df6; --seq-5: #4285f4; --seq-6: #1a73e8; --seq-7: #174ea6;
-    --shadow: 0 1px 1px rgba(15,23,42,.04), 0 8px 28px rgba(15,23,42,.08);
-    --shadow-lg: 0 2px 4px rgba(15,23,42,.05), 0 24px 60px rgba(15,23,42,.14);
-    --blur: saturate(180%) blur(22px);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:where(:not([data-theme="light"])) {
-      color-scheme: dark;
-      --bg: #0a0e16;
-      --blob-1: rgba(66,133,244,.26); --blob-2: rgba(52,168,83,.14); --blob-3: rgba(161,66,244,.14);
-      --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --menu: rgba(32,38,50,.98); --glass-soft: rgba(28,33,44,.36);
-      --edge: rgba(255,255,255,.10); --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
-      --ink: #eef2f8; --ink-2: #b4bdcc; --muted: #7d8799;
-      --accent: #8ab4f8; --accent-ink: #0b1a33; --accent-wash: rgba(138,180,248,.16);
-      --good: #81c995; --good-wash: rgba(129,201,149,.14);
-      --warn: #fdd663; --warn-wash: rgba(253,214,99,.12);
-      --crit: #f28b82; --crit-wash: rgba(242,139,130,.12);
-      --bar: #4b6ea8; --bar-hover: #8ab4f8; --bar-empty: rgba(255,255,255,.08);
-      --seq-1: #1c2f52; --seq-2: #1f3f73; --seq-3: #255294; --seq-4: #3367b8; --seq-5: #5a8ee0; --seq-6: #8ab4f8; --seq-7: #c6dafc;
-      --shadow: 0 1px 1px rgba(0,0,0,.2), 0 8px 28px rgba(0,0,0,.35);
-      --shadow-lg: 0 24px 60px rgba(0,0,0,.5);
-    }
-  }
-  :root[data-theme="dark"] {
-    color-scheme: dark;
-    --bg: #0a0e16;
-    --blob-1: rgba(66,133,244,.26); --blob-2: rgba(52,168,83,.14); --blob-3: rgba(161,66,244,.14);
-    --glass: rgba(28,33,44,.58); --glass-strong: rgba(34,40,53,.86); --menu: rgba(32,38,50,.98); --glass-soft: rgba(28,33,44,.36);
-    --edge: rgba(255,255,255,.10); --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
-    --ink: #eef2f8; --ink-2: #b4bdcc; --muted: #7d8799;
-    --accent: #8ab4f8; --accent-ink: #0b1a33; --accent-wash: rgba(138,180,248,.16);
-    --good: #81c995; --good-wash: rgba(129,201,149,.14);
-    --warn: #fdd663; --warn-wash: rgba(253,214,99,.12);
-    --crit: #f28b82; --crit-wash: rgba(242,139,130,.12);
-    --bar: #4b6ea8; --bar-hover: #8ab4f8; --bar-empty: rgba(255,255,255,.08);
-    --seq-1: #1c2f52; --seq-2: #1f3f73; --seq-3: #255294; --seq-4: #3367b8; --seq-5: #5a8ee0; --seq-6: #8ab4f8; --seq-7: #c6dafc;
-    --shadow: 0 1px 1px rgba(0,0,0,.2), 0 8px 28px rgba(0,0,0,.35);
-    --shadow-lg: 0 24px 60px rgba(0,0,0,.5);
-  }
-
-  /* ---------- base ---------- */
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink);
-         font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-         -webkit-font-smoothing: antialiased; letter-spacing: -.005em; }
-  body::before { content: ""; position: fixed; inset: -20vmax; z-index: -1; pointer-events: none;
-    background: radial-gradient(40vmax 40vmax at 15% 10%, var(--blob-1), transparent 60%),
-                radial-gradient(35vmax 35vmax at 90% 20%, var(--blob-3), transparent 60%),
-                radial-gradient(45vmax 45vmax at 70% 95%, var(--blob-2), transparent 60%); }
-  a { color: var(--accent); text-decoration: none; }
-  h1, h2, h3 { margin: 0; letter-spacing: -.02em; }
-  h2 { font-size: 20px; font-weight: 650; }
-  h3 { font-size: 15px; font-weight: 600; }
-  p { margin: 0; }
-  .muted { color: var(--muted); } .ink2 { color: var(--ink-2); } .small { font-size: 13px; } .tiny { font-size: 12px; }
-  .num { font-variant-numeric: tabular-nums; }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .between { justify-content: space-between; }
-  .grow { flex: 1; min-width: 0; }
-  .hidden { display: none !important; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-
-  .glass { background: var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
-           border: 1px solid var(--edge); box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.35); border-radius: 22px; }
-  .panel { padding: 20px; }
-  .section { margin-top: 32px; }
-  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
-
-  /* ---------- controls ---------- */
-  button, .btn { font: inherit; color: var(--ink); background: var(--glass-strong); border: 1px solid var(--line); border-radius: 999px;
-                 padding: 8px 16px; min-height: 40px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-                 transition: transform .12s ease, background .2s, border-color .2s; white-space: nowrap; }
-  button:hover, .btn:hover { border-color: var(--line-2); }
-  button:active, .btn:active { transform: scale(.97); }
-  button:disabled { opacity: .5; cursor: default; transform: none; }
-  .primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; box-shadow: 0 6px 18px rgba(26,115,232,.28); }
-  .primary:hover { filter: brightness(1.06); border-color: transparent; }
-  .plain { background: transparent; border-color: transparent; }
-  .plain:hover { background: var(--glass-soft); border-color: transparent; }
-  .icon { width: 40px; padding: 0; }
-  .danger { color: var(--crit); }
-  svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-
-  input, select { font: inherit; color: var(--ink); background: var(--glass-soft); border: 1px solid var(--line); border-radius: 14px;
-                  padding: 10px 12px; min-height: 46px; width: 100%; transition: border-color .2s, background .2s; }
-  input:hover, select:hover { border-color: var(--line-2); }
-  input:focus, select:focus { outline: none; border-color: var(--accent); background: var(--glass-strong); }
-  input[type=checkbox] { width: auto; min-height: 0; accent-color: var(--accent); }
-  .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-  .field > span { font-size: 12px; font-weight: 600; color: var(--ink-2); padding-left: 4px; }
-  .field .hint { font-style: normal; font-size: 12px; color: var(--muted); padding-left: 4px; min-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-  /* segmented control (iOS) */
-  .seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; background: var(--glass-soft); border: 1px solid var(--line); max-width: 100%; overflow-x: auto; scrollbar-width: none; }
-  .seg::-webkit-scrollbar { display: none; }
-  .seg button { border: none; background: none; min-height: 34px; padding: 6px 14px; color: var(--ink-2); font-size: 14px; font-weight: 500; }
-  .seg button[aria-pressed=true] { background: var(--glass-strong); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 0 0 1px var(--line); }
-  .seg button.off { opacity: .4; }
-
-  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 5px 12px; border-radius: 999px; background: var(--glass-soft); border: 1px solid var(--line); color: var(--ink-2); white-space: nowrap; }
-  label.chip { cursor: pointer; user-select: none; min-height: 36px; }
-  label.chip:has(input:checked) { background: var(--accent-wash); border-color: transparent; color: var(--accent); font-weight: 600; }
-  label.chip input { position: absolute; opacity: 0; pointer-events: none; }
-  label.chip:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; background: var(--line); color: var(--ink-2); white-space: nowrap; }
-  .badge.low { background: var(--good-wash); color: var(--good); }
-  .badge.high { background: var(--crit-wash); color: var(--crit); }
-  .badge.target { background: var(--accent-wash); color: var(--accent); }
-  .badge.demo { background: var(--warn-wash); color: var(--warn); }
-  .down { color: var(--good); } .up { color: var(--crit); }
-
-  /* ---------- app shell ---------- */
-  .topbar { position: sticky; top: 0; z-index: 20; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); }
-  .topbar-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 999px; }
-  .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; color: var(--ink); letter-spacing: -.02em; }
-  .brand .logo { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: linear-gradient(135deg, #4285f4, #1a73e8); color: #fff; }
-  .brand .logo svg { width: 18px; height: 18px; }
-  .nav { display: flex; gap: 2px; margin-left: 12px; }
-  .nav a { padding: 8px 14px; border-radius: 999px; color: var(--ink-2); font-weight: 500; font-size: 14px; display: inline-flex; gap: 6px; align-items: center; }
-  .nav a:hover { background: var(--glass-soft); }
-  .nav a[aria-current=page] { background: var(--accent-wash); color: var(--accent); font-weight: 600; }
-  .nav .count { font-size: 11px; background: var(--accent); color: var(--accent-ink); border-radius: 999px; padding: 0 6px; min-width: 18px; text-align: center; }
-  .status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); margin-left: auto; white-space: nowrap; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
-  .dot.good { background: #34a853; box-shadow: 0 0 0 3px rgba(52,168,83,.18); } .dot.warn { background: #fbbc04; } .dot.crit { background: #ea4335; }
-
-  .tabbar { display: none; }
-  main { max-width: 1120px; margin: 0 auto; padding: 8px 16px 64px; }
-  .view { animation: fade .25s ease; }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
-  @media (max-width: 760px) {
-    .nav, .status .label, .hide-sm { display: none; }
-    .topbar-inner { padding-left: 12px; }
-    main { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
-    .tabbar { display: flex; position: fixed; z-index: 20; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); padding: 6px; border-radius: 28px; justify-content: space-around; }
-    .tabbar a { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; border-radius: 22px; color: var(--ink-2); font-size: 11px; font-weight: 500; position: relative; }
-    .tabbar a[aria-current=page] { color: var(--accent); background: var(--accent-wash); font-weight: 600; }
-    .tabbar .count { position: absolute; top: 2px; right: calc(50% - 22px); font-size: 10px; background: #ea4335; color: #fff; border-radius: 999px; padding: 0 5px; }
-  }
-
-  /* ---------- explore / hero ---------- */
-  .hero { text-align: center; padding: 28px 0 0; }
-  .hero-art { display: block; width: 100%; height: 120px; margin: 0 auto 8px; max-width: 520px; }
-  .hero h1 { font-size: clamp(30px, 5vw, 48px); font-weight: 700; letter-spacing: -.035em; }
-  .hero p { color: var(--ink-2); margin-top: 6px; }
-  .search { position: relative; z-index: 5; margin: 24px auto 0; max-width: 980px; padding: 16px 16px 40px; text-align: left; }
-  .search-opts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
-  .search-opts select { width: auto; min-height: 36px; padding: 6px 30px 6px 12px; border-radius: 999px; font-size: 14px; }
-  .stepper { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 999px; background: var(--glass-soft); padding: 2px; font-size: 14px; }
-  .stepper button { min-height: 30px; width: 30px; padding: 0; border: none; background: none; }
-  .search-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: start; }
-
-  /* location picker */
-  .loc { position: relative; }
-  .loc-box { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-height: 46px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--glass-soft); cursor: text; transition: border-color .2s, background .2s; }
-  .loc-box:hover { border-color: var(--line-2); }
-  .loc-box:focus-within { border-color: var(--accent); background: var(--glass-strong); }
-  .loc-chips { display: contents; }
-  .loc-chip { display: inline-flex; align-items: center; gap: 2px; padding: 3px 4px 3px 10px; border-radius: 999px; background: var(--accent-wash); color: var(--accent); font-size: 14px; font-weight: 600; white-space: nowrap; }
-  .loc-chip button { min-height: 22px; width: 22px; padding: 0; border: none; background: none; color: inherit; }
-  .loc-input { flex: 1; min-width: 110px; border: none !important; background: none !important; padding: 4px; min-height: 30px; }
-  .loc-menu { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; min-width: 100%; width: max-content; max-width: min(440px, calc(100vw - 32px)); max-height: min(420px, 60vh); overflow: auto; padding: 6px; border-radius: 18px; background: var(--menu); box-shadow: var(--shadow-lg); }
-  .loc-opt { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 12px; cursor: pointer; }
-  .loc-opt.hi { background: var(--accent-wash); }
-  .loc-opt:focus { outline: none; }
-  .loc-opt.sub { padding: 6px 10px 6px 30px; position: relative; }
-  .loc-opt.sub::before { content: ""; position: absolute; left: 25px; top: 0; bottom: 50%; width: 10px; border-left: 1.5px solid var(--line-2); border-bottom: 1.5px solid var(--line-2); border-bottom-left-radius: 6px; }
-  .loc-opt.sub .loc-ic { width: 26px; height: 26px; border-radius: 8px; margin-left: 12px; }
-  .loc-opt.sub b { font-weight: 500; }
-  .loc-opt.taken { opacity: .5; }
-  .loc-code { font-size: 12px; font-weight: 700; color: var(--ink-2); padding: 2px 8px; border-radius: 6px; background: var(--glass-soft); border: 1px solid var(--line); white-space: nowrap; }
-  .loc-ic { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; background: var(--glass-soft); border: 1px solid var(--line); color: var(--ink-2); flex: none; }
-  .loc-empty { padding: 10px; }
-
-  /* date fields */
-  .dates-box { display: grid; gap: 10px; margin-top: 12px; }
-  .dates-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
-  .dates-row[hidden], .dates-box [hidden] { display: none !important; }
-  .nights { display: flex; gap: 6px; align-items: center; }
-  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-
-  /* date grid */
-  .grid-wrap { overflow: auto; max-height: 480px; border-radius: 14px; }
-  .dgrid { border-collapse: separate; border-spacing: 3px; font-size: 12px; }
-  .dgrid th { font-weight: 400; color: var(--ink-2); padding: 4px 6px; white-space: nowrap; text-align: center; line-height: 1.25; background: var(--glass-strong); position: sticky; z-index: 1; }
-  .dgrid thead th { top: 0; }
-  .dgrid tbody th { left: 0; text-align: right; }
-  .dgrid th.corner { left: 0; z-index: 2; font-size: 11px; }
-  .dgrid td { padding: 0; text-align: center; color: var(--muted); }
-  .dgrid td.g0 { background: var(--bar-empty); border-radius: 8px; height: 38px; min-width: 52px; }
-  .gc { width: 100%; min-width: 52px; min-height: 38px; padding: 0 6px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .gc.light { color: #0f172a; } .gc.dark { color: #fff; }
-  .gc.best { box-shadow: inset 0 0 0 2px #34a853; }
-  .gc.sel { outline: 2px solid var(--ink); outline-offset: 1px; }
-  .swap { margin-top: 22px; width: 40px; height: 40px; padding: 0; z-index: 1; }
-  .dates { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .search .go { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%); min-height: 48px; padding: 0 26px; font-size: 16px; }
-  .search .go:active { transform: translate(-50%, 50%) scale(.97); }
-  .cab-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  @media (max-width: 860px) {
-    .search-grid { grid-template-columns: 1fr auto 1fr; }
-    .search-grid .wide { grid-column: 1 / -1; }
-  }
-  @media (max-width: 560px) {
-    .search-grid { grid-template-columns: 1fr; }
-    .swap { margin: -6px auto -6px; transform: rotate(90deg); }
-  }
-
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-  .deal { display: block; text-align: left; padding: 16px; border-radius: 22px; width: 100%; color: inherit; white-space: normal; min-height: 0; transition: transform .15s ease, box-shadow .2s; }
-  .deal:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-  .deal .city { font-size: 17px; font-weight: 650; letter-spacing: -.02em; }
-  .deal .price { font-size: 26px; font-weight: 700; letter-spacing: -.03em; }
-  .deal .k { font-size: 13px; color: var(--ink-2); }
-  @media (max-width: 560px) {
-    .cards.scroller { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -16px; padding: 4px 16px 12px; scrollbar-width: none; }
-    .cards.scroller::-webkit-scrollbar { display: none; }
-    .cards.scroller > * { flex: 0 0 78%; scroll-snap-align: start; }
-  }
-
-  /* ---------- tracked ---------- */
-  .route-card { padding: 18px 18px 8px; }
-  .route-card .title { font-size: 18px; font-weight: 650; letter-spacing: -.02em; color: var(--ink); }
-  .cab-row { display: grid; grid-template-columns: 1fr 96px auto; gap: 12px; align-items: center; padding: 12px 8px; margin: 0 -8px; border-top: 1px solid var(--line); border-radius: 12px; color: inherit; }
-  .cab-row:hover { background: var(--glass-soft); }
-  .cab-row .p { font-size: 18px; font-weight: 650; text-align: right; font-variant-numeric: tabular-nums; }
-  .spark { width: 96px; height: 28px; display: block; }
-  .routes { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
-  @media (max-width: 420px) { .routes { grid-template-columns: 1fr; } .cab-row { grid-template-columns: 1fr auto; } .cab-row .spark { display: none; } }
-
-  /* ---------- route detail ---------- */
-  .crumb { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-2); font-size: 14px; padding: 6px 10px 6px 4px; border-radius: 999px; }
-  .crumb:hover { background: var(--glass-soft); }
-  .detail-head { display: flex; gap: 12px; align-items: start; justify-content: space-between; flex-wrap: wrap; margin: 8px 0 16px; }
-  .detail-head h1 { font-size: clamp(24px, 4vw, 34px); font-weight: 700; letter-spacing: -.03em; }
-  .summary { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; margin-top: 14px; }
-  @media (max-width: 860px) { .summary { grid-template-columns: 1fr; } }
-  .big-price { font-size: 44px; font-weight: 750; letter-spacing: -.04em; line-height: 1.05; font-variant-numeric: tabular-nums; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .stat { padding: 12px 14px; border-radius: 16px; background: var(--glass-soft); border: 1px solid var(--line); }
-  .stat .v { font-size: 20px; font-weight: 650; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .stat .k { font-size: 12px; color: var(--ink-2); }
-
-  .insight { margin-top: 16px; }
-  .range { position: relative; height: 8px; border-radius: 999px; display: flex; gap: 3px; margin: 30px 0 6px; }
-  .range i { display: block; height: 100%; border-radius: 999px; }
-  .range .z1 { background: #34a853; flex: 1; } .range .z2 { background: #fbbc04; flex: 1.2; } .range .z3 { background: #ea4335; flex: 1; }
-  .range .pin { position: absolute; top: -27px; transform: translateX(-50%); font-size: 12px; font-weight: 700; background: var(--ink); color: var(--bg); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
-  .range .pin::after { content: ""; position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); border: 4px solid transparent; border-bottom: 0; border-top-color: var(--ink); }
-  .range .knob { position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%; background: var(--glass-strong); border: 3px solid var(--ink); transform: translate(-50%, -50%); }
-  .range-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-
-  .chart-wrap { position: relative; overflow-x: auto; overflow-y: hidden; scrollbar-width: thin; padding-bottom: 4px; }
-  .chart-wrap svg { display: block; }
-  .bar { cursor: pointer; transition: fill .15s; }
-  .tip { position: absolute; pointer-events: none; padding: 8px 11px; font-size: 13px; border-radius: 12px; white-space: nowrap; display: none; z-index: 5; }
-
-  .months { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
-  .month h4 { margin: 0 0 6px; font-size: 14px; font-weight: 600; }
-  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-  .cal .wd { font-size: 11px; color: var(--muted); text-align: center; }
-  .cal .d { aspect-ratio: 1 / .92; border-radius: 9px; font-size: 11px; padding: 3px 4px; display: flex; flex-direction: column; justify-content: space-between; align-items: stretch;
-            background: var(--bar-empty); color: var(--muted); border: none; min-height: 0; cursor: default; white-space: normal; }
-  .cal .d.out { background: none; }
-  .cal .d.has { cursor: pointer; }
-  .cal .d.light { color: #0f172a; } .cal .d.dark { color: #fff; }
-  .cal .d .p { font-weight: 700; font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
-  .cal .d.best { box-shadow: inset 0 0 0 2px #34a853; }
-  .cal .d.sel { outline: 2px solid var(--ink); outline-offset: 1px; }
-  @media (max-width: 560px) { .cal { gap: 2px; } .cal .d { padding: 2px 3px; font-size: 10px; line-height: 1.1; border-radius: 7px; } .cal .d .p { font-size: 10px; } }
-  .legend { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
-  .legend .sw { display: inline-flex; border-radius: 4px; overflow: hidden; } .legend .sw i { width: 16px; height: 10px; display: block; }
-
-  /* Google-style result rows */
-  .results { padding: 0; overflow: hidden; }
-  .res { border-top: 1px solid var(--line); }
-  .res:first-child { border-top: none; }
-  .res > button { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 40px minmax(150px, 1.3fr) 1fr .8fr auto 20px; gap: 14px; align-items: center; padding: 16px 18px; width: 100%; cursor: pointer; }
-  .res > button:hover { background: var(--glass-soft); }
-  .res > button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-  .res.sel > button { background: var(--accent-wash); }
-  .alogo { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: var(--glass-strong); border: 1px solid var(--line); overflow: hidden; font-size: 12px; font-weight: 700; color: var(--ink-2); }
-  .alogo img { width: 28px; height: 28px; object-fit: contain; }
-  .res .t { font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .res .s { font-size: 13px; color: var(--ink-2); }
-  .res .pr { text-align: right; }
-  .res .pr .t { font-size: 18px; }
-  .res .chev { transition: transform .2s; color: var(--muted); }
-  .res.open .chev { transform: rotate(180deg); }
-  .res-more { display: none; padding: 0 18px 18px 72px; }
-  .res.open .res-more { display: block; }
-  .legs { border-left: 2px dotted var(--line-2); padding-left: 14px; margin: 4px 0 14px; }
-  .legs div { padding: 4px 0; font-size: 14px; }
-  @media (max-width: 640px) {
-    .res > button { grid-template-columns: 36px 1fr auto; gap: 10px; padding: 14px; }
-    .res .c3, .res .c4 { display: none; }
-    .res .chev { display: none; }
-    .res-more { padding: 0 14px 14px 60px; }
-  }
-
-  /* ---------- alerts ---------- */
-  .alert { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 14px 18px; border-top: 1px solid var(--line); color: inherit; }
-  .alert:first-child { border-top: none; }
-  .alert:hover { background: var(--glass-soft); }
-  .alert .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--good-wash); color: var(--good); }
-
-  /* live search */
-  .dstrip { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
-  .dcell { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; border-radius: 14px; padding: 8px 12px; min-height: 56px; white-space: normal; text-align: left; line-height: 1.25; }
-  .dcell b { font-size: 16px; font-variant-numeric: tabular-nums; }
-  .dcell.on { background: var(--accent-wash); border-color: var(--accent); }
-  .sk { display: block; height: 14px; border-radius: 7px; background: linear-gradient(90deg, var(--line) 25%, var(--line-2) 50%, var(--line) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite linear; }
-  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
-  .skel-row { display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
-  .layover { margin: 8px 0 8px -14px; padding: 8px 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
-
-  .diag { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
-  .diag li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 12px; background: var(--glass-soft); border: 1px solid var(--line); font-size: 14px; }
-  .diag .mark { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; flex: none; font-size: 12px; font-weight: 700; background: var(--line); }
-  .diag li.ok .mark { background: var(--good-wash); color: var(--good); }
-  .diag li.bad .mark { background: var(--crit-wash); color: var(--crit); }
-
-  .empty { text-align: center; padding: 40px 20px; color: var(--ink-2); }
-  .empty .em { font-size: 40px; }
-  .banner { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 18px; margin-top: 48px; background: var(--warn-wash); border: 1px solid var(--edge); font-size: 14px; }
-
-  /* ---------- sheets ---------- */
-  dialog { border: 1px solid var(--edge); border-radius: 28px; padding: 0; color: var(--ink); width: min(680px, calc(100vw - 24px)); max-height: calc(100dvh - 24px);
-           background: var(--glass-strong); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--shadow-lg); }
-  dialog[open] { animation: pop .22s cubic-bezier(.2,.9,.3,1.2); }
-  @keyframes pop { from { opacity: 0; transform: scale(.96) translateY(8px); } to { opacity: 1; transform: none; } }
-  dialog::backdrop { background: rgba(8,12,20,.32); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px 6px; }
-  .sheet-body { padding: 12px 20px 20px; display: grid; gap: 18px; }
-  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-  .targets { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-  .tcard { padding: 10px 12px; border-radius: 16px; background: var(--glass-soft); border: 1px solid var(--line); display: grid; gap: 8px; }
-  .tcard label.top { display: flex; gap: 8px; align-items: center; font-weight: 600; font-size: 14px; cursor: pointer; }
-  @media (max-width: 560px) {
-    dialog { width: 100vw; max-width: 100vw; margin: auto 0 0; border-radius: 28px 28px 0 0; max-height: 92dvh; padding-bottom: env(safe-area-inset-bottom); }
-    @keyframes pop { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
-  }
-
-  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); padding: 10px 18px; border-radius: 999px; font-size: 14px; z-index: 50; display: none; max-width: calc(100vw - 32px); }
-  @media (max-width: 760px) { .toast { bottom: calc(96px + env(safe-area-inset-bottom)); } }
-  .spin { width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; display: inline-block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-plane" viewBox="0 0 24 24"><path d="M10.5 21l1.5-1v-4.5l7 2.5v-2l-7-4.5V5a1.5 1.5 0 0 0-3 0v6.5L2 16v2l7-2.5V20l1.5 1z" fill="currentColor" stroke="none" transform="rotate(45 12 12)"/></symbol>
   <symbol id="i-explore" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/></symbol>
   <symbol id="i-track" viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M15 8h5v5"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
   <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3h0a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8v0a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></symbol>
   <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.9-3.9L4 9"/><path d="M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14.9 3.9L20 15"/><path d="M20 20v-5h-5"/></symbol>
   <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4L3 8l4 4"/><path d="M3 8h14"/><path d="M17 20l4-4-4-4"/><path d="M21 16H7"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
   <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></symbol>
@@ -396,35 +36,49 @@
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
   <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6 8v5l-4 2v-7z"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
 </svg>
 
 <header class="topbar">
-  <div class="topbar-inner glass">
+  <div class="wrap">
     <a class="brand" href="#/"><span class="logo"><svg><use href="#i-plane"/></svg></span><span>Flight Tracker</span></a>
     <nav class="nav" aria-label="Main">
-      <a href="#/" data-nav="explore"><svg class="i"><use href="#i-explore"/></svg>Explore</a>
-      <a href="#/tracked" data-nav="tracked"><svg class="i"><use href="#i-track"/></svg>Tracked</a>
-      <a href="#/alerts" data-nav="alerts"><svg class="i"><use href="#i-bell"/></svg>Price drops <span class="count hidden" id="nav-count"></span></a>
+      <a href="#/" data-nav="home">Flights</a>
+      <a href="#/explore" data-nav="explore">Explore</a>
+      <a href="#/deals" data-nav="deals">Deals</a>
+      <a href="#/tracked" data-nav="tracked">Tracked <span class="count hidden" data-count></span></a>
     </nav>
-    <span class="status" id="status"><span class="dot"></span><span class="label">Loading…</span></span>
-    <button class="plain icon" id="btn-run" title="Update all tracked prices now" aria-label="Update all tracked prices now"><svg class="i"><use href="#i-refresh"/></svg></button>
-    <button class="plain icon" id="btn-settings" title="Settings" aria-label="Settings"><svg class="i"><use href="#i-gear"/></svg></button>
+    <div class="top-actions">
+      <span class="status" id="status"><span class="dot"></span><span class="label">Loading…</span></span>
+      <button class="btn-ghost icon-btn" id="btn-run" title="Update tracked prices now" aria-label="Update tracked prices now"><svg class="i"><use href="#i-refresh"/></svg></button>
+      <button class="btn-ghost icon-btn" id="btn-settings" title="Settings" aria-label="Settings"><svg class="i"><use href="#i-gear"/></svg></button>
+    </div>
   </div>
 </header>
 
 <main id="app" tabindex="-1"></main>
 
-<nav class="tabbar glass" aria-label="Main">
-  <a href="#/" data-nav="explore"><svg class="i"><use href="#i-explore"/></svg>Explore</a>
-  <a href="#/tracked" data-nav="tracked"><svg class="i"><use href="#i-track"/></svg>Tracked</a>
-  <a href="#/alerts" data-nav="alerts"><svg class="i"><use href="#i-bell"/></svg>Drops<span class="count hidden" id="tab-count"></span></a>
-  <a href="#/settings" data-nav="settings"><svg class="i"><use href="#i-gear"/></svg>Settings</a>
+<footer class="foot">
+  <div class="wrap">
+    <span>Prices from Google Flights (via SerpApi), checked automatically. Flight Tracker doesn't sell tickets: book on Google Flights or with the airline.</span>
+    <span id="foot-updated"></span>
+  </div>
+</footer>
+
+<nav class="tabbar" aria-label="Main">
+  <a href="#/" data-nav="home"><svg class="i"><use href="#i-search"/></svg>Flights</a>
+  <a href="#/explore" data-nav="explore"><svg class="i"><use href="#i-explore"/></svg>Explore</a>
+  <a href="#/deals" data-nav="deals"><svg class="i"><use href="#i-tag"/></svg>Deals</a>
+  <a href="#/tracked" data-nav="tracked"><svg class="i"><use href="#i-bell"/></svg>Tracked<span class="count hidden" data-count></span></a>
 </nav>
 
-<!-- Route editor sheet -->
+<!-- Route editor -->
 <dialog id="dlg-route" aria-labelledby="r-title">
   <form id="route-form" novalidate>
-    <div class="sheet-head"><h2 id="r-title">Edit route</h2><button type="button" class="plain icon" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-head"><h2 id="r-title">Edit tracked route</h2><button type="button" class="btn-ghost icon-btn" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
     <div class="sheet-body">
       <div class="grid2" id="r-locs"></div>
       <label class="field"><span>Name (optional)</span><input name="name" placeholder="Tokyo in spring"></label>
@@ -434,15 +88,15 @@
         <label class="field"><span>Stops</span><select name="max_stops"><option value="">Any number</option><option value="0">Non-stop only</option><option value="1">1 stop or fewer</option><option value="2">2 stops or fewer</option></select></label>
       </div>
       <div id="r-dates"></div>
-      <div>
-        <h3 style="margin-bottom:8px">Classes &amp; target prices</h3>
+      <section>
+        <h3>Classes &amp; target prices</h3>
+        <p class="tiny muted" style="margin-bottom:8px">You get a notification when the cheapest fare drops below a target.</p>
         <div class="targets" id="r-cabins"></div>
-        <p class="tiny muted" style="margin-top:8px">You get a notification when the cheapest fare drops below a target.</p>
-      </div>
+      </section>
       <p class="tiny muted" id="r-cost"></p>
       <div class="row between">
-        <button type="button" class="plain danger" id="r-delete">Delete route</button>
-        <div class="row"><button type="button" data-close>Cancel</button><button class="primary" id="r-save">Save</button></div>
+        <button type="button" class="btn-ghost danger" id="r-delete">Delete route</button>
+        <div class="row"><button type="button" data-close>Cancel</button><button class="btn-primary" id="r-save">Save</button></div>
       </div>
     </div>
   </form>
@@ -451,21 +105,47 @@
 <!-- Passcode prompt -->
 <dialog id="dlg-pass" aria-labelledby="p-title" style="width:min(420px, calc(100vw - 24px))">
   <form id="pass-form">
-    <div class="sheet-head"><h2 id="p-title">Passcode</h2><button type="button" class="plain icon" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-head"><h2 id="p-title">Passcode</h2><button type="button" class="btn-ghost icon-btn" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
     <div class="sheet-body">
       <p class="small ink2" id="pass-msg"></p>
       <label class="field"><span>Passcode</span><input name="pass" type="password" autocomplete="current-password" required></label>
-      <p class="tiny muted">It's the <code>SEARCH_PASSCODE</code> secret of the repository. This browser remembers it.</p>
-      <div class="row" style="justify-content:flex-end"><button type="button" data-close>Cancel</button><button class="primary">Continue</button></div>
+      <p class="tiny muted">It's the <code>SEARCH_PASSCODE</code> secret of the search service. This browser remembers it.</p>
+      <div class="row" style="justify-content:flex-end"><button type="button" data-close>Cancel</button><button class="btn-primary">Continue</button></div>
     </div>
   </form>
 </dialog>
 
-<!-- Settings sheet -->
+<!-- Filters (phones) -->
+<dialog id="dlg-filters" aria-labelledby="f-title">
+  <div class="sheet-head"><h2 id="f-title">Filters</h2><button type="button" class="btn-ghost icon-btn" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
+  <div id="f-body"></div>
+  <div class="sheet-body" style="padding-top:0"><button class="btn-primary" data-close>Show flights</button></div>
+</dialog>
+
+<!-- Settings -->
 <dialog id="dlg-settings" aria-labelledby="s-title">
   <form id="settings-form" novalidate>
-    <div class="sheet-head"><h2 id="s-title">Settings</h2><button type="button" class="plain icon" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
+    <div class="sheet-head"><h2 id="s-title">Settings</h2><button type="button" class="btn-ghost icon-btn" data-close aria-label="Close"><svg class="i"><use href="#i-close"/></svg></button></div>
     <div class="sheet-body">
+      <section>
+        <h3>Deal finder</h3>
+        <p class="small ink2" style="margin-bottom:10px">Every run looks up the cheapest destinations from your home airports with Google's Explore (one search each), for any time and for each of the next six months.</p>
+        <div id="s-home"></div>
+        <div class="grid2" style="margin-top:12px">
+          <div class="field"><span>Classes</span><div class="checks" id="s-cabins"></div></div>
+          <div class="field"><span>Trip lengths</span><div class="checks" id="s-durations"></div></div>
+        </div>
+      </section>
+      <section>
+        <h3>Search budget</h3>
+        <div class="grid2" style="margin-top:10px">
+          <label class="field"><span>Explore searches per run</span><input type="number" name="explore_per_run" min="0" max="50"></label>
+          <label class="field"><span>Tracked-route searches per run</span><input type="number" name="searches_per_run" min="0" max="200"></label>
+          <label class="field"><span>Currency</span><select name="currency"><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option><option>SEK</option><option>NOK</option><option>DKK</option><option>PLN</option><option>AUD</option><option>CAD</option><option>JPY</option></select></label>
+          <label class="field"><span>Alert on drops of (%)</span><input type="number" name="drop_threshold_pct" min="1" max="90"></label>
+        </div>
+        <p class="tiny muted" style="margin-top:8px">Each search uses one SerpApi credit. With 2 runs a day that's about <b id="s-month"></b> searches a month, plus the searches you run yourself.</p>
+      </section>
       <section>
         <h3>Live search</h3>
         <p class="small ink2" style="margin:4px 0 10px" id="s-live"></p>
@@ -475,7 +155,7 @@
       </section>
       <section>
         <h3>GitHub connection <span class="muted" style="font-weight:400">(optional)</span></h3>
-        <p class="small ink2" style="margin:4px 0 10px">Only needed when the search service can't save routes (no <code>TRACKER_GITHUB_TOKEN</code>). Create a
+        <p class="small ink2" style="margin:4px 0 10px">Only needed when the search service can't save routes. Create a
           <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
           for this repository only, with <b>Contents</b> and <b>Actions</b> set to <i>Read and write</i>. It stays in this browser.</p>
         <div class="grid2">
@@ -484,1141 +164,30 @@
         </div>
       </section>
       <section>
-        <h3>Searching</h3>
-        <div class="grid2" style="margin-top:10px">
-          <label class="field"><span>Currency</span><select name="currency"><option>EUR</option><option>USD</option><option>GBP</option><option>CHF</option><option>SEK</option><option>NOK</option><option>DKK</option><option>PLN</option><option>AUD</option><option>CAD</option><option>JPY</option></select></label>
-          <label class="field"><span>Searches per run</span><input type="number" name="searches_per_run" min="1" max="200"></label>
-          <label class="field"><span>Alert on drops of (%)</span><input type="number" name="drop_threshold_pct" min="1" max="90"></label>
-          <label class="field"><span>Ignore prices older than (days)</span><input type="number" name="stale_days" min="1" max="60"></label>
-        </div>
-        <p class="tiny muted" style="margin-top:8px">Each search is one Google Flights query (one route, class and date) and uses one SerpApi credit.
-          With 4 runs a day that's about <b id="s-month"></b> searches a month.</p>
-      </section>
-      <section>
         <h3>Appearance</h3>
         <div class="seg" role="group" aria-label="Theme" id="s-theme" style="margin-top:10px">
           <button type="button" data-t="auto">Automatic</button><button type="button" data-t="light">Light</button><button type="button" data-t="dark">Dark</button>
         </div>
       </section>
-      <div class="row" style="justify-content:flex-end"><button type="button" data-close>Cancel</button><button class="primary">Save</button></div>
+      <div class="row" style="justify-content:flex-end"><button type="button" data-close>Cancel</button><button class="btn-primary">Save</button></div>
     </div>
   </form>
 </dialog>
 
-<div class="toast glass" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
-const CABINS = ["economy", "premium", "business", "first"];
-const CABIN_NAME = { economy: "Economy", premium: "Premium economy", business: "Business", first: "First" };
-const CABIN_SHORT = { economy: "Economy", premium: "Premium", business: "Business", first: "First" };
-
-// ---------- helpers ----------
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const icon = (n, cls = "i") => `<svg class="${cls}"><use href="#i-${n}"/></svg>`;
-const store = {
-  get(k, d) { try { return JSON.parse(localStorage.getItem("ft." + k)) ?? d; } catch { return d; } },
-  set(k, v) { try { localStorage.setItem("ft." + k, JSON.stringify(v)); } catch {} },
-};
-let config = { settings: {}, routes: [] }, latest = { routes: {} }, hist = {}, alerts = [];
-let cabinFilter = store.get("cabin", "all");
-const ui = { open: null, chart: store.get("chart", "graph") };
-
-function toast(msg) { const t = $("#toast"); t.textContent = msg; t.style.display = "block"; clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 4000); }
-function money(v) {
-  if (v == null) return "–";
-  const cur = latest.currency || config.settings.currency || "EUR";
-  try { return new Intl.NumberFormat(undefined, { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(v); } catch { return `${cur} ${v}`; }
-}
-const fmtDate = (iso, o = { day: "numeric", month: "short" }) => iso ? new Date(iso.slice(0, 10) + "T12:00:00Z").toLocaleDateString(undefined, { ...o, timeZone: "UTC" }) : "";
-const fmtDay = iso => fmtDate(iso, { weekday: "short", day: "numeric", month: "short" });
-const ago = iso => { const m = (Date.now() - new Date(iso)) / 60000; return m < 90 ? `${Math.max(1, Math.round(m))} min ago` : m < 2880 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} days ago`; };
-const dur = m => m ? `${Math.floor(m / 60)} h ${m % 60 ? (m % 60) + " min" : ""}`.trim() : "";
-const stopsTxt = n => n == null ? "" : n === 0 ? "Non-stop" : `${n} stop${n > 1 ? "s" : ""}`;
-const hhmm = t => (t || "").slice(11, 16);
-const plusDays = (a, b) => { if (!a || !b) return ""; const d = (new Date(b.slice(0, 10)) - new Date(a.slice(0, 10))) / 864e5; return d > 0 ? `<sup>+${d}</sup>` : ""; };
-const routeTitle = r => r.name || `${cityOf(r.from)} → ${cityOf(r.to)}`;
-const cabinsOf = r => CABINS.filter(c => (r.cabins || CABINS).includes(c));
-const entry = (id, c) => latest.routes?.[id]?.[c] || {};
-const compact = p => p >= 10000 ? Math.round(p / 1000) + "k" : p >= 1000 ? (p / 1000).toFixed(1).replace(/\.0$/, "") + "k" : String(p);
-const prevPrice = (id, c, price) => [...(hist[id]?.[c] || [])].reverse().find(p => p[1] !== price)?.[1];
-
-function airlineLogo(row) {
-  const code = (row?.legs?.[0]?.flight || "").split(" ")[0];
-  const src = row?.logo || (code ? `https://www.gstatic.com/flights/airline_logos/70px/${code}.png` : "");
-  const initials = esc((row?.airlines?.[0] || "?").split(/\s+/).map(w => w[0]).join("").slice(0, 2));
-  return `<span class="alogo" aria-hidden="true">${src ? `<img src="${esc(src)}" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode('${initials}'))">` : initials}</span>`;
-}
-function levelBadge(b) {
-  if (!b?.level) return "";
-  const t = { low: "Low price", typical: "Typical price", high: "High price" }[b.level] || b.level;
-  return `<span class="badge ${b.level}">${b.level === "low" ? icon("down", "i\" style=\"width:12px;height:12px") : ""}${t}</span>`;
-}
-function spark(points, w = 96, h = 28) {
-  if (!points || points.length < 2) return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"></svg>`;
-  const pts = points.slice(-40), ys = pts.map(p => p[1]), lo = Math.min(...ys), hi = Math.max(...ys);
-  const X = i => 2 + i / (pts.length - 1) * (w - 4), Y = v => h - 3 - (v - lo) / (hi - lo || 1) * (h - 6);
-  const d = pts.map((p, i) => `${i ? "L" : "M"}${X(i).toFixed(1)},${Y(p[1]).toFixed(1)}`).join("");
-  const last = pts[pts.length - 1][1], first = pts[0][1];
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="${last <= first ? "var(--good)" : "var(--crit)"}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${X(pts.length - 1)}" cy="${Y(last)}" r="2.5" fill="${last <= first ? "var(--good)" : "var(--crit)"}"/></svg>`;
-}
-function segmented(id, options, current, label) {
-  return `<div class="seg" role="group" aria-label="${label}" id="${id}">${options.map(([v, t, off]) => `<button type="button" data-v="${v}" aria-pressed="${v === current}" class="${off ? "off" : ""}">${t}</button>`).join("")}</div>`;
-}
-
-// ---------- locations ----------
-const AIRPORTS = "AMS|Amsterdam|Schiphol|NL;RTM|Rotterdam|Rotterdam The Hague|NL;EIN|Eindhoven|Eindhoven|NL;GRQ|Groningen|Eelde|NL;MST|Maastricht|Maastricht Aachen|NL;BRU|Brussels|Brussels|BE;CRL|Brussels|Charleroi|BE;ANR|Antwerp|Antwerp|BE;LGG|Liège|Liège|BE;LUX|Luxembourg|Luxembourg|LU;DUS|Düsseldorf|Düsseldorf|DE;NRN|Düsseldorf|Weeze|DE;CGN|Cologne|Cologne Bonn|DE;FRA|Frankfurt|Frankfurt|DE;HHN|Frankfurt|Hahn|DE;MUC|Munich|Munich|DE;BER|Berlin|Brandenburg|DE;HAM|Hamburg|Hamburg|DE;STR|Stuttgart|Stuttgart|DE;HAJ|Hanover|Hanover|DE;DTM|Dortmund|Dortmund|DE;NUE|Nuremberg|Nuremberg|DE;BRE|Bremen|Bremen|DE;LEJ|Leipzig|Leipzig/Halle|DE;LHR|London|Heathrow|GB;LGW|London|Gatwick|GB;STN|London|Stansted|GB;LTN|London|Luton|GB;LCY|London|City|GB;SEN|London|Southend|GB;MAN|Manchester|Manchester|GB;BHX|Birmingham|Birmingham|GB;BRS|Bristol|Bristol|GB;EDI|Edinburgh|Edinburgh|GB;GLA|Glasgow|Glasgow|GB;BFS|Belfast|Belfast International|GB;DUB|Dublin|Dublin|IE;ORK|Cork|Cork|IE;SNN|Shannon|Shannon|IE;CDG|Paris|Charles de Gaulle|FR;ORY|Paris|Orly|FR;BVA|Paris|Beauvais|FR;NCE|Nice|Côte d'Azur|FR;LYS|Lyon|Saint-Exupéry|FR;MRS|Marseille|Provence|FR;TLS|Toulouse|Blagnac|FR;BOD|Bordeaux|Mérignac|FR;NTE|Nantes|Atlantique|FR;ZRH|Zurich|Zurich|CH;GVA|Geneva|Geneva|CH;BSL|Basel|EuroAirport|CH;VIE|Vienna|Vienna|AT;SZG|Salzburg|Salzburg|AT;INN|Innsbruck|Innsbruck|AT;CPH|Copenhagen|Kastrup|DK;BLL|Billund|Billund|DK;ARN|Stockholm|Arlanda|SE;BMA|Stockholm|Bromma|SE;GOT|Gothenburg|Landvetter|SE;OSL|Oslo|Gardermoen|NO;BGO|Bergen|Flesland|NO;TOS|Tromsø|Tromsø|NO;HEL|Helsinki|Helsinki-Vantaa|FI;RVN|Rovaniemi|Rovaniemi|FI;KEF|Reykjavik|Keflavík|IS;MAD|Madrid|Barajas|ES;BCN|Barcelona|El Prat|ES;AGP|Málaga|Málaga|ES;PMI|Palma de Mallorca|Palma|ES;ALC|Alicante|Alicante|ES;VLC|Valencia|Valencia|ES;SVQ|Seville|Seville|ES;IBZ|Ibiza|Ibiza|ES;TFS|Tenerife|Tenerife South|ES;LPA|Gran Canaria|Gran Canaria|ES;ACE|Lanzarote|Lanzarote|ES;FUE|Fuerteventura|Fuerteventura|ES;BIO|Bilbao|Bilbao|ES;LIS|Lisbon|Humberto Delgado|PT;OPO|Porto|Francisco Sá Carneiro|PT;FAO|Faro|Faro|PT;FNC|Madeira|Funchal|PT;PDL|Azores|Ponta Delgada|PT;FCO|Rome|Fiumicino|IT;CIA|Rome|Ciampino|IT;MXP|Milan|Malpensa|IT;LIN|Milan|Linate|IT;BGY|Milan|Bergamo|IT;VCE|Venice|Marco Polo|IT;TSF|Venice|Treviso|IT;NAP|Naples|Naples|IT;FLR|Florence|Peretola|IT;PSA|Pisa|Galileo Galilei|IT;BLQ|Bologna|Bologna|IT;CTA|Catania|Catania|IT;PMO|Palermo|Palermo|IT;CAG|Cagliari|Cagliari|IT;OLB|Olbia|Costa Smeralda|IT;BRI|Bari|Bari|IT;ATH|Athens|Eleftherios Venizelos|GR;SKG|Thessaloniki|Macedonia|GR;HER|Crete|Heraklion|GR;CHQ|Crete|Chania|GR;RHO|Rhodes|Rhodes|GR;JTR|Santorini|Santorini|GR;JMK|Mykonos|Mykonos|GR;CFU|Corfu|Corfu|GR;KGS|Kos|Kos|GR;ZTH|Zakynthos|Zakynthos|GR;IST|Istanbul|Istanbul|TR;SAW|Istanbul|Sabiha Gökçen|TR;AYT|Antalya|Antalya|TR;DLM|Dalaman|Dalaman|TR;BJV|Bodrum|Milas-Bodrum|TR;ADB|Izmir|Adnan Menderes|TR;ESB|Ankara|Esenboğa|TR;LCA|Larnaca|Larnaca|CY;PFO|Paphos|Paphos|CY;MLA|Malta|Malta|MT;WAW|Warsaw|Chopin|PL;KRK|Kraków|John Paul II|PL;GDN|Gdańsk|Lech Wałęsa|PL;PRG|Prague|Václav Havel|CZ;BUD|Budapest|Ferenc Liszt|HU;OTP|Bucharest|Henri Coandă|RO;SOF|Sofia|Sofia|BG;VAR|Varna|Varna|BG;ZAG|Zagreb|Zagreb|HR;SPU|Split|Split|HR;DBV|Dubrovnik|Dubrovnik|HR;LJU|Ljubljana|Jože Pučnik|SI;BEG|Belgrade|Nikola Tesla|RS;TIA|Tirana|Tirana|AL;RIX|Riga|Riga|LV;TLL|Tallinn|Tallinn|EE;VNO|Vilnius|Vilnius|LT;DXB|Dubai|Dubai International|AE;DWC|Dubai|Al Maktoum|AE;AUH|Abu Dhabi|Zayed|AE;DOH|Doha|Hamad|QA;BAH|Bahrain|Bahrain|BH;MCT|Muscat|Muscat|OM;RUH|Riyadh|King Khalid|SA;JED|Jeddah|King Abdulaziz|SA;AMM|Amman|Queen Alia|JO;TLV|Tel Aviv|Ben Gurion|IL;CAI|Cairo|Cairo|EG;HRG|Hurghada|Hurghada|EG;SSH|Sharm El Sheikh|Sharm El Sheikh|EG;RAK|Marrakesh|Menara|MA;CMN|Casablanca|Mohammed V|MA;AGA|Agadir|Al Massira|MA;TUN|Tunis|Carthage|TN;JNB|Johannesburg|O. R. Tambo|ZA;CPT|Cape Town|Cape Town|ZA;NBO|Nairobi|Jomo Kenyatta|KE;ZNZ|Zanzibar|Abeid Amani Karume|TZ;JRO|Kilimanjaro|Kilimanjaro|TZ;ADD|Addis Ababa|Bole|ET;LOS|Lagos|Murtala Muhammed|NG;ACC|Accra|Kotoka|GH;MRU|Mauritius|Sir Seewoosagur Ramgoolam|MU;SEZ|Seychelles|Mahé|SC;JFK|New York|John F. Kennedy|US;EWR|New York|Newark|US;LGA|New York|LaGuardia|US;BOS|Boston|Logan|US;IAD|Washington|Dulles|US;DCA|Washington|Reagan National|US;PHL|Philadelphia|Philadelphia|US;ORD|Chicago|O'Hare|US;MDW|Chicago|Midway|US;ATL|Atlanta|Hartsfield-Jackson|US;MIA|Miami|Miami|US;FLL|Miami|Fort Lauderdale|US;MCO|Orlando|Orlando|US;TPA|Tampa|Tampa|US;DFW|Dallas|Dallas/Fort Worth|US;IAH|Houston|George Bush|US;AUS|Austin|Austin-Bergstrom|US;DEN|Denver|Denver|US;PHX|Phoenix|Sky Harbor|US;LAS|Las Vegas|Harry Reid|US;LAX|Los Angeles|Los Angeles|US;SFO|San Francisco|San Francisco|US;SJC|San Francisco|San José|US;OAK|San Francisco|Oakland|US;SAN|San Diego|San Diego|US;SEA|Seattle|Seattle-Tacoma|US;PDX|Portland|Portland|US;MSP|Minneapolis|Minneapolis–Saint Paul|US;DTW|Detroit|Detroit|US;CLT|Charlotte|Charlotte|US;MSY|New Orleans|Louis Armstrong|US;SLC|Salt Lake City|Salt Lake City|US;HNL|Honolulu|Daniel K. Inouye|US;OGG|Maui|Kahului|US;ANC|Anchorage|Ted Stevens|US;YYZ|Toronto|Pearson|CA;YVR|Vancouver|Vancouver|CA;YUL|Montreal|Trudeau|CA;YYC|Calgary|Calgary|CA;YOW|Ottawa|Macdonald-Cartier|CA;MEX|Mexico City|Benito Juárez|MX;CUN|Cancún|Cancún|MX;SJD|Los Cabos|Los Cabos|MX;PVR|Puerto Vallarta|Puerto Vallarta|MX;HAV|Havana|José Martí|CU;VRA|Varadero|Juan Gualberto Gómez|CU;PUJ|Punta Cana|Punta Cana|DO;SDQ|Santo Domingo|Las Américas|DO;MBJ|Montego Bay|Sangster|JM;NAS|Nassau|Lynden Pindling|BS;AUA|Aruba|Queen Beatrix|AW;CUR|Curaçao|Hato|CW;BON|Bonaire|Flamingo|BQ;SXM|Sint Maarten|Princess Juliana|SX;PBM|Paramaribo|Johan Adolf Pengel|SR;SJO|San José|Juan Santamaría|CR;LIR|Liberia|Guanacaste|CR;PTY|Panama City|Tocumen|PA;BOG|Bogotá|El Dorado|CO;CTG|Cartagena|Rafael Núñez|CO;MDE|Medellín|José María Córdova|CO;LIM|Lima|Jorge Chávez|PE;CUZ|Cusco|Alejandro Velasco Astete|PE;UIO|Quito|Mariscal Sucre|EC;GRU|São Paulo|Guarulhos|BR;GIG|Rio de Janeiro|Galeão|BR;EZE|Buenos Aires|Ezeiza|AR;AEP|Buenos Aires|Aeroparque|AR;SCL|Santiago|Arturo Merino Benítez|CL;NRT|Tokyo|Narita|JP;HND|Tokyo|Haneda|JP;KIX|Osaka|Kansai|JP;ITM|Osaka|Itami|JP;NGO|Nagoya|Chubu Centrair|JP;FUK|Fukuoka|Fukuoka|JP;CTS|Sapporo|New Chitose|JP;OKA|Okinawa|Naha|JP;ICN|Seoul|Incheon|KR;GMP|Seoul|Gimpo|KR;PUS|Busan|Gimhae|KR;CJU|Jeju|Jeju|KR;PEK|Beijing|Capital|CN;PKX|Beijing|Daxing|CN;PVG|Shanghai|Pudong|CN;SHA|Shanghai|Hongqiao|CN;CAN|Guangzhou|Baiyun|CN;SZX|Shenzhen|Bao'an|CN;CTU|Chengdu|Tianfu|CN;HKG|Hong Kong|Hong Kong|HK;MFM|Macau|Macau|MO;TPE|Taipei|Taoyuan|TW;SIN|Singapore|Changi|SG;BKK|Bangkok|Suvarnabhumi|TH;DMK|Bangkok|Don Mueang|TH;HKT|Phuket|Phuket|TH;CNX|Chiang Mai|Chiang Mai|TH;USM|Koh Samui|Samui|TH;KBV|Krabi|Krabi|TH;KUL|Kuala Lumpur|KLIA|MY;PEN|Penang|Penang|MY;LGK|Langkawi|Langkawi|MY;CGK|Jakarta|Soekarno-Hatta|ID;DPS|Bali|Ngurah Rai|ID;MNL|Manila|Ninoy Aquino|PH;CEB|Cebu|Mactan-Cebu|PH;SGN|Ho Chi Minh City|Tan Son Nhat|VN;HAN|Hanoi|Noi Bai|VN;DAD|Da Nang|Da Nang|VN;PNH|Phnom Penh|Techo|KH;REP|Siem Reap|Angkor|KH;DEL|Delhi|Indira Gandhi|IN;BOM|Mumbai|Chhatrapati Shivaji|IN;BLR|Bangalore|Kempegowda|IN;GOI|Goa|Dabolim|IN;MAA|Chennai|Chennai|IN;KTM|Kathmandu|Tribhuvan|NP;MLE|Malé|Velana|MV;CMB|Colombo|Bandaranaike|LK;SYD|Sydney|Kingsford Smith|AU;MEL|Melbourne|Tullamarine|AU;BNE|Brisbane|Brisbane|AU;PER|Perth|Perth|AU;ADL|Adelaide|Adelaide|AU;OOL|Gold Coast|Gold Coast|AU;CNS|Cairns|Cairns|AU;AKL|Auckland|Auckland|NZ;CHC|Christchurch|Christchurch|NZ;ZQN|Queenstown|Queenstown|NZ;NAN|Fiji|Nadi|FJ;PPT|Tahiti|Faa'a|PF".split(";").map(s => { const [code, city, name, cc] = s.split("|"); return { code, city, name, cc }; });
-const AP = Object.fromEntries(AIRPORTS.map(a => [a.code, a]));
-const regionName = (() => { try { const dn = new Intl.DisplayNames(["en"], { type: "region" }); return cc => dn.of(cc) || cc; } catch { return cc => cc; } })();
-const COUNTRY_ALIAS = { usa: "US", america: "US", "united states": "US", us: "US", uk: "GB", england: "GB", britain: "GB", scotland: "GB", holland: "NL", uae: "AE", emirates: "AE", korea: "KR" };
-const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
-const CITIES = Object.values(AIRPORTS.reduce((m, a) => { (m[a.city + "|" + a.cc] ||= { city: a.city, cc: a.cc, codes: [] }).codes.push(a.code); return m; }, {}));
-const COUNTRIES = Object.values(AIRPORTS.reduce((m, a) => { (m[a.cc] ||= { cc: a.cc, name: regionName(a.cc), codes: [] }).codes.push(a.code); return m; }, {}));
-const MAX_AIRPORTS = 7; // Google Flights searches at most 7 airports per side
-
-/**
- * Dropdown rows for a search, grouped like Google Flights: a city ("all airports") with its airports
- * indented under it. Countries come first when the query names one, followed by their cities.
- * Returns { opts, hi } where hi is the row to highlight (the airport itself when a code is typed).
- */
-function locationOptions(q) {
-  const n = norm(q), code = q.trim().toUpperCase();
-  if (!n) return { opts: [], hi: 0 };
-  const score = (text, base) => { const t = norm(text); return t === n ? base : t.startsWith(n) ? base + 1 : t.includes(" " + n) || t.includes("-" + n) ? base + 2 : n.length > 3 && t.includes(n) ? base + 4 : null; };
-  const cityOfAirport = a => CITIES.find(c => c.city === a.city && c.cc === a.cc);
-  const groups = new Map(); // city -> best score
-  const hit = (city, sc) => { if (sc != null && (!groups.has(city) || sc < groups.get(city))) groups.set(city, sc); };
-  for (const c of CITIES) hit(c, score(c.city, 1));
-  for (const a of AIRPORTS) hit(cityOfAirport(a), a.code === code ? 0 : score(a.name, 3));
-  const countries = COUNTRIES.filter(c => c.codes.length > 1 && (COUNTRY_ALIAS[n] === c.cc || [0, 2].includes(score(c.name, 0)) || score(c.name, 0) === 1));
-  const opts = [];
-  for (const c of countries.slice(0, 1)) {
-    opts.push({ kind: "country", level: 0, label: c.name, sub: `All airports · ${c.codes.slice(0, MAX_AIRPORTS).join(", ")}${c.codes.length > MAX_AIRPORTS ? " (largest 7)" : ""}`, codes: c.codes.slice(0, MAX_AIRPORTS) });
-    CITIES.filter(x => x.cc === c.cc).slice(0, 6).forEach((x, i) => hit(x, 10 + i));
-  }
-  const cities = [...groups].sort((a, b) => a[1] - b[1] || b[0].codes.length - a[0].codes.length).slice(0, countries.length ? 7 : 6).map(([c]) => c);
-  for (const c of cities) {
-    const country = regionName(c.cc);
-    if (c.codes.length > 1) {
-      opts.push({ kind: "city", level: 0, label: c.city, sub: `All airports · ${country}`, codes: c.codes });
-      for (const x of c.codes) opts.push({ kind: "airport", level: 1, label: AP[x].name, sub: `${c.city}, ${country}`, codes: [x] });
-    } else {
-      const a = AP[c.codes[0]];
-      opts.push({ kind: "airport", level: 0, label: a.city, sub: `${a.name !== a.city ? a.name + " · " : ""}${country}`, codes: [a.code] });
-    }
-  }
-  // highlight the row that matches what was typed: an airport code, else the first row whose own name starts with it
-  const exactAt = opts.findIndex(o => o.kind === "airport" && o.codes[0] === code);
-  const nameAt = opts.findIndex(o => norm(o.label).split(/[\s-]+/).some(w => w.startsWith(n)) || norm(o.label).startsWith(n));
-  return { opts, hi: exactAt >= 0 ? exactAt : nameAt >= 0 ? nameAt : 0 };
-}
-
-/** Codes string -> chips: whole cities/countries collapse into one chip. */
-function chipsFromCodes(str) {
-  const left = codes(str).split(",").filter(Boolean), chips = [];
-  for (const c of COUNTRIES) { const g = c.codes.slice(0, MAX_AIRPORTS); if (g.length > 2 && g.every(x => left.includes(x))) { chips.push({ label: c.name, codes: g }); g.forEach(x => left.splice(left.indexOf(x), 1)); } }
-  for (const c of CITIES) if (c.codes.length > 1 && c.codes.every(x => left.includes(x))) { chips.push({ label: `${c.city} (all)`, codes: c.codes }); c.codes.forEach(x => left.splice(left.indexOf(x), 1)); }
-  for (const x of left) chips.push({ label: AP[x] ? `${AP[x].city} ${x}` : x, codes: [x] });
-  return chips;
-}
-const cityOf = str => { const cs = [...new Set(codes(str).split(",").filter(Boolean).map(c => AP[c]?.city || c))]; return cs.length > 3 ? `${cs.slice(0, 2).join(" / ")} +${cs.length - 2}` : cs.join(" / "); };
-
-function locPicker(name, label, value, placeholder) {
-  return `<div class="field"><span id="lbl-${name}">${label}</span>
-    <div class="loc" data-loc="${name}">
-      <div class="loc-box"><span class="loc-chips"></span><input class="loc-input" placeholder="${placeholder}" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-labelledby="lbl-${name}" autocomplete="off" spellcheck="false"></div>
-      <input type="hidden" name="${name}" value="${esc(value || "")}">
-      <div class="loc-menu glass" role="listbox" hidden></div>
-    </div></div>`;
-}
-function initLoc(root) {
-  const hidden = root.querySelector("input[type=hidden]"), input = root.querySelector(".loc-input"), menu = root.querySelector(".loc-menu"), chipsEl = root.querySelector(".loc-chips");
-  let chips = chipsFromCodes(hidden.value), opts = [], hi = 0;
-  const sync = () => {
-    hidden.value = [...new Set(chips.flatMap(c => c.codes))].join(",");
-    chipsEl.innerHTML = chips.map((c, i) => `<span class="loc-chip">${esc(c.label)}<button type="button" data-rm="${i}" aria-label="Remove ${esc(c.label)}">${icon("close", "i\" style=\"width:14px;height:14px")}</button></span>`).join("");
-    input.placeholder = chips.length ? "Add another" : input.dataset.ph;
-    hidden.dispatchEvent(new Event("input", { bubbles: true }));
-  };
-  input.dataset.ph = input.placeholder;
-  const close = () => { menu.hidden = true; input.setAttribute("aria-expanded", "false"); };
-  const show = () => {
-    ({ opts, hi } = locationOptions(input.value));
-    if (!input.value.trim()) return close();
-    const taken = new Set(chips.flatMap(c => c.codes));
-    menu.innerHTML = opts.length ? opts.map((o, i) => `<div class="loc-opt ${o.level ? "sub" : ""} ${i === hi ? "hi" : ""} ${o.codes.every(c => taken.has(c)) ? "taken" : ""}" role="option" tabindex="-1" data-i="${i}" aria-selected="${i === hi}">
-        <span class="loc-ic">${o.kind === "airport" ? icon("plane", "i\" style=\"width:16px;height:16px") : o.kind === "city" ? icon("city") : icon("globe")}</span>
-        <span class="grow"><b>${esc(o.label)}</b><br><span class="tiny ink2">${esc(o.sub)}</span></span>
-        <span class="loc-code">${o.codes.length === 1 ? o.codes[0] : o.codes.length + " airports"}</span></div>`).join("")
-      : /^[a-z]{3}$/i.test(input.value.trim()) ? `<div class="loc-opt hi" role="option" tabindex="-1" data-raw="1"><span class="loc-ic">${icon("plane", "i\" style=\"width:16px;height:16px")}</span><span class="grow"><b>Use airport code ${esc(input.value.trim().toUpperCase())}</b></span></div>`
-      : `<div class="loc-empty small ink2">No match. Type a city, airport, country or 3-letter code.</div>`;
-    menu.hidden = false; input.setAttribute("aria-expanded", "true");
-  };
-  const pick = o => {
-    if (!o) { const raw = input.value.trim().toUpperCase(); if (!/^[A-Z]{3}$/.test(raw)) return; o = { label: AP[raw] ? `${AP[raw].city} ${raw}` : raw, codes: [raw] }; }
-    const total = new Set([...chips.flatMap(c => c.codes), ...o.codes]).size;
-    if (total > MAX_AIRPORTS) return toast(`Google Flights searches up to ${MAX_AIRPORTS} airports at once.`);
-    // picking a whole city replaces chips for its single airports, and vice versa
-    chips = chips.filter(c => !c.codes.every(x => o.codes.includes(x)) && !o.codes.every(x => c.codes.includes(x)));
-    chips.push({ label: o.kind === "city" ? `${o.label} (all)` : o.kind === "airport" && AP[o.codes[0]] ? `${AP[o.codes[0]].city} ${o.codes[0]}` : o.label, codes: o.codes });
-    input.value = ""; close(); sync(); input.focus();
-  };
-  const move = d => { if (!opts.length) return; hi = (hi + d + opts.length) % opts.length; menu.querySelectorAll(".loc-opt").forEach((el, i) => { el.classList.toggle("hi", i === hi); el.setAttribute("aria-selected", i === hi); if (i === hi) el.scrollIntoView({ block: "nearest" }); }); };
-  input.addEventListener("input", e => { e.stopPropagation(); show(); });
-  input.addEventListener("keydown", e => {
-    if (e.key === "ArrowDown") { e.preventDefault(); menu.hidden ? show() : move(1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); move(-1); }
-    else if (e.key === "Enter" || e.key === "," || e.key === "Tab" && input.value.trim()) { if (input.value.trim()) { e.preventDefault(); pick(opts[hi]); } }
-    else if (e.key === "Escape") close();
-    else if (e.key === "Backspace" && !input.value && chips.length) { chips.pop(); sync(); }
-  });
-  menu.addEventListener("mousedown", e => e.preventDefault()); // keep focus (and the keyboard) in the input
-  menu.addEventListener("click", e => { const el = e.target.closest(".loc-opt"); if (el) pick(el.dataset.raw ? null : opts[+el.dataset.i]); });
-  menu.addEventListener("pointermove", e => { const el = e.target.closest(".loc-opt"); if (el && !el.dataset.raw && +el.dataset.i !== hi) move(+el.dataset.i - hi); });
-  chipsEl.addEventListener("click", e => { const b = e.target.closest("[data-rm]"); if (b) { chips.splice(+b.dataset.rm, 1); sync(); input.focus(); } });
-  root.querySelector(".loc-box").addEventListener("click", e => { if (e.target === e.currentTarget || e.target === chipsEl) input.focus(); });
-  input.addEventListener("blur", () => setTimeout(() => { if (!root.contains(document.activeElement)) close(); }, 150));
-  document.addEventListener("pointerdown", e => { if (!root.contains(e.target)) close(); });
-  // on phones, lift the field to just below the top bar so the list has room under it
-  input.addEventListener("focus", () => { if (innerWidth < 760 && !root.closest("dialog")) setTimeout(() => scrollBy({ top: root.getBoundingClientRect().top - 96, behavior: "smooth" }), 250); });
-  root._set = v => { chips = chipsFromCodes(v); sync(); };
-  sync();
-}
-
-// ---------- dates ----------
-const addDays = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
-const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
-const LENGTHS = { weekend: { label: "Weekend (Thu/Fri – Sun/Mon)", weekdays: [3, 4], nights_min: 2, nights_max: 3 }, week: { label: "1 week", nights: 7 }, "2weeks": { label: "2 weeks", nights: 14 }, custom: { label: "Custom number of nights" } };
-
-/** A route's date settings as form values. Routes made before date modes count as flexible. */
-function dateValues(r) {
-  const today = new Date().toISOString().slice(0, 10);
-  if (!r) return { mode: "exact", flex: 0, depart: addDays(today, 30), ret: addDays(today, 37), from: addDays(today, 30), to: addDays(today, 90), len: "week", nmin: 5, nmax: 9 };
-  if (r.date_mode === "exact") {
-    const flex = +r.flex || 0;
-    return { mode: "exact", flex, depart: addDays(r.depart_from, flex), ret: r.return_from ? addDays(r.return_from, flex) : addDays(r.depart_from, flex + 7), from: r.depart_from, to: r.depart_to, len: "week", nmin: 5, nmax: 9 };
-  }
-  const len = r.length || (r.weekdays ? "weekend" : r.nights_min != null ? "custom" : r.nights == 7 ? "week" : r.nights == 14 ? "2weeks" : "custom");
-  return { mode: "flexible", flex: 0, depart: r.depart_from, ret: addDays(r.depart_from, r.nights || 7), from: r.depart_from, to: r.depart_to, len,
-           nmin: r.nights_min ?? r.nights ?? 7, nmax: r.nights_max ?? r.nights ?? 7 };
-}
-function dateFields(r) {
-  const v = dateValues(r);
-  return `<div class="dates-box" data-dates>
-    <input type="hidden" name="d_mode" value="${v.mode}">
-    ${segmented("", [["exact", "Specific dates"], ["flexible", "Flexible dates"]], v.mode, "Date type").replace('id=""', 'data-dmode')}
-    <div class="dates-row" data-panel="exact">
-      <label class="field"><span>Departure</span><input type="date" name="d_depart" value="${v.depart}"></label>
-      <label class="field" data-ret><span>Return</span><input type="date" name="d_return" value="${v.ret}"></label>
-      <label class="field"><span>Flexibility</span><select name="d_flex">${[0, 1, 2, 3].map(n => `<option value="${n}" ${n === v.flex ? "selected" : ""}>${n ? `± ${n} day${n > 1 ? "s" : ""}` : "Exact dates"}</option>`).join("")}</select></label>
-    </div>
-    <div class="dates-row" data-panel="flexible">
-      <label class="field"><span>Leave from</span><input type="date" name="d_from" value="${v.from}"></label>
-      <label class="field"><span>Leave until</span><input type="date" name="d_to" value="${v.to}"></label>
-      <label class="field" data-len><span>Trip length</span><select name="d_len">${Object.entries(LENGTHS).map(([k, l]) => `<option value="${k}" ${k === v.len ? "selected" : ""}>${l.label}</option>`).join("")}</select></label>
-      <div class="field" data-custom><span>Nights</span><div class="nights"><input type="number" name="d_nmin" min="1" max="60" value="${v.nmin}" aria-label="Fewest nights"><span class="muted">to</span><input type="number" name="d_nmax" min="1" max="60" value="${v.nmax}" aria-label="Most nights"></div></div>
-    </div>
-    <p class="tiny muted" data-dsum></p>
-  </div>`;
-}
-function initDates(root, form) {
-  const el = form.elements, seg = root.querySelector("[data-dmode]");
-  const sync = () => {
-    if (!root.isConnected) return;
-    const mode = el.d_mode.value, round = el.trip.value === "return";
-    root.querySelectorAll("[data-panel]").forEach(p => p.hidden = p.dataset.panel !== mode);
-    root.querySelector("[data-ret]").hidden = !round;
-    root.querySelector("[data-len]").hidden = !round;
-    root.querySelector("[data-custom]").hidden = !round || el.d_len.value !== "custom";
-    const d = readDates(form), sum = root.querySelector("[data-dsum]");
-    sum.textContent = typeof d === "string" ? d : tripSummary({ trip: el.trip.value, ...d });
-  };
-  seg.onclick = e => { const b = e.target.closest("button"); if (!b) return; el.d_mode.value = b.dataset.v; seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); sync(); };
-  form.addEventListener("input", sync); form.addEventListener("change", sync);
-  sync();
-}
-/** Form values -> route date fields, or an error message. */
-function readDates(form) {
-  if (!form.elements.d_mode) return "";
-  const el = form.elements, round = el.trip.value === "return";
-  if (el.d_mode.value === "exact") {
-    const dep = el.d_depart.value, ret = el.d_return.value, n = +el.d_flex.value || 0;
-    if (!dep) return "Pick a departure date.";
-    if (round && (!ret || ret <= dep)) return "The return date must be after the departure date.";
-    return { date_mode: "exact", flex: n, depart_from: addDays(dep, -n), depart_to: addDays(dep, n), ...(round ? { return_from: addDays(ret, -n), return_to: addDays(ret, n) } : {}) };
-  }
-  const from = el.d_from.value, to = el.d_to.value;
-  if (!from || !to || to < from) return "Check the travel window: the last date is before the first.";
-  const out = { date_mode: "flexible", depart_from: from, depart_to: to };
-  if (!round) return out;
-  const len = el.d_len.value, preset = LENGTHS[len];
-  if (len !== "custom") { const { label, ...fields } = preset; return { ...out, length: len, ...fields }; }
-  const a = +el.d_nmin.value, b = +el.d_nmax.value;
-  if (!a || !b || b < a) return "Check the number of nights.";
-  return { ...out, length: "custom", ...(a === b ? { nights: a } : { nights_min: a, nights_max: b }) };
-}
-
-/** Every trip of a route (mirrors flights/planner.py trips, without dropping past dates). */
-function tripsOf(r) {
-  const out = [], single = r.trip === "oneway" || (!r.return_from && r.nights_min == null);
-  for (let d = r.depart_from; d <= (r.depart_to || r.depart_from); d = addDays(d, 1)) {
-    if (r.weekdays && !r.weekdays.includes((new Date(d + "T12:00:00Z").getUTCDay() + 6) % 7)) continue;
-    let ns = [null];
-    if (r.trip !== "oneway") {
-      if (r.return_from) { ns = []; for (let n = daysBetween(d, r.return_from); n <= daysBetween(d, r.return_to || r.return_from); n++) if (n >= 0) ns.push(n); }
-      else if (r.nights_min != null) { ns = []; for (let n = +r.nights_min; n <= +(r.nights_max ?? r.nights_min); n++) ns.push(n); }
-      else ns = [+r.nights || 7];
-    }
-    for (const n of ns) out.push({ key: single ? d : `${d}+${n}`, date: d, ret: n == null ? null : addDays(d, n), n });
-  }
-  return out;
-}
-const singleStay = r => r.trip === "oneway" || (!r.return_from && r.nights_min == null);
-function tripTxt(r) {
-  if (r.trip === "oneway") return "One way";
-  if (r.date_mode === "exact") return "Round trip";
-  if (r.nights_min != null) return `Round trip · ${r.nights_min}–${r.nights_max} nights`;
-  return `Round trip · ${r.nights} night${r.nights == 1 ? "" : "s"}`;
-}
-function datesTxt(r) {
-  if (r.date_mode === "exact") {
-    const v = dateValues(r);
-    return `${fmtDate(v.depart)}${r.trip !== "oneway" ? ` – ${fmtDate(v.ret)}` : ""}${v.flex ? ` · ±${v.flex} day${v.flex > 1 ? "s" : ""}` : ""}`;
-  }
-  return `${r.length === "weekend" ? "Weekends · " : "Leave "}${fmtDate(r.depart_from)} – ${fmtDate(r.depart_to)}`;
-}
-function tripSummary(r) {
-  const n = tripsOf(r).length;
-  const what = r.date_mode === "exact" ? (r.flex ? `every combination within ±${r.flex} days` : "these exact dates")
-    : r.length === "weekend" ? "every weekend in the window" : `every departure date${r.nights_min != null ? " and trip length" : ""} in the window`;
-  return `Tracks ${what}: ${n} trip${n === 1 ? "" : "s"} per class.`;
-}
-
-// ---------- data ----------
-const repoGuess = () => { const m = location.hostname.match(/^([\w-]+)\.github\.io$/); return m ? `${m[1]}/${location.pathname.split("/")[1] || "Flight-tracker"}` : ""; };
-const gh = () => ({ repo: store.get("repo", repoGuess()), token: store.get("token", "") });
-const loadErrors = [];
-async function getJSON(path, fb) {
-  try {
-    const r = await fetch(`${path}?t=${Date.now()}`);
-    if (r.status === 404) return fb;
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return await r.json();
-  } catch (e) { if (path !== "api.json") loadErrors.push(`${path} (${e.message})`); return fb; }
-}
-async function load() {
-  [config, latest, hist, alerts] = await Promise.all([
-    getJSON("routes.json", { settings: {}, routes: [] }), getJSON("data/latest.json", { routes: {} }),
-    getJSON("data/history.json", {}), getJSON("data/alerts.json", []),
-  ]);
-  config.settings ||= {}; config.routes ||= []; latest.routes ||= {};
-  if (loadErrors.length) toast(`Couldn't load ${loadErrors.join(", ")}. Showing what's available; reload to try again.`);
-  await loadLive();
-  route();
-}
-
-// ---------- router ----------
-function route() {
-  const [view, id, cabin] = location.hash.replace(/^#\/?/, "").split("/").map(decodeURIComponent);
-  const nav = view === "route" ? "tracked" : view === "search" ? "explore" : (view || "explore");
-  document.querySelectorAll("[data-nav]").forEach(a => a.dataset.nav === nav ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"));
-  renderStatus();
-  const app = $("#app");
-  if (view === "settings") { openSettings(); return; }
-  const html = view === "tracked" ? viewTracked() : view === "alerts" ? viewAlerts() : view === "route" ? viewRoute(id, cabin) : view === "search" ? viewSearch() : viewExplore();
-  app.innerHTML = `<div class="view">${html}</div>`;
-  if (view === "route") afterRoute(); else if (view === "search") afterSearch(); else if (!view || view === "explore") afterExplore();
-  if (route._last !== location.hash) { scrollTo({ top: 0 }); route._last = location.hash; }
-}
-addEventListener("hashchange", route);
-
-function renderStatus() {
-  const s = $("#status");
-  if (latest.updated) {
-    const hrs = (Date.now() - new Date(latest.updated)) / 3.6e6;
-    s.innerHTML = `<span class="dot ${hrs < 8 ? "good" : hrs < 30 ? "warn" : "crit"}"></span><span class="label">${latest.demo ? "Demo data · " : ""}Updated ${ago(latest.updated)}</span>`;
-    s.title = `Source: ${latest.source || ""}`;
-  } else s.innerHTML = `<span class="dot"></span><span class="label">No searches yet</span>`;
-  const recent = alerts.filter(a => Date.now() - new Date(a.time) < 7 * 864e5).length;
-  for (const el of [$("#nav-count"), $("#tab-count")]) { el.textContent = recent; el.classList.toggle("hidden", !recent); }
-}
-
-// ---------- Explore ----------
-function viewExplore() {
-  const shown = cabinFilter === "all" ? CABINS : [cabinFilter];
-  return `
-  <section class="hero">
-    ${heroArt()}
-    <h1>Find the cheapest flights</h1>
-    <p>Pick where you want to go, on specific dates or whenever it's cheapest. We check every class around the clock.</p>
-  </section>
-  <form class="search glass" id="search-form" autocomplete="off">
-    <div class="search-opts">
-      <select name="trip" aria-label="Trip type"><option value="return">⇄ Round trip</option><option value="oneway">→ One way</option></select>
-      <span class="stepper" aria-label="Passengers">${icon("person", "i\" style=\"width:16px;height:16px;margin-left:8px")}<button type="button" data-step="-1" aria-label="Fewer passengers">−</button><b id="pax">1</b><button type="button" data-step="1" aria-label="More passengers">+</button></span>
-      <select name="max_stops" aria-label="Stops"><option value="">Any stops</option><option value="0">Non-stop</option><option value="1">≤ 1 stop</option><option value="2">≤ 2 stops</option></select>
-      <div class="cab-chips" role="group" aria-label="Classes">${CABINS.map(c => `<label class="chip"><input type="checkbox" name="cab" value="${c}" ${c === "economy" || c === "business" ? "checked" : ""}>${CABIN_SHORT[c]}</label>`).join("")}</div>
-    </div>
-    <div class="search-grid">
-      ${locPicker("from", "Where from?", store.get("lastFrom", ""), "City, airport or country")}
-      <button type="button" class="swap icon" id="swap" aria-label="Swap origin and destination">${icon("swap")}</button>
-      ${locPicker("to", "Where to?", "", "City, airport or country")}
-    </div>
-    ${dateFields()}
-    <button class="primary go" id="search-go">${icon("search")} Search</button>
-  </form>
-
-  ${latest.demo ? `<div class="banner">⚠️ <span><b>Demo data.</b> Add a <code>SERPAPI_KEY</code> repository secret to get real Google Flights prices.</span></div>` : ""}
-
-  <section class="section" style="margin-top:${latest.demo ? 32 : 56}px">
-    <div class="section-head">
-      <div><h2>Cheapest right now</h2><p class="small ink2">Best fare per route and class, best deals first</p></div>
-      ${segmented("cab-filter", [["all", "All classes"], ...CABINS.map(c => [c, CABIN_SHORT[c]])], cabinFilter, "Class")}
-    </div>
-    ${dealCards(shown)}
-  </section>
-
-  <section class="section">
-    <div class="section-head"><div><h2>Your routes</h2><p class="small ink2">${config.routes.length} tracked</p></div><a class="btn" href="#/tracked">See all</a></div>
-    ${routeCards(config.routes.slice(0, 4))}
-  </section>`;
-}
-
-function heroArt() {
-  return `<svg class="hero-art" viewBox="0 0 520 120" aria-hidden="true">
-    <defs><linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity="0"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".7"/></linearGradient></defs>
-    <path d="M20 100 C 160 100, 260 20, 470 30" fill="none" stroke="url(#trail)" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round"/>
-    <circle cx="20" cy="100" r="5" fill="var(--accent)" opacity=".5"/>
-    <g transform="translate(470 30) rotate(-8)"><circle r="22" fill="var(--glass-strong)" stroke="var(--edge)"/><svg x="-12" y="-12" width="24" height="24" style="color:var(--accent)"><use href="#i-plane"/></svg></g>
-  </svg>`;
-}
-
-function dealList(shown) {
-  const deals = [];
-  for (const r of config.routes) for (const c of cabinsOf(r)) {
-    const best = entry(r.id, c).cheapest;
-    if (!best || !shown.includes(c)) continue;
-    const typ = best.typical?.[0], tgt = r.targets?.[c];
-    const score = Math.max(typ ? 1 - best.price / typ : 0, tgt ? 1 - best.price / tgt : 0) + (best.level === "low" ? .05 : 0);
-    deals.push({ r, c, best, score, tgt });
-  }
-  return deals.sort((a, b) => b.score - a.score || a.best.price - b.best.price);
-}
-function dealCards(shown) {
-  const deals = dealList(shown);
-  if (!deals.length) return `<div class="glass empty"><div class="em">🛫</div><p>${config.routes.length ? "Prices appear after the next search run." : "Track your first route above to see prices here."}</p></div>`;
-  return `<div class="cards scroller">${deals.slice(0, 8).map(({ r, c, best, tgt }) => {
-    const prev = prevPrice(r.id, c, best.price);
-    return `<a class="deal glass" href="#/route/${encodeURIComponent(r.id)}/${c}">
-      <div class="row between"><span class="badge">${CABIN_NAME[c]}</span>${levelBadge(best)}</div>
-      <div class="city" style="margin-top:10px">${esc(cityOf(r.to))}</div>
-      <div class="k">from ${esc(cityOf(r.from))}</div>
-      <div class="row" style="margin-top:10px;align-items:baseline"><span class="price num">${money(best.price)}</span>
-        ${prev && prev !== best.price ? `<span class="small num ${best.price < prev ? "down" : "up"}">${best.price < prev ? "▼" : "▲"} ${money(Math.abs(best.price - prev))}</span>` : ""}</div>
-      <div class="k">${fmtDate(best.date)}${best.return_date ? ` – ${fmtDate(best.return_date)}` : ""} · ${stopsTxt(best.stops)}</div>
-      <div class="row" style="margin-top:10px">${airlineLogo(best)}<span class="k grow">${esc((best.airlines || []).join(", "))}</span>${tgt && best.price <= tgt ? `<span class="badge target">✓ Target</span>` : ""}</div>
-    </a>`;
-  }).join("")}</div>`;
-}
-
-function afterExplore() {
-  const f = $("#search-form");
-  f.querySelectorAll("[data-loc]").forEach(initLoc);
-  initDates(f.querySelector("[data-dates]"), f);
-  f.querySelectorAll("[data-step]").forEach(b => b.onclick = () => { const p = $("#pax"); p.textContent = Math.min(9, Math.max(1, +p.textContent + +b.dataset.step)); });
-  $("#swap").onclick = () => { const [a, b] = [f.from.value, f.to.value]; f.querySelector("[data-loc=from]")._set(b); f.querySelector("[data-loc=to]")._set(a); };
-  const seg = $("#cab-filter");
-  seg.onclick = e => { const b = e.target.closest("button"); if (!b) return; cabinFilter = b.dataset.v; store.set("cabin", cabinFilter); route(); };
-  f.onsubmit = async e => {
-    e.preventDefault();
-    const cabins = [...f.querySelectorAll("[name=cab]:checked")].map(i => i.value);
-    const r = buildRoute({ from: f.from.value, to: f.to.value, trip: f.trip.value, adults: $("#pax").textContent, max_stops: f.max_stops.value, cabins }, null, f);
-    if (typeof r === "string") return toast(r);
-    store.set("lastFrom", r.from);
-    startSearch(r);
-  };
-}
-
-// ---------- Tracked ----------
-function routeCards(routes) {
-  if (!routes.length) return `<div class="glass empty"><div class="em">🗺️</div><p>No routes yet.</p><p style="margin-top:12px"><a class="btn primary" href="#/">${icon("plus")} Track a route</a></p></div>`;
-  return `<div class="routes">${routes.map(r => `
-    <article class="glass route-card">
-      <div class="row between" style="align-items:start">
-        <a href="#/route/${encodeURIComponent(r.id)}" class="grow"><div class="title">${esc(routeTitle(r))}</div>
-          <div class="small ink2">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)}</div>
-          <div class="small muted">${icon("cal", "i\" style=\"width:13px;height:13px;vertical-align:-2px")} ${datesTxt(r)}${r.adults > 1 ? ` · ${r.adults} passengers` : ""}</div></a>
-        <button class="plain icon" data-edit="${esc(r.id)}" aria-label="Edit route">${icon("edit")}</button>
-      </div>
-      <div style="margin-top:10px">${cabinsOf(r).map(c => {
-        const best = entry(r.id, c).cheapest, tgt = r.targets?.[c];
-        return `<a class="cab-row" href="#/route/${encodeURIComponent(r.id)}/${c}">
-          <span><span style="font-weight:600">${CABIN_NAME[c]}</span><br><span class="tiny ink2">${best ? `${fmtDate(best.date)} · ${stopsTxt(best.stops)}` : "Waiting for first search"}${tgt ? ` · target ${money(tgt)}` : ""}</span></span>
-          ${spark(hist[r.id]?.[c])}
-          <span class="p ${tgt && best && best.price <= tgt ? "down" : ""}">${best ? money(best.price) : "–"}</span></a>`;
-      }).join("")}</div>
-    </article>`).join("")}</div>`;
-}
-function viewTracked() {
-  return `<div class="section-head" style="margin-top:16px"><div><h1 style="font-size:30px;font-weight:700">Tracked flights</h1><p class="small ink2">Lowest fare per class across each travel window</p></div>
-    <a class="btn primary" href="#/">${icon("plus")} Track a route</a></div>${routeCards(config.routes)}`;
-}
-document.addEventListener("click", e => { const b = e.target.closest("[data-edit]"); if (b) { e.preventDefault(); openRoute(b.dataset.edit); } });
-
-// ---------- Alerts ----------
-function viewAlerts() {
-  return `<div class="section-head" style="margin-top:16px"><div><h1 style="font-size:30px;font-weight:700">Price drops</h1>
-    <p class="small ink2">When the cheapest fare drops ${config.settings.drop_threshold_pct ?? 5}% or more, or below your target. Also sent to your phone via ntfy.</p></div></div>
-    ${alerts.length ? `<div class="glass" style="overflow:hidden">${alerts.slice(0, 50).map(a => `
-      <a class="alert" href="#/route/${encodeURIComponent(a.route)}/${a.cabin}">
-        <span class="ic">${icon(a.reason === "below target" ? "track" : "down")}</span>
-        <span class="grow"><b>${esc(a.name)}</b> · ${CABIN_NAME[a.cabin]}<br><span class="small ink2">${fmtDay(a.date)}${a.return_date ? ` – ${fmtDay(a.return_date)}` : ""} · ${ago(a.time)}</span></span>
-        <span style="text-align:right"><b class="num">${money(a.price)}</b><br>${a.previous ? `<span class="tiny muted"><s>${money(a.previous)}</s></span> ` : ""}<span class="badge ${a.reason === "below target" ? "target" : "low"}">${esc(a.reason)}</span></span>
-      </a>`).join("")}</div>`
-    : `<div class="glass empty"><div class="em">🔔</div><p>No price drops yet.</p></div>`}`;
-}
-
-// ---------- Route detail ----------
-let cur = null;
-function viewRoute(id, cabin) {
-  const r = config.routes.find(x => x.id === id);
-  if (!r) return `<div class="glass empty" style="margin-top:24px"><div class="em">🧭</div><p>This route doesn't exist (anymore).</p><p style="margin-top:12px"><a class="btn" href="#/tracked">Back to tracked</a></p></div>`;
-  const c = cabinsOf(r).includes(cabin) ? cabin : cabinsOf(r)[0];
-  if (!cur || cur.id !== id || cur.cabin !== c) cur = { id, cabin: c, date: null };
-  const e = entry(id, c), best = e.cheapest, cal = e.calendar || {}, tgt = r.targets?.[c];
-  const pts = hist[id]?.[c] || [], low = pts.length ? Math.min(...pts.map(p => p[1])) : null;
-  const okCount = Object.values(cal).filter(v => v.price).length, total = Object.keys(cal).length;
-  const today = new Date().toISOString().slice(0, 10), allTrips = tripsOf(r).filter(t => t.date > today).length;
-  if (ui.chart === "grid" && singleStay(r)) ui.chart = "graph";
-  return `
-  <a class="crumb" href="#/tracked">${icon("back")} Tracked</a>
-  <div class="detail-head">
-    <div><h1>${esc(routeTitle(r))}</h1>
-      <div class="row small ink2" style="margin-top:6px"><span class="chip">${esc(r.from)} → ${esc(r.to)}</span><span class="chip">${tripTxt(r)}</span><span class="chip">${icon("person", "i\" style=\"width:14px;height:14px")} ${r.adults || 1}</span>${r.max_stops != null ? `<span class="chip">${r.max_stops === 0 ? "Non-stop" : `≤ ${r.max_stops} stop${r.max_stops > 1 ? "s" : ""}`}</span>` : ""}<span class="chip">${icon("cal", "i\" style=\"width:14px;height:14px")} ${datesTxt(r)}</span></div></div>
-    <button data-edit="${esc(r.id)}">${icon("edit")} Edit</button>
-  </div>
-  ${segmented("d-cabin", CABINS.map(x => [x, CABIN_NAME[x], !cabinsOf(r).includes(x)]), c, "Class")}
-
-  <div class="summary">
-    <div class="glass panel">
-      <div class="small ink2">Cheapest ${CABIN_NAME[c].toLowerCase()} fare</div>
-      <div class="row" style="align-items:baseline;gap:12px;margin-top:2px"><span class="big-price">${money(best?.price)}</span>${levelBadge(best)}</div>
-      <div class="ink2" style="margin-top:4px">${best ? `${fmtDay(best.date)}${best.return_date ? ` – ${fmtDay(best.return_date)}` : ""} · ${esc((best.airlines || []).join(", "))} · ${stopsTxt(best.stops)}` : "Not found yet. The first prices arrive after the next search run."}</div>
-      ${insight(best)}
-    </div>
-    <div class="glass panel stats">
-      <div class="stat"><div class="k">Lowest seen</div><div class="v">${money(low)}</div><div class="k">${pts.length ? `since ${fmtDate(pts[0][0])}` : "–"}</div></div>
-      <div class="stat"><div class="k">Your target</div><div class="v ${tgt && best && best.price <= tgt ? "down" : ""}">${money(tgt)}</div><div class="k">${tgt && best ? (best.price <= tgt ? "✓ Reached" : `${money(best.price - tgt)} to go`) : `<a href="#" data-edit="${esc(r.id)}">Set a target</a>`}</div></div>
-      <div class="stat"><div class="k">Trips checked</div><div class="v">${total}<span class="small muted">/${allTrips}</span></div><div class="k">${okCount} with fares</div></div>
-      <div style="grid-column:1/-1" class="row between">
-        <span class="small ink2">Trend</span>${spark(pts, 220, 36).replace('class="spark"', 'class="spark" style="width:100%;max-width:260px;height:36px"')}
-      </div>
-    </div>
-  </div>
-
-  <section class="section">
-    <div class="section-head">
-      <div><h2>${r.date_mode === "exact" ? "Prices around your dates" : "Prices by departure date"}</h2><p class="small ink2">${chartHint(r)}</p></div>
-      ${segmented("d-chart-mode", [["graph", "Price graph"], ["calendar", "Calendar"], ...(singleStay(r) ? [] : [["grid", "Date grid"]])], ui.chart, "Chart type")}
-    </div>
-    <div class="glass panel" id="d-chart"></div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><div><h2>${cur.date ? "Selected date & cheapest options" : "Cheapest options"}</h2><p class="small ink2">Prices include taxes and fees for ${r.adults || 1} passenger${r.adults > 1 ? "s" : ""}. Book on Google Flights.</p></div></div>
-    <div class="glass results" id="d-results"></div>
-  </section>
-
-  <section class="section">
-    <div class="section-head"><div><h2>Price history</h2><p class="small ink2">Cheapest fare found over time${tgt ? ", with your target" : ""}</p></div></div>
-    <div class="glass panel" id="d-history"></div>
-  </section>`;
-}
-
-function insight(best) {
-  if (!best?.typical) return "";
-  const [a, b] = best.typical, lo = Math.min(a * .7, best.price * .95), hi = Math.max(b * 1.3, best.price * 1.05);
-  // three zones sized like the bar: below typical / typical / above typical
-  const z1 = (a - lo) / (hi - lo), z2 = (b - a) / (hi - lo), z3 = (hi - b) / (hi - lo);
-  const pos = Math.min(98, Math.max(2, (best.price - lo) / (hi - lo) * 100));
-  const msg = { low: "Prices are currently <b class=\"down\">low</b>", typical: "Prices are currently <b>typical</b>", high: "Prices are currently <b class=\"up\">high</b>" }[best.level] || "";
-  return `<div class="insight"><div class="small">${msg} for this search.</div>
-    <div class="small ink2">Usually ${money(a)} – ${money(b)} according to Google.</div>
-    <div class="range" role="img" aria-label="${money(best.price)} compared to the usual ${money(a)} to ${money(b)}">
-      <i class="z1" style="flex:${z1}"></i><i class="z2" style="flex:${z2}"></i><i class="z3" style="flex:${z3}"></i>
-      <span class="knob" style="left:${pos}%"></span><span class="pin" style="left:${pos}%">${money(best.price)}</span></div>
-    <div class="range-labels"><span>Low</span><span>${money(a)}</span><span>${money(b)}</span><span>High</span></div></div>`;
-}
-
-function afterRoute() {
-  const r = config.routes.find(x => x.id === cur?.id); if (!r) return;
-  $("#d-cabin").onclick = e => { const b = e.target.closest("button"); if (!b) return;
-    if (!cabinsOf(r).includes(b.dataset.v)) return toast(`${CABIN_NAME[b.dataset.v]} isn't tracked on this route. Use Edit to add it.`);
-    location.hash = `#/route/${encodeURIComponent(r.id)}/${b.dataset.v}`; };
-  $("#d-chart-mode").onclick = e => { const b = e.target.closest("button"); if (!b) return; ui.chart = b.dataset.v; store.set("chart", ui.chart);
-    $("#d-chart-mode").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); drawChart(r); };
-  drawChart(r); drawResults(r); drawHistory(r);
-}
-
-function chartHint(r) {
-  if (r.trip === "oneway") return "One-way fares. Select a date to see its flight.";
-  if (singleStay(r)) return `Round trip with ${r.nights} nights away. Select a date to see its flight.`;
-  return "Each date shows its cheapest round trip; the date grid shows every departure and return combination.";
-}
-const windowDates = r => [...new Set(tripsOf(r).map(t => t.date))];
-/** Cheapest trip per departure date. */
-function byDepart(cal) {
-  const out = {};
-  for (const [key, v] of Object.entries(cal)) { const d = key.slice(0, 10); if (v.price && (!out[d] || v.price < out[d].price)) out[d] = { ...v, key }; }
-  for (const [key, v] of Object.entries(cal)) { const d = key.slice(0, 10); if (!out[d]) out[d] = { ...v, key }; }
-  return out;
-}
-function pickDate(r, sel) { cur.date = cur.date === sel ? null : sel; drawChart(r); drawResults(r); $("#d-results").scrollIntoView({ behavior: "smooth", block: "nearest" }); }
-
-function drawChart(r) {
-  const el = $("#d-chart"), full = entry(r.id, cur.cabin).calendar || {}, best = entry(r.id, cur.cabin).cheapest, cal = byDepart(full);
-  const dates = windowDates(r), prices = dates.map(d => cal[d]?.price).filter(Boolean);
-  if (!prices.length) { el.innerHTML = `<div class="empty" style="padding:24px"><p>No dates checked yet for this class.</p></div>`; return; }
-  if (ui.chart === "calendar") return drawCalendar(r, el, cal, best);
-  if (ui.chart === "grid") return drawGrid(r, el, full, best);
-  const bw = 22, gap = 6, H = 220, T = 28, B = 34, L = 8;
-  const W = Math.max(L * 2 + dates.length * (bw + gap), el.clientWidth - 40);
-  const hi = Math.max(...prices) * 1.08, Y = v => T + (1 - v / hi) * (H - T - B);
-  const step = Math.pow(10, Math.floor(Math.log10(hi / 3))), gstep = Math.ceil(hi / 4 / step) * step;
-  let s = `<svg width="${W}" height="${H}" role="img" aria-label="Price by departure date">`;
-  for (let g = gstep; g < hi; g += gstep) s += `<line x1="0" x2="${W}" y1="${Y(g)}" y2="${Y(g)}" stroke="var(--line)"/><text x="${W - 4}" y="${Y(g) - 4}" text-anchor="end" font-size="11" fill="var(--muted)">${compact(g)}</text>`;
-  s += `<line x1="0" x2="${W}" y1="${H - B}" y2="${H - B}" stroke="var(--line-2)"/>`;
-  dates.forEach((d, i) => {
-    const x = L + i * (bw + gap), v = cal[d]?.price, dt = new Date(d + "T12:00:00Z"), isBest = best?.date === d, sel = cur.date?.slice(0, 10) === d;
-    if (v) {
-      const y = Y(v), h = H - B - y;
-      s += `<path class="bar" data-d="${d}" tabindex="0" role="button" aria-label="${fmtDay(d)}: ${money(v)}" d="M${x},${H - B}V${y + 5}q0,-5 5,-5h${bw - 10}q5,0 5,5V${H - B}z" fill="${isBest ? "#34a853" : sel ? "var(--bar-hover)" : "var(--bar)"}"/>`;
-      if (isBest) s += `<text x="${x + bw / 2}" y="${y - 8}" text-anchor="middle" font-size="11" font-weight="700" fill="var(--good)">${money(v)}</text>`;
-    } else s += `<rect x="${x}" y="${H - B - 4}" width="${bw}" height="4" rx="2" fill="var(--bar-empty)"><title>${fmtDay(d)}: ${cal[d] ? "no flights" : "not checked yet"}</title></rect>`;
-    if (sel) s += `<rect x="${x - 3}" y="${T - 6}" width="${bw + 6}" height="${H - B - T + 10}" rx="8" fill="none" stroke="var(--ink)" stroke-width="1.5"/>`;
-    const dow = dt.getUTCDay();
-    s += `<text x="${x + bw / 2}" y="${H - B + 15}" text-anchor="middle" font-size="11" fill="${dow === 0 || dow === 6 ? "var(--ink-2)" : "var(--muted)"}">${dt.getUTCDate()}</text>`;
-    if (dt.getUTCDate() === 1 || i === 0) s += `<text x="${x}" y="${H - 4}" font-size="11" font-weight="600" fill="var(--ink-2)">${dt.toLocaleDateString(undefined, { month: "short", timeZone: "UTC" })}</text>`;
-  });
-  s += `</svg>`;
-  el.innerHTML = `<div class="chart-wrap">${s}<div class="tip glass" id="tip"></div></div>
-    <div class="row tiny ink2" style="margin-top:8px;gap:16px"><span class="row" style="gap:6px"><i style="width:10px;height:10px;border-radius:3px;background:#34a853;display:inline-block"></i>Cheapest date</span>
-    <span class="row" style="gap:6px"><i style="width:10px;height:4px;border-radius:2px;background:var(--bar-empty);display:inline-block"></i>Not checked yet</span></div>`;
-  const wrap = el.querySelector(".chart-wrap"), tip = el.querySelector("#tip");
-  if (best && !drawChart._scrolled?.[r.id + cur.cabin]) {
-    const i = dates.indexOf(best.date); wrap.scrollLeft = Math.max(0, L + i * (bw + gap) - wrap.clientWidth / 2);
-    (drawChart._scrolled ||= {})[r.id + cur.cabin] = true;
-  }
-  wrap.onpointermove = e => {
-    const b = e.target.closest(".bar"); if (!b) { tip.style.display = "none"; return; }
-    const v = cal[b.dataset.d], box = wrap.getBoundingClientRect(), bb = b.getBoundingClientRect();
-    tip.innerHTML = `<b>${singleStay(r) ? "" : "from "}${money(v.price)}</b><br><span class="ink2">${fmtDay(b.dataset.d)}${v.return_date ? ` – ${fmtDay(v.return_date)}` : ""}</span><br><span class="tiny muted">${esc((v.airlines || []).join(", "))} · ${stopsTxt(v.stops)}</span>`;
-    tip.style.display = "block";
-    const left = bb.left - box.left + wrap.scrollLeft + bb.width / 2 - tip.offsetWidth / 2;
-    tip.style.left = Math.max(wrap.scrollLeft, Math.min(left, wrap.scrollLeft + wrap.clientWidth - tip.offsetWidth)) + "px";
-    tip.style.top = Math.max(0, bb.top - box.top - tip.offsetHeight - 8) + "px";
-  };
-  wrap.onpointerleave = () => tip.style.display = "none";
-  wrap.onclick = e => { const b = e.target.closest(".bar"); if (b) pickDate(r, b.dataset.d); };
-  wrap.onkeydown = e => { const b = e.target.closest(".bar"); if (b && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pickDate(r, b.dataset.d); } };
-}
-
-function drawCalendar(r, el, cal, best) {
-  const prices = Object.values(cal).filter(v => v.price).map(v => v.price).sort((a, b) => a - b);
-  const step = p => prices.length < 2 ? 7 : 7 - Math.min(6, Math.floor(prices.findIndex(x => x >= p) / (prices.length - 1) * 7));
-  const dark = getComputedStyle(document.documentElement).colorScheme === "dark";
-  const start = new Date(r.depart_from + "T00:00:00Z"), end = new Date(r.depart_to + "T00:00:00Z"), departDays = new Set(windowDates(r));
-  let html = "";
-  for (let m = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), 1)); m <= end; m.setUTCMonth(m.getUTCMonth() + 1)) {
-    const y = m.getUTCFullYear(), mo = m.getUTCMonth(), days = new Date(Date.UTC(y, mo + 1, 0)).getUTCDate(), lead = (new Date(Date.UTC(y, mo, 1)).getUTCDay() + 6) % 7;
-    let cells = ["M", "T", "W", "T", "F", "S", "S"].map(d => `<div class="wd">${d}</div>`).join("") + "<div></div>".repeat(lead);
-    for (let d = 1; d <= days; d++) {
-      const iso = `${y}-${String(mo + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`, v = cal[iso];
-      if (!departDays.has(iso)) { cells += `<div class="d out"><span>${d}</span></div>`; continue; }
-      if (!v?.price) { cells += `<div class="d" title="${fmtDay(iso)}: ${v ? "no flights" : "not checked yet"}"><span>${d}</span><span class="p">${v ? "×" : ""}</span></div>`; continue; }
-      const s = step(v.price), lightText = dark ? s <= 4 : s >= 5;
-      cells += `<button type="button" class="d has ${lightText ? "dark" : "light"} ${best?.date === iso ? "best" : ""} ${cur.date?.slice(0, 10) === iso ? "sel" : ""}" data-d="${iso}" style="background:var(--seq-${s})" aria-label="${fmtDay(iso)}: ${money(v.price)}"><span>${d}</span><span class="p">${compact(v.price)}</span></button>`;
-    }
-    html += `<div class="month"><h4>${new Date(Date.UTC(y, mo, 1)).toLocaleDateString(undefined, { month: "long", year: "numeric", timeZone: "UTC" })}</h4><div class="cal">${cells}</div></div>`;
-  }
-  el.innerHTML = `<div class="row between" style="margin-bottom:12px"><span class="legend"><span>Cheaper</span><span class="sw">${[7, 6, 5, 4, 3, 2, 1].map(i => `<i style="background:var(--seq-${i})"></i>`).join("")}</span><span>Pricier</span></span>
-    <span class="legend"><i style="width:12px;height:12px;border-radius:4px;box-shadow:inset 0 0 0 2px #34a853;display:inline-block"></i>Cheapest</span></div><div class="months">${html}</div>`;
-  el.querySelector(".months").onclick = e => { const b = e.target.closest("button.d"); if (b) pickDate(r, b.dataset.d); };
-}
-
-/** Departure dates across, return dates (or nights) down, like Google Flights' date grid. */
-function drawGrid(r, el, cal, best) {
-  const trips = tripsOf(r), byKey = Object.fromEntries(trips.map(t => [t.key, t]));
-  const cols = [...new Set(trips.map(t => t.date))], useRet = !!r.return_from;
-  const rows = [...new Set(trips.map(t => useRet ? t.ret : t.n))].sort((a, b) => a < b ? -1 : 1);
-  const prices = Object.values(cal).filter(v => v.price).map(v => v.price).sort((a, b) => a - b);
-  const step = p => prices.length < 2 ? 7 : 7 - Math.min(6, Math.floor(prices.findIndex(x => x >= p) / (prices.length - 1) * 7));
-  const dark = getComputedStyle(document.documentElement).colorScheme === "dark";
-  const cell = (d, rv) => {
-    const t = trips.find(x => x.date === d && (useRet ? x.ret === rv : x.n === rv));
-    if (!t) return `<td class="gx"></td>`;
-    const v = cal[t.key];
-    if (!v?.price) return `<td class="g0" title="${fmtDay(d)} – ${fmtDay(t.ret)}: ${v ? "no flights" : "not checked yet"}">${v ? "×" : "·"}</td>`;
-    const s = step(v.price), light = dark ? s <= 4 : s >= 5;
-    return `<td><button type="button" class="gc ${light ? "dark" : "light"} ${best && best.date === d && best.return_date === t.ret ? "best" : ""} ${cur.date === t.key ? "sel" : ""}" data-k="${t.key}" style="background:var(--seq-${s})"
-      aria-label="${fmtDay(d)} to ${fmtDay(t.ret)}: ${money(v.price)}">${compact(v.price)}</button></td>`;
-  };
-  el.innerHTML = `<div class="row between" style="margin-bottom:12px"><span class="legend"><span>Cheaper</span><span class="sw">${[7, 6, 5, 4, 3, 2, 1].map(i => `<i style="background:var(--seq-${i})"></i>`).join("")}</span><span>Pricier</span></span>
-    <span class="tiny ink2">Departure → · ${useRet ? "Return" : "Nights"} ↓</span></div>
-    <div class="grid-wrap"><table class="dgrid"><thead><tr><th class="corner">${useRet ? "Return" : "Nights"}</th>${cols.map(d => `<th>${fmtDate(d, { weekday: "short" })}<br><b>${fmtDate(d)}</b></th>`).join("")}</tr></thead>
-    <tbody>${rows.map(rv => `<tr><th>${useRet ? `${fmtDate(rv, { weekday: "short" })}<br><b>${fmtDate(rv)}</b>` : `<b>${rv}</b> night${rv === 1 ? "" : "s"}`}</th>${cols.map(d => cell(d, rv)).join("")}</tr>`).join("")}</tbody></table></div>`;
-  el.querySelector(".dgrid").onclick = e => { const b = e.target.closest(".gc"); if (b) pickDate(r, b.dataset.k); };
-}
-
-function drawResults(r) {
-  const cal = entry(r.id, cur.cabin).calendar || {};
-  let rows = Object.entries(cal).filter(([, v]) => v.price).sort((a, b) => a[1].price - b[1].price);
-  if (cur.date) { const hit = ([k]) => cur.date.includes("+") || cur.date.length > 10 ? k === cur.date : k.slice(0, 10) === cur.date; rows = [...rows.filter(hit), ...rows.filter(x => !hit(x))]; }
-  rows = rows.slice(0, 10).map(([k, v]) => [k.slice(0, 10), v, k]);
-  const el = $("#d-results");
-  if (!rows.length) { el.innerHTML = `<div class="empty"><p>No flights found yet.</p></div>`; return; }
-  el.innerHTML = rows.map(([d, v, k], i) => {
-    const legs = v.legs || [], from = legs[0]?.from || r.from.split(",")[0], to = legs[legs.length - 1]?.to || r.to.split(",")[0];
-    const isSel = cur.date && (cur.date === k || cur.date === d) && i === 0;
-    const nights = v.return_date ? daysBetween(d, v.return_date) : null;
-    return `<div class="res ${isSel ? "sel" : ""}" data-d="${d}">
-      <button type="button" aria-expanded="false">
-        ${airlineLogo(v)}
-        <span><span class="t">${hhmm(v.depart_time) ? `${hhmm(v.depart_time)} – ${hhmm(v.arrive_time) || "?"}${plusDays(v.depart_time, v.arrive_time)}` : fmtDay(d)}</span><br>
-          <span class="s">${hhmm(v.depart_time) ? fmtDay(d) + (v.return_date ? ` → ${fmtDay(v.return_date)}` : "") + " · " : ""}${esc((v.airlines || []).join(", "))}</span></span>
-        <span class="c3"><span class="t" style="font-weight:500">${dur(v.duration) || "–"}</span><br><span class="s">${esc(from)}–${esc(to)}</span></span>
-        <span class="c4"><span class="t" style="font-weight:500">${stopsTxt(v.stops)}</span><br><span class="s">${legs.length > 1 ? esc(legs.slice(0, -1).map(l => l.to).join(", ")) : "&nbsp;"}</span></span>
-        <span class="pr"><span class="t ${v.price === entry(r.id, cur.cabin).cheapest?.price ? "down" : ""}">${money(v.price)}</span><br><span class="s">${v.return_date ? `round trip · ${nights} n` : "one way"}</span></span>
-        <span class="chev">${icon("chev")}</span>
-      </button>
-      <div class="res-more">
-        ${legs.length ? `<div class="legs">${legs.map(l => `<div><b>${esc(l.from)} → ${esc(l.to)}</b> <span class="ink2">· ${esc(l.airline)} ${esc(l.flight)}</span></div>`).join("")}</div>` : ""}
-        <div class="row between"><span class="small ink2">${fmtDay(d)}${v.return_date ? ` – return ${fmtDay(v.return_date)}` : ""} · checked ${ago(v.checked)}${v.level ? ` · ${v.level} price` : ""}</span>
-        <a class="btn primary" href="${esc(v.url)}" target="_blank" rel="noopener">Book on Google Flights ${icon("ext", "i\" style=\"width:16px;height:16px")}</a></div>
-      </div></div>`;
-  }).join("");
-  el.onclick = e => { const b = e.target.closest(".res > button"); if (!b) return; const row = b.parentElement; row.classList.toggle("open"); b.setAttribute("aria-expanded", row.classList.contains("open")); };
-  if (cur.date) el.querySelector(".res.sel")?.classList.add("open");
-}
-
-function drawHistory(r) {
-  const el = $("#d-history"), pts = hist[r.id]?.[cur.cabin] || [], tgt = r.targets?.[cur.cabin];
-  if (pts.length < 2) { el.innerHTML = `<p class="small muted">The trend appears after a few search runs.</p>`; return; }
-  const W = Math.max(320, el.clientWidth - 40), H = 220, L = 8, R = 44, T = 16, B = 28;
-  const xs = pts.map(p => +new Date(p[0])), ys = pts.map(p => p[1]).concat(tgt ? [tgt] : []);
-  const x0 = Math.min(...xs), x1 = Math.max(...xs), lo = Math.min(...ys) * .94, hi = Math.max(...ys) * 1.04;
-  const X = t => L + (t - x0) / (x1 - x0 || 1) * (W - L - R), Y = v => T + (1 - (v - lo) / (hi - lo || 1)) * (H - T - B);
-  let d = `M${X(xs[0])},${Y(pts[0][1])}`;
-  for (let i = 1; i < pts.length; i++) d += `H${X(xs[i])}V${Y(pts[i][1])}`;
-  const area = `${d}H${X(xs[xs.length - 1])}V${H - B}H${X(xs[0])}Z`;
-  const ticks = [0, 1, 2, 3].map(i => lo + (hi - lo) * (i + .5) / 4);
-  el.innerHTML = `<div class="chart-wrap" style="overflow:visible"><svg width="${W}" height="${H}" role="img" aria-label="Cheapest fare over time">
-    <defs><linearGradient id="hg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".22"/><stop offset="1" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>
-    ${ticks.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${W - R + 6}" y="${Y(v) + 4}" font-size="11" fill="var(--muted)">${compact(Math.round(v))}</text>`).join("")}
-    <text x="${L}" y="${H - 8}" font-size="11" fill="var(--muted)">${fmtDate(pts[0][0])}</text><text x="${W - R}" y="${H - 8}" font-size="11" fill="var(--muted)" text-anchor="end">${fmtDate(pts[pts.length - 1][0])}</text>
-    ${tgt ? `<line x1="${L}" x2="${W - R}" y1="${Y(tgt)}" y2="${Y(tgt)}" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${W - R + 6}" y="${Y(tgt) + 4}" font-size="11" font-weight="600" fill="var(--good)">target</text>` : ""}
-    <path d="${area}" fill="url(#hg)"/><path d="${d}" fill="none" stroke="var(--accent)" stroke-width="2"/>
-    <line id="hx" y1="${T}" y2="${H - B}" stroke="var(--line-2)" visibility="hidden"/><circle id="hd" r="5" fill="var(--accent)" stroke="var(--glass-strong)" stroke-width="2" visibility="hidden"/>
-  </svg><div class="tip glass" id="htip"></div></div>`;
-  const svg = el.querySelector("svg"), tip = el.querySelector("#htip"), hx = el.querySelector("#hx"), hd = el.querySelector("#hd");
-  svg.onpointermove = e => {
-    const box = svg.getBoundingClientRect(), t = x0 + (e.clientX - box.left - L) / (W - L - R) * (x1 - x0);
-    let i = 0; while (i < xs.length - 1 && xs[i + 1] <= t) i++;
-    const px = X(xs[i]), py = Y(pts[i][1]);
-    for (const [k, v] of [["x1", px], ["x2", px]]) hx.setAttribute(k, v);
-    hd.setAttribute("cx", px); hd.setAttribute("cy", py); hx.setAttribute("visibility", "visible"); hd.setAttribute("visibility", "visible");
-    tip.style.display = "block"; tip.innerHTML = `<b>${money(pts[i][1])}</b><br><span class="tiny ink2">${new Date(pts[i][0]).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span>`;
-    tip.style.left = Math.min(px + 12, W - tip.offsetWidth) + "px"; tip.style.top = Math.max(0, py - tip.offsetHeight - 10) + "px";
-  };
-  svg.onpointerleave = () => { tip.style.display = "none"; hx.setAttribute("visibility", "hidden"); hd.setAttribute("visibility", "hidden"); };
-}
-let resizeT; addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { const r = config.routes.find(x => x.id === cur?.id); if (r && location.hash.startsWith("#/route/")) { drawChart(r); drawHistory(r); } }, 150); });
-
-// ---------- live search (Cloudflare Worker, see worker/) ----------
-let liveApi = null, liveStatus = null;
-async function loadLive() {
-  const cfg = await getJSON("api.json", {});
-  liveApi = (cfg.search_api || "").replace(/\/$/, "") || null;
-  if (!liveApi) return;
-  try { liveStatus = await (await fetch(liveApi + "/status")).json(); } catch { liveStatus = null; }
-  renderStatus();
-}
-const apiError = (code, message) => Object.assign(new Error(message), { code });
-/** Calls the search service. GETs are retried once on network errors, timeouts and 5xx answers. */
-async function live(path, opts = {}, attempt = 1) {
-  if (!liveApi) throw apiError("not-set-up", "Live search isn't set up yet.");
-  const retryable = (opts.method || "GET") === "GET" && attempt === 1;
-  let r;
-  try {
-    r = await fetch(liveApi + path, { ...opts, signal: AbortSignal.timeout(opts.timeout || 40000),
-      headers: { "Content-Type": "application/json", "X-Passcode": store.get("passcode", ""), ...(opts.headers || {}) } });
-  } catch (e) {
-    if (retryable) { await new Promise(res => setTimeout(res, 1500)); return live(path, opts, 2); }
-    if (e?.name === "TimeoutError") throw apiError("timeout", "The search took too long. Try again.");
-    if (!navigator.onLine) throw apiError("offline", "You're offline. Check your internet connection.");
-    throw apiError("unreachable", `Can't reach the search service (${liveApi.replace(/^https:\/\//, "")}). If you just deployed it, wait a minute. Otherwise check in Cloudflare that the flight-tracker Worker is deployed and that ALLOWED_ORIGIN is ${location.origin}.`);
-  }
-  const body = await r.json().catch(() => ({}));
-  if (r.status === 401) throw apiError("passcode", body.message || "Enter the passcode to search.");
-  if (!r.ok) {
-    if (retryable && r.status >= 500 && !["no-key", "serpapi-key", "serpapi-quota"].includes(body.error)) { await new Promise(res => setTimeout(res, 1500)); return live(path, opts, 2); }
-    throw apiError(body.error || `http-${r.status}`, body.message || `The search service answered with an error (HTTP ${r.status}).`);
-  }
-  return body;
-}
-const SETUP_ERRORS = ["no-key", "serpapi-key", "serpapi-quota", "unreachable", "github-token", "github-access", "write-disabled"];
-const liveWrite = () => Boolean(liveApi && liveStatus?.write);
-
-/** The trips a live search checks: the chosen dates, or up to 5 dates spread over a flexible window. */
-function liveTrips(r) {
-  if (r.date_mode === "exact") { const v = dateValues(r); return [{ date: v.depart, ret: r.trip === "oneway" ? null : v.ret }]; }
-  const tomorrow = addDays(new Date().toISOString().slice(0, 10), 1);
-  const all = tripsOf(r).filter(t => t.date >= tomorrow), dates = [...new Set(all.map(t => t.date))];
-  const ns = [...new Set(all.map(t => t.n))], mid = ns[Math.floor((ns.length - 1) / 2)];
-  const pick = dates.length <= 5 ? dates : [0, 1, 2, 3, 4].map(i => dates[Math.round(i * (dates.length - 1) / 4)]);
-  return pick.map(d => all.find(t => t.date === d && t.n === mid) || all.find(t => t.date === d));
-}
-
-function startSearch(r) {
-  ui.search = { r, cabin: r.cabins[0], results: {}, sel: null };
-  try { sessionStorage.setItem("ft.search", JSON.stringify(ui.search)); } catch {}
-  location.hash = "#/search";
-  if (location.hash === "#/search") route();
-}
-function restoreSearch() {
-  if (ui.search) return ui.search;
-  try { ui.search = JSON.parse(sessionStorage.getItem("ft.search")); } catch {}
-  return ui.search;
-}
-function saveSearchState() { try { sessionStorage.setItem("ft.search", JSON.stringify(ui.search)); } catch {} }
-const tripKey = (t, cabin) => `${cabin}|${t.date}|${t.ret || ""}`;
-
-function viewSearch() {
-  const s = restoreSearch();
-  if (!s) return `<div class="glass empty" style="margin-top:24px"><div class="em">🔎</div><p>Start a search on Explore.</p><p style="margin-top:12px"><a class="btn primary" href="#/">Explore</a></p></div>`;
-  const r = s.r, sig = routeSig(r), tracked = config.routes.find(x => routeSig(x) === sig);
-  return `
-  <a class="crumb" href="#/">${icon("back")} Change search</a>
-  <div class="detail-head">
-    <div><h1>${esc(cityOf(r.from))} → ${esc(cityOf(r.to))}</h1>
-      <div class="row small ink2" style="margin-top:6px"><span class="chip">${esc(r.from)} → ${esc(r.to)}</span><span class="chip">${r.trip === "oneway" ? "One way" : "Round trip"}</span>
-        <span class="chip">${icon("cal", "i\" style=\"width:14px;height:14px")} ${datesTxt(r)}</span><span class="chip">${icon("person", "i\" style=\"width:14px;height:14px")} ${r.adults || 1}</span>
-        ${r.max_stops != null ? `<span class="chip">${r.max_stops === 0 ? "Non-stop" : `≤ ${r.max_stops} stop${r.max_stops > 1 ? "s" : ""}`}</span>` : ""}</div></div>
-    ${tracked ? `<a class="btn" href="#/route/${encodeURIComponent(tracked.id)}">${icon("track")} Tracking · view prices</a>`
-      : `<button class="primary" id="s-track">${icon("bell")} Track prices</button>`}
-  </div>
-  ${segmented("s-cabin", CABINS.map(c => [c, CABIN_NAME[c]]), s.cabin, "Class")}
-  <div id="s-body" style="margin-top:14px"></div>`;
-}
-
-function afterSearch() {
-  const s = ui.search; if (!s) return;
-  $("#s-cabin").onclick = e => { const b = e.target.closest("button"); if (!b || b.dataset.v === s.cabin) return; s.cabin = b.dataset.v; s.sel = null; saveSearchState(); route(); };
-  $("#s-track")?.addEventListener("click", trackSearch);
-  runLiveSearch();
-}
-
-async function runLiveSearch() {
-  const s = ui.search, body = $("#s-body");
-  if (!liveApi) { body.innerHTML = liveSetupPanel(); return; }
-  if (liveStatus?.passcode && !store.get("passcode", "")) return askPasscode(runLiveSearch);
-  const trips = liveTrips(s.r);
-  if (!trips.length) { body.innerHTML = `<div class="glass empty"><p>These dates are in the past.</p></div>`; return; }
-  const todo = trips.filter(t => !s.results[tripKey(t, s.cabin)]);
-  if (todo.length) {
-    body.innerHTML = skeleton(trips.length > 1);
-    const p = new URLSearchParams({ from: s.r.from, to: s.r.to, cabin: s.cabin, adults: s.r.adults || 1, stops: s.r.max_stops ?? "", currency: config.settings.currency || "EUR" });
-    const out = await Promise.allSettled(todo.map(t => live(`/search?${p}&depart=${t.date}${t.ret ? `&return=${t.ret}` : ""}`)));
-    if (ui.search !== s || !$("#s-body")) return; // navigated away meanwhile
-    const pass = out.find(o => o.status === "rejected" && o.reason.code === "passcode");
-    if (pass) { store.set("passcode", ""); return askPasscode(runLiveSearch, "That passcode didn't work. Try again."); }
-    const failed = out.find(o => o.status === "rejected");
-    if (failed && out.every(o => o.status === "rejected")) return showSearchError(failed.reason);
-    s.failed = {};
-    out.forEach((o, i) => { if (o.status === "fulfilled") s.results[tripKey(todo[i], s.cabin)] = o.value; else s.failed[tripKey(todo[i], s.cabin)] = o.reason.message; });
-    saveSearchState();
-  }
-  drawSearch(trips);
-}
-
-function showSearchError(err) {
-  const setup = SETUP_ERRORS.includes(err.code);
-  $("#s-body").innerHTML = `<div class="glass empty"><div class="em">${err.code === "offline" ? "📡" : setup ? "🔧" : "⚠️"}</div>
-    <h3>${err.code === "serpapi-quota" ? "Out of searches" : setup ? "The search service needs attention" : "The search didn't work"}</h3>
-    <p class="ink2" style="margin:6px auto 0;max-width:560px">${esc(err.message)}</p>
-    <p class="row" style="justify-content:center;margin-top:14px"><button class="primary" id="s-retry">${icon("refresh")} Try again</button>${setup ? `<button id="s-diag">${icon("gear")} Test connection</button>` : ""}</p></div>`;
-  $("#s-retry").onclick = runLiveSearch;
-  $("#s-diag")?.addEventListener("click", () => { openSettings(); runDiagnostics(); });
-}
-
-function drawSearch(trips) {
-  const s = ui.search, body = $("#s-body");
-  const res = trips.map(t => ({ t, v: s.results[tripKey(t, s.cabin)] })).filter(x => x.v);
-  const cheapestOf = v => v.options?.length ? Math.min(...v.options.map(o => o.price)) : null;
-  if (!s.sel || !res.find(x => x.t.date === s.sel)) {
-    const ok = res.filter(x => cheapestOf(x.v) != null).sort((a, b) => cheapestOf(a.v) - cheapestOf(b.v));
-    s.sel = (ok[0] || res[0])?.t.date;
-  }
-  const cur = res.find(x => x.t.date === s.sel);
-  const failedTrips = trips.filter(t => s.failed?.[tripKey(t, s.cabin)] && !s.results[tripKey(t, s.cabin)]);
-  const failNote = failedTrips.length ? `<div class="banner" style="margin:0 0 14px">⚠️ <span class="grow">${failedTrips.length} date${failedTrips.length > 1 ? "s" : ""} couldn't be checked: ${esc(s.failed[tripKey(failedTrips[0], s.cabin)].replace(/\.$/, ""))}.</span><button id="s-retry-failed">Retry</button></div>` : "";
-  const strip = trips.length > 1 ? `<div class="glass panel" style="margin-bottom:14px">
-      <div class="row between" style="margin-bottom:10px"><h3>Sampled dates</h3><span class="tiny ink2">Checked ${trips.length} of ${windowDates(s.r).length} departure dates. <b>Track prices</b> to check every date, every few hours.</span></div>
-      <div class="dstrip">${res.map(({ t, v }) => { const c = cheapestOf(v), best = c != null && c === Math.min(...res.map(x => cheapestOf(x.v)).filter(x => x != null));
-        return `<button class="dcell ${t.date === s.sel ? "on" : ""}" data-d="${t.date}"><span class="tiny ink2">${fmtDate(t.date, { weekday: "short", day: "numeric", month: "short" })}${t.ret ? `<br>→ ${fmtDate(t.ret)}` : ""}</span><b class="${best ? "down" : ""}">${c != null ? money(c) : "–"}</b></button>`; }).join("")}</div></div>` : "";
-  if (!cur) { body.innerHTML = failNote + strip + `<div class="glass empty"><p>No results.</p></div>`; $("#s-retry-failed")?.addEventListener("click", runLiveSearch); return; }
-  const v = cur.v, opts = (v.options || []).slice().sort((a, b) => a.price - b.price);
-  const bestOpts = (v.options || []).filter(o => o.best), other = opts.filter(o => !o.best);
-  const best = opts[0];
-  body.innerHTML = failNote + strip + (opts.length ? `
-    <div class="glass panel">
-      <div class="row between" style="align-items:start">
-        <div><div class="small ink2">Cheapest ${CABIN_NAME[s.cabin].toLowerCase()} · ${fmtDay(cur.t.date)}${cur.t.ret ? ` – ${fmtDay(cur.t.ret)}` : ""}</div>
-          <div class="row" style="align-items:baseline;gap:12px"><span class="big-price">${money(best.price)}</span>${levelBadge(v)}</div></div>
-        <span class="tiny muted">${v.cached ? "From the last 30 min" : "Live"} · ${ago(v.searched_at)}</span>
-      </div>
-      ${insight({ ...v, price: best.price })}
-    </div>
-    ${bestOpts.length ? `<section class="section"><div class="section-head"><div><h2>Top departing flights</h2><p class="small ink2">Ranked by Google on price and convenience. Prices include taxes and fees for ${s.r.adults || 1} passenger${s.r.adults > 1 ? "s" : ""}${cur.t.ret ? ", round trip" : ""}.</p></div></div>
-      <div class="glass results">${bestOpts.map(o => liveRow(o, v, best)).join("")}</div></section>` : ""}
-    ${other.length ? `<section class="section"><div class="section-head"><div><h2>${bestOpts.length ? "Other departing flights" : "Departing flights"}</h2></div></div>
-      <div class="glass results">${other.map(o => liveRow(o, v, best)).join("")}</div></section>` : ""}`
-    : `<div class="glass empty"><div class="em">🛬</div><p>${esc(v.message || "No flights found for this search.")}</p><p class="small ink2" style="margin-top:6px">Try other dates, more stops or nearby airports.</p></div>`);
-  $("#s-retry-failed")?.addEventListener("click", runLiveSearch);
-  body.querySelectorAll(".dcell").forEach(b => b.onclick = () => { s.sel = b.dataset.d; saveSearchState(); drawSearch(trips); });
-  body.querySelectorAll(".results").forEach(el => el.onclick = e => { const b = e.target.closest(".res > button"); if (!b) return; const row = b.parentElement; row.classList.toggle("open"); b.setAttribute("aria-expanded", row.classList.contains("open")); });
-}
-
-function liveRow(o, v, best) {
-  const legs = o.legs || [], first = legs[0] || {}, last = legs[legs.length - 1] || {};
-  const lay = (o.layovers || []).map(l => `${l.id} ${dur(l.duration)}`).join(", ");
-  return `<div class="res"><button type="button" aria-expanded="false">
-      ${airlineLogo(o)}
-      <span><span class="t">${hhmm(o.depart_time)} – ${hhmm(o.arrive_time)}${plusDays(o.depart_time, o.arrive_time)}</span><br><span class="s">${esc(o.airlines.join(", "))}</span></span>
-      <span class="c3"><span class="t" style="font-weight:500">${dur(o.duration)}</span><br><span class="s">${esc(first.from || "")}–${esc(last.to || "")}</span></span>
-      <span class="c4"><span class="t" style="font-weight:500">${stopsTxt(o.stops)}</span><br><span class="s">${esc(lay) || "&nbsp;"}</span></span>
-      <span class="pr"><span class="t ${o.price === best.price ? "down" : ""}">${money(o.price)}</span><br><span class="s">${o.co2_diff != null && o.co2_diff <= -5 ? `<span class="down">${o.co2_diff}% CO₂</span>` : v.query?.ret ? "round trip" : "one way"}</span></span>
-      <span class="chev">${icon("chev")}</span>
-    </button>
-    <div class="res-more">
-      <div class="legs">${legs.map((l, i) => `
-        <div><b>${hhmm(l.depart)}</b> ${esc(l.from_name || l.from)} (${esc(l.from)})</div>
-        <div class="tiny ink2" style="padding-left:12px">${dur(l.duration) ? `Travel time ${dur(l.duration)} · ` : ""}${esc(l.airline)} ${esc(l.flight)}${l.airplane ? ` · ${esc(l.airplane)}` : ""}${l.legroom ? ` · legroom ${esc(l.legroom)}` : ""}${l.overnight ? " · overnight" : ""}</div>
-        <div><b>${hhmm(l.arrive)}</b> ${esc(l.to_name || l.to)} (${esc(l.to)})</div>
-        ${o.layovers?.[i] ? `<div class="layover">${dur(o.layovers[i].duration)} layover · ${esc(o.layovers[i].name || o.layovers[i].id)}${o.layovers[i].overnight ? " · overnight" : ""}</div>` : ""}`).join("")}</div>
-      <div class="row between"><span class="small ink2">${o.co2 ? `${Math.round(o.co2 / 1000)} kg CO₂e${o.co2_diff != null ? ` (${o.co2_diff > 0 ? "+" : ""}${o.co2_diff}% vs typical)` : ""}` : ""}</span>
-        ${v.url ? `<a class="btn primary" href="${esc(v.url)}" target="_blank" rel="noopener">Book on Google Flights ${icon("ext", "i\" style=\"width:16px;height:16px")}</a>` : ""}</div>
-    </div></div>`;
-}
-
-function skeleton(withStrip) {
-  const row = `<div class="res"><div class="skel-row"><i class="sk" style="width:36px;height:36px;border-radius:10px"></i><span style="flex:1"><i class="sk" style="width:40%"></i><i class="sk" style="width:25%;margin-top:6px"></i></span><i class="sk" style="width:70px"></i></div></div>`;
-  return `${withStrip ? `<div class="glass panel" style="margin-bottom:14px"><i class="sk" style="width:30%"></i><div class="dstrip" style="margin-top:10px">${"<i class='sk' style='height:56px;border-radius:14px'></i>".repeat(5)}</div></div>` : ""}
-    <div class="glass panel"><i class="sk" style="width:25%"></i><i class="sk" style="width:35%;height:40px;margin-top:8px"></i><p class="small ink2" style="margin-top:12px"><span class="spin" style="width:12px;height:12px;vertical-align:-1px"></span> Searching Google Flights…</p></div>
-    <div class="glass results" style="margin-top:32px">${row.repeat(4)}</div>`;
-}
-
-function liveSetupPanel() {
-  return `<div class="glass panel">
-    <h2>Live search isn't set up yet</h2>
-    <p class="ink2" style="margin-top:6px">Searching straight from this page needs the small search service in <code>worker/</code>, which keeps your SerpApi key secret.
-      It's a one-time, ~5 minute setup with a free Cloudflare account; the steps are in the README under <b>Live search</b>.</p>
-    <p class="ink2" style="margin-top:10px">Meanwhile you can still <b>Track prices</b>: the route is checked automatically every few hours.</p>
-  </div>`;
-}
-
-function askPasscode(then, msg) {
-  const d = $("#dlg-pass"), f = $("#pass-form");
-  $("#pass-msg").textContent = msg || "This site's search is protected so nobody else can use your search credits.";
-  f.elements.pass.value = ""; d.showModal(); f.elements.pass.focus();
-  f.onsubmit = e => { e.preventDefault(); store.set("passcode", f.elements.pass.value.trim()); d.close(); then(); };
-  const body = $("#s-body"); if (body) body.innerHTML = `<div class="glass empty"><div class="em">🔒</div><p>Enter the passcode to search.</p><p style="margin-top:12px"><button class="primary" id="s-pass">Enter passcode</button></p></div>`;
-  $("#s-pass")?.addEventListener("click", () => askPasscode(then));
-}
-
-const routeSig = x => JSON.stringify([x.from, x.to, x.trip, x.depart_from, x.depart_to, x.return_from, x.return_to, x.nights, x.nights_min, x.nights_max, x.weekdays]);
-async function trackSearch() {
-  const r = ui.search.r, btn = $("#s-track");
-  btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Saving…`;
-  try {
-    await saveConfig(c => { c.routes = (c.routes || []).filter(x => routeSig(x) !== routeSig(r)).concat(r); }, `Track ${r.from} → ${r.to}`);
-    toast("Tracking started. Prices for every date fill in over the next runs.");
-  } catch (err) { toast(err.message); btn.disabled = false; btn.innerHTML = `${icon("bell")} Track prices`; }
-}
-
-// ---------- diagnostics ----------
-async function runDiagnostics() {
-  const out = $("#s-diag-out"), btn = $("#s-test"), f = $("#settings-form");
-  if (f.elements.passcode.value.trim()) store.set("passcode", f.elements.passcode.value.trim());
-  out.hidden = false; btn.disabled = true;
-  const rows = [];
-  const show = () => out.innerHTML = rows.map(([ok, title, detail]) => `<li class="${ok === null ? "" : ok ? "ok" : "bad"}"><span class="mark">${ok === null ? '<span class="spin" style="width:12px;height:12px"></span>' : ok ? "✓" : "✕"}</span><span><b>${title}</b>${detail ? `<br><span class="tiny ink2">${detail}</span>` : ""}</span></li>`).join("");
-  const step = async (title, fn) => { const row = [null, title, ""]; rows.push(row); show(); try { const d = await fn(); row[0] = d?.ok !== false; row[2] = d?.detail || ""; } catch (e) { row[0] = false; row[2] = esc(e.message); } show(); return row[0]; };
-  try {
-    const listed = await step("Search service address", async () => {
-      const cfg = await getJSON("api.json", {});
-      if (!cfg.search_api) return { ok: false, detail: "api.json has no address yet. See <b>Live search</b> in the README." };
-      liveApi = cfg.search_api.replace(/\/$/, ""); return { detail: esc(liveApi) };
-    });
-    if (!listed) return;
-    const reach = await step("Search service reachable", async () => {
-      let r; try { r = await fetch(liveApi + "/status", { signal: AbortSignal.timeout(15000) }); }
-      catch { return { ok: false, detail: `No answer. Check the Worker is deployed in Cloudflare and its ALLOWED_ORIGIN is <code>${esc(location.origin)}</code>.` }; }
-      liveStatus = await r.json().catch(() => null);
-      return liveStatus ? { detail: "Connected." } : { ok: false, detail: `Unexpected answer (HTTP ${r.status}).` };
-    });
-    if (!reach) return;
-    let diag = null;
-    await step("Passcode", async () => {
-      try { diag = await live("/diagnose", { timeout: 30000 }); }
-      catch (e) { if (e.code === "passcode") return { ok: false, detail: "Wrong or missing passcode. Enter it above and test again." }; throw e; }
-      return liveStatus.passcode ? { detail: "Accepted." } : { ok: false, detail: "No SEARCH_PASSCODE secret on the Worker, so anyone could use your search credits and saving routes is disabled." };
-    });
-    await step("SerpApi key (Google Flights)", async () => {
-      const d = diag?.serpapi;
-      if (!d) return { ok: false, detail: "Couldn't check: the passcode step must pass first." };
-      return { ok: d.ok, detail: d.ok ? `${esc(d.plan || "Plan")}${d.searches_left != null ? ` · ${d.searches_left} searches left` : ""}` : esc(d.message) };
-    });
-    await step("Saving routes from the site", async () => {
-      const d = diag?.github;
-      if (!d) return { ok: false, detail: "Couldn't check: the passcode step must pass first." };
-      return { ok: d.ok, detail: d.ok ? "Works, no GitHub token needed in this browser." : esc(d.message) };
-    });
-  } finally { btn.disabled = false; renderStatus(); }
-}
-
-// ---------- GitHub ----------
-async function api(path, opts = {}) {
-  const { repo, token } = gh();
-  if (!repo || !token) {
-    if (liveApi && liveStatus && !liveStatus.write) throw new Error("Saving needs SEARCH_PASSCODE and TRACKER_GITHUB_TOKEN on the search service (see README).");
-    openSettings(); throw new Error(liveApi ? "Saving isn't available yet." : "Set up live search (README), or connect GitHub in Settings.");
-  }
-  const r = await fetch(`https://api.github.com/repos/${repo}${path}`, { ...opts, headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", ...(opts.headers || {}) } });
-  if (!r.ok) throw new Error(`GitHub: ${r.status} ${(await r.json().catch(() => ({}))).message || ""}`);
-  return r.status === 204 ? null : r.json();
-}
-const b64 = s => { const b = new TextEncoder().encode(s); let out = ""; for (let i = 0; i < b.length; i += 0x8000) out += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(out); };
-const unb64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), c => c.charCodeAt(0)));
-async function saveConfig(mutate, message, attempt = 1) {
-  if (liveWrite()) {
-    const file = await live("/config"), fresh = JSON.parse(file.content);
-    mutate(fresh);
-    try { await live("/config", { method: "POST", body: JSON.stringify({ message, sha: file.sha, content: JSON.stringify(fresh, null, 1) + "\n" }) }); }
-    catch (e) { if (e.code === "conflict" && attempt === 1) return saveConfig(mutate, message, 2); throw e; }
-    config = fresh; route(); return;
-  }
-  const file = await api("/contents/routes.json"), fresh = JSON.parse(unb64(file.content));
-  mutate(fresh);
-  await api("/contents/routes.json", { method: "PUT", body: JSON.stringify({ message, sha: file.sha, content: b64(JSON.stringify(fresh, null, 1) + "\n") }) });
-  config = fresh; route();
-}
-$("#btn-run").onclick = async () => {
-  const b = $("#btn-run"); b.disabled = true; b.innerHTML = `<span class="spin"></span>`;
-  try {
-    if (liveWrite()) await live("/run", { method: "POST" });
-    else { const info = await api(""); await api("/actions/workflows/check-flights.yml/dispatches", { method: "POST", body: JSON.stringify({ ref: info.default_branch }) }); }
-    toast("Checking all tracked routes now. New prices appear in a few minutes.");
-  }
-  catch (e) { toast(e.message); } finally { b.disabled = false; b.innerHTML = icon("refresh"); }
-};
-
-// ---------- route editor ----------
-const codes = v => String(v || "").toUpperCase().replace(/[^A-Z,]/g, "").replace(/,+/g, ",").replace(/^,|,$/g, "");
-const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-function buildRoute(v, id, form) {
-  const ok = s => /^[A-Z]{3}(,[A-Z]{3})*$/.test(s);
-  if (!ok(codes(v.from))) return "Choose where you fly from.";
-  if (!ok(codes(v.to))) return "Choose where you want to go.";
-  if (!v.cabins.length) return "Pick at least one class.";
-  const dates = readDates(form);
-  if (typeof dates === "string") return dates;
-  const r = {
-    id: id || slug(`${codes(v.from).split(",")[0]}-${codes(v.to).split(",")[0]}-${Date.now().toString(36).slice(-4)}`),
-    ...(v.name?.trim() ? { name: v.name.trim() } : {}),
-    from: codes(v.from), to: codes(v.to), trip: v.trip, ...dates,
-    cabins: v.cabins, adults: +v.adults || 1, max_stops: v.max_stops === "" || v.max_stops == null ? null : +v.max_stops, targets: v.targets || {},
-  };
-  if (r.depart_to < new Date().toISOString().slice(0, 10)) return "These dates are in the past.";
-  if (tripsOf(r).length > 400) return "That's a lot of trips to search. Pick a shorter window or fewer trip lengths.";
-  return r;
-}
-function openRoute(id) {
-  const r = config.routes.find(x => x.id === id); if (!r) return;
-  const f = $("#route-form"); f.dataset.id = id;
-  for (const k of ["name", "trip", "adults"]) f.elements[k].value = r[k] ?? "";
-  f.elements.max_stops.value = r.max_stops ?? "";
-  $("#r-dates").innerHTML = dateFields(r);
-  $("#r-locs").innerHTML = locPicker("from", "From", r.from, "City, airport or country") + locPicker("to", "To", r.to, "City, airport or country");
-  f.querySelectorAll("[data-loc]").forEach(initLoc);
-  initDates($("#r-dates [data-dates]"), f);
-  $("#r-cabins").innerHTML = CABINS.map(c => `<div class="tcard"><label class="top"><input type="checkbox" name="cab-${c}" ${cabinsOf(r).includes(c) ? "checked" : ""}>${CABIN_NAME[c]}</label>
-    <input type="number" min="1" name="tgt-${c}" value="${r.targets?.[c] ?? ""}" placeholder="Target (optional)" aria-label="${CABIN_NAME[c]} target price"></div>`).join("");
-  editorSync(); $("#dlg-route").showModal();
-}
-function editorSync() {
-  const f = $("#route-form"), el = f.elements, d = readDates(f);
-  const n = typeof d === "string" ? 0 : tripsOf({ trip: el.trip.value, ...d }).length, cabs = CABINS.filter(c => el["cab-" + c]?.checked).length;
-  $("#r-cost").textContent = n && cabs ? `${n} trips × ${cabs} classes = ${n * cabs} searches to check everything once. Each run does ${config.settings.searches_per_run || 8} searches, shared by all routes.` : "";
-}
-$("#route-form").addEventListener("input", editorSync);
-$("#route-form").addEventListener("submit", async e => {
-  e.preventDefault();
-  const f = e.target, el = f.elements, cabins = CABINS.filter(c => el["cab-" + c].checked);
-  const r = buildRoute({ from: el.from.value, to: el.to.value, name: el.name.value, trip: el.trip.value, adults: el.adults.value, max_stops: el.max_stops.value, cabins,
-    targets: Object.fromEntries(cabins.filter(c => +el["tgt-" + c].value > 0).map(c => [c, +el["tgt-" + c].value])) }, f.dataset.id, f);
-  if (typeof r === "string") return toast(r);
-  const btn = $("#r-save"); btn.disabled = true;
-  try { await saveConfig(c => { c.routes = c.routes.map(x => x.id === r.id ? r : x); }, `Edit route ${r.from} → ${r.to}`); $("#dlg-route").close(); toast("Saved. A new search starts right away."); }
-  catch (err) { toast(err.message); } finally { btn.disabled = false; }
-});
-$("#r-delete").onclick = async () => {
-  const id = $("#route-form").dataset.id, r = config.routes.find(x => x.id === id);
-  if (!r || !confirm(`Stop tracking ${routeTitle(r)}? Its price history is deleted too.`)) return;
-  try { await saveConfig(c => { c.routes = c.routes.filter(x => x.id !== id); }, `Delete route ${r.from} → ${r.to}`); $("#dlg-route").close(); location.hash = "#/tracked"; toast("Route deleted."); }
-  catch (err) { toast(err.message); }
-};
-
-// ---------- settings ----------
-function applyTheme(t) { if (t === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t; }
-applyTheme(store.get("theme", "auto"));
-function openSettings() {
-  const f = $("#settings-form"), s = config.settings;
-  f.elements.repo.value = gh().repo; f.elements.token.value = gh().token;
-  f.elements.currency.value = s.currency || "EUR"; f.elements.searches_per_run.value = s.searches_per_run ?? 8;
-  f.elements.drop_threshold_pct.value = s.drop_threshold_pct ?? 5; f.elements.stale_days.value = s.stale_days ?? 14;
-  f.elements.passcode.value = store.get("passcode", "");
-  $("#s-live").innerHTML = !liveApi ? "Not set up yet. Follow <b>Live search</b> in the README to search Google Flights straight from this page."
-    : !liveStatus ? `Can't reach the search service at <code>${esc(liveApi)}</code>.`
-    : `Connected${liveStatus.search ? "" : ", but <b>SERPAPI_KEY</b> is missing"}. ${liveStatus.write ? "Saving routes works without a GitHub token." : "Add <b>SEARCH_PASSCODE</b> and <b>TRACKER_GITHUB_TOKEN</b> to save routes from here."}`;
-  $("#s-pass-field").hidden = !liveStatus?.passcode;
-  const t = store.get("theme", "auto"); $("#s-theme").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t));
-  monthly(); if (!$("#dlg-settings").open) $("#dlg-settings").showModal();
-}
-const monthly = () => $("#s-month").textContent = ((+$("#settings-form").elements.searches_per_run.value || 0) * 120).toLocaleString();
-$("#settings-form").addEventListener("input", monthly);
-$("#s-test").onclick = runDiagnostics;
-$("#s-theme").onclick = e => { const b = e.target.closest("button"); if (!b) return; store.set("theme", b.dataset.t); applyTheme(b.dataset.t);
-  $("#s-theme").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); if (location.hash.startsWith("#/route/")) route(); };
-$("#settings-form").addEventListener("submit", async e => {
-  e.preventDefault();
-  const el = e.target.elements;
-  store.set("repo", el.repo.value.trim()); store.set("token", el.token.value.trim()); store.set("passcode", el.passcode.value.trim());
-  const next = { currency: el.currency.value, searches_per_run: +el.searches_per_run.value || 8, drop_threshold_pct: +el.drop_threshold_pct.value || 5, stale_days: +el.stale_days.value || 14 };
-  const changed = Object.keys(next).some(k => next[k] !== config.settings[k]);
-  try { if (changed && (gh().token || liveWrite())) await saveConfig(c => { c.settings = { ...(c.settings || {}), ...next }; }, "Update settings"); $("#dlg-settings").close(); toast(changed ? "Settings saved." : "Connection saved."); }
-  catch (err) { toast(err.message); }
-});
-$("#dlg-settings").addEventListener("close", () => { if (location.hash === "#/settings") location.hash = "#/"; });
-
-// ---------- wiring ----------
-$("#btn-settings").onclick = openSettings;
-document.querySelectorAll("[data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
-document.querySelectorAll("dialog").forEach(d => d.addEventListener("click", e => { if (e.target === d) d.close(); }));
-addEventListener("unhandledrejection", e => { console.error(e.reason); toast(e.reason?.message || "Something went wrong. Try again."); });
-addEventListener("error", e => { if (e.message) toast("Something went wrong on this page. Reload to try again."); });
-load();
-</script>
+<script src="js/core.js"></script>
+<script src="js/places.js"></script>
+<script src="js/dates.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search-form.js"></script>
+<script src="js/views/home.js"></script>
+<script src="js/views/explore.js"></script>
+<script src="js/views/deals.js"></script>
+<script src="js/views/results.js"></script>
+<script src="js/views/tracked.js"></script>
+<script src="js/views/route.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@
  *
  *   GET  /status   what this worker can do: { search, write, passcode }
  *   GET  /search   one Google Flights search: from, to, depart, return?, cabin, adults, stops, currency
+ *   GET  /explore  cheapest destinations from one airport (Google Travel Explore): from, month (0-12), duration, cabin, currency
  *   GET  /config   routes.json from the repository: { content, sha }
  *   POST /config   save routes.json: { content, sha, message }
  *   POST /run      start the "Check flights" workflow
@@ -16,6 +17,8 @@
  */
 const CABINS = { economy: 1, premium: 2, business: 3, first: 4 };
 const CACHE_SECONDS = 30 * 60;
+const EXPLORE_CACHE_SECONDS = 6 * 60 * 60;
+const DURATIONS = { weekend: 1, week: 2, "2weeks": 3 };
 const TIMEOUT_MS = 25_000;
 
 /** An error with a code and a message meant for the dashboard user. */
@@ -43,6 +46,10 @@ export default {
       if (url.pathname === "/search" && request.method === "GET") {
         if (!env.SERPAPI_KEY) throw new ApiError("no-key", "The search service has no SerpApi key. In Cloudflare: Workers → flight-tracker → Settings → Variables and Secrets, add the secret SERPAPI_KEY.", 503);
         return json(await search(url.searchParams, env, ctx));
+      }
+      if (url.pathname === "/explore" && request.method === "GET") {
+        if (!env.SERPAPI_KEY) throw new ApiError("no-key", "The search service has no SerpApi key. In Cloudflare: Workers → flight-tracker → Settings → Variables and Secrets, add the secret SERPAPI_KEY.", 503);
+        return json(await explore(url.searchParams, env, ctx));
       }
       if (url.pathname === "/diagnose" && request.method === "GET") return json(await diagnose(env));
       if (url.pathname === "/config" || url.pathname === "/run") {
@@ -113,6 +120,64 @@ async function search(params, env, ctx) {
   const result = { query: q, ...normalize(data), searched_at: new Date().toISOString() };
   if (cache && !data.error) ctx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(result), { headers: { "Cache-Control": `max-age=${CACHE_SECONDS}` } })));
   return result;
+}
+
+// ---------- explore ----------
+export function exploreParams(p) {
+  const q = {
+    from: (p.get("from") || "").toUpperCase(), month: Number(p.get("month") || 0), duration: p.get("duration") || "week",
+    cabin: p.get("cabin") || "economy", currency: (p.get("currency") || "EUR").toUpperCase(),
+  };
+  if (!/^[A-Z]{3}$/.test(q.from)) return "from must be one airport code";
+  if (!Number.isInteger(q.month) || q.month < 0 || q.month > 12) return "month must be 0-12";
+  if (!(q.duration in DURATIONS) || !(q.cabin in CABINS) || !/^[A-Z]{3}$/.test(q.currency)) return "bad duration, cabin or currency";
+  return q;
+}
+
+async function explore(params, env, ctx) {
+  const q = exploreParams(params);
+  if (typeof q === "string") throw new ApiError("bad-request", `Invalid explore search: ${q}.`, 400);
+  const serp = new URLSearchParams({
+    engine: "google_travel_explore", departure_id: q.from, travel_class: String(CABINS[q.cabin]),
+    travel_duration: String(DURATIONS[q.duration]), currency: q.currency, hl: "en",
+  });
+  if (q.month) serp.set("month", String(q.month));
+  const cacheKey = new Request(`https://cache.flight-tracker.local/explore?${serp}`);
+  const cache = typeof caches !== "undefined" ? caches.default : null;
+  const hit = cache && await cache.match(cacheKey);
+  if (hit) return { ...(await hit.json()), cached: true };
+  serp.set("api_key", env.SERPAPI_KEY);
+  let r;
+  try { r = await fetch(`https://serpapi.com/search.json?${serp}`, { signal: AbortSignal.timeout(TIMEOUT_MS) }); }
+  catch (e) { if (e?.name === "TimeoutError" || e?.name === "AbortError") throw e; throw new ApiError("serpapi-down", "Couldn't reach SerpApi (the Google Flights source). Try again in a minute.", 502); }
+  const data = await r.json().catch(() => ({}));
+  const destinations = normalizeExplore(data);
+  const problem = destinations.length ? null : serpError(r.status, data.error);
+  if (problem) throw problem;
+  const result = { query: q, destinations, searched_at: new Date().toISOString() };
+  if (cache && destinations.length) ctx.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(result), { headers: { "Cache-Control": `max-age=${EXPLORE_CACHE_SECONDS}` } })));
+  return result;
+}
+
+const num = v => typeof v === "number" ? v : typeof v === "string" && /\d/.test(v) ? Number(v.replace(/[^\d.]/g, "")) : null;
+const isoDay = v => typeof v === "string" && /^\d{4}-\d{2}-\d{2}/.test(v) ? v.slice(0, 10) : null;
+
+/** Same fields as flights/explore.py parse_explore, cheapest first. */
+export function normalizeExplore(data) {
+  return (data.destinations || []).map(d => {
+    const price = num(d.flight_price ?? d.price);
+    if (!price) return null;
+    const airport = d.destination_airport || {}, gps = d.gps_coordinates || {};
+    return {
+      name: d.name || d.title || "", country: d.country || "",
+      code: String(airport.code || d.destination_airport_code || d.airport_code || d.arrival_id || "").toUpperCase().slice(0, 3),
+      id: d.destination_id || d.kgmid || "", price,
+      start_date: isoDay(d.start_date || d.outbound_date), end_date: isoDay(d.end_date || d.return_date),
+      stops: num(d.number_of_stops ?? d.stops), duration: num(d.flight_duration),
+      airline: d.airline || "", airline_code: d.airline_code || "",
+      lat: gps.latitude ?? null, lon: gps.longitude ?? null, image: d.thumbnail || d.image || "", link: d.link || d.google_flights_link || "",
+    };
+  }).filter(Boolean).sort((a, b) => a.price - b.price);
 }
 
 /** SerpApi failures as user-facing errors; "no results" is not an error (normalize reports it). */

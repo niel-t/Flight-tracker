@@ -64,3 +64,32 @@ def test_serpapi_provider_flags_bad_key():
     client = httpx.Client(transport=httpx.MockTransport(lambda req: httpx.Response(401, json={"error": "Invalid API key."})))
     row = SerpApiProvider("bad", client).search(Q)
     assert row["status"] == "error" and row["fatal"] and "SERPAPI_KEY" in row["detail"]
+
+
+def test_serpapi_explore_request_and_parse():
+    import httpx
+    from flights.explore import ExploreQuery
+    from flights.providers import SerpApiProvider
+    seen = {}
+
+    def handler(req):
+        seen.update(dict(req.url.params))
+        return httpx.Response(200, json={"destinations": [{"name": "Rome", "country": "Italy", "flight_price": 120,
+                                                           "destination_airport": {"code": "FCO"}}]})
+    p = SerpApiProvider("k", httpx.Client(transport=httpx.MockTransport(handler)))
+    res = p.explore(ExploreQuery("AMS", 3, "weekend", "business"))
+    assert seen["engine"] == "google_travel_explore" and seen["departure_id"] == "AMS"
+    assert seen["travel_class"] == "3" and seen["travel_duration"] == "1" and seen["month"] == "3"
+    assert res["status"] == "ok" and res["destinations"][0]["code"] == "FCO"
+    assert "flight_price" in res["raw_fields"]
+    seen.clear()
+    p.explore(ExploreQuery("AMS", 0, "week", "economy"))
+    assert "month" not in seen  # "any time" sends no month
+
+
+def test_serpapi_explore_bad_key_is_fatal():
+    import httpx
+    from flights.explore import ExploreQuery
+    from flights.providers import SerpApiProvider
+    p = SerpApiProvider("bad", httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(401, json={"error": "Invalid API key."}))))
+    assert p.explore(ExploreQuery("AMS", 0, "week", "economy"))["fatal"]

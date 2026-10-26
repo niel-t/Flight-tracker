@@ -12,6 +12,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from flights.alerts import detect_drop, send_ntfy
+from flights.explore import month_mismatch, plan_explore, prune_deals, slices, update_slice
 from flights.planner import plan, route_cabins, trips
 from flights.providers import CABIN_LABEL, DemoProvider, SerpApiProvider
 
@@ -65,6 +66,7 @@ def main() -> int:
     ap.add_argument("--demo", action="store_true", help="use made-up prices instead of Google Flights")
     ap.add_argument("--demo-if-no-key", action="store_true", help="use demo prices when SERPAPI_KEY is not set")
     ap.add_argument("--budget", type=int, help="number of searches this run (default: settings.searches_per_run)")
+    ap.add_argument("--explore-budget", type=int, help="number of Explore searches this run (default: settings.explore_per_run)")
     ap.add_argument("--now", help=argparse.SUPPRESS)  # ISO time, for tests and seeding demo history
     args = ap.parse_args()
 
@@ -74,7 +76,8 @@ def main() -> int:
     currency = settings.get("currency", "EUR")
     threshold = float(settings.get("drop_threshold_pct", 5))
     stale_days = int(settings.get("stale_days", 14))
-    budget = args.budget or int(settings.get("searches_per_run", 8))
+    budget = args.budget if args.budget is not None else int(settings.get("searches_per_run", 1))
+    explore_budget = args.explore_budget if args.explore_budget is not None else int(settings.get("explore_per_run", 1))
 
     now = datetime.fromisoformat(args.now) if args.now else datetime.now(timezone.utc).replace(microsecond=0)
     today = now.date()
@@ -90,9 +93,12 @@ def main() -> int:
     latest = load(DATA / "latest.json", {})
     history = load(DATA / "history.json", {})
     alerts = load(DATA / "alerts.json", [])
+    deals = load(DATA / "deals.json", {})
     if latest.get("demo", provider.demo) != provider.demo or latest.get("currency", currency) != currency:
         log.info("Data source or currency changed: starting with fresh data")
         latest, history, alerts = {}, {}, []
+    if deals.get("demo", provider.demo) != provider.demo or deals.get("currency", currency) != currency:
+        deals = {}
     prune(latest, routes, today)
     history = {rid: h for rid, h in history.items() if rid in latest["routes"]}
 
@@ -113,6 +119,28 @@ def main() -> int:
         else:
             cal[q.key] = row
         log.info("  %s %-8s %s → %s: %s", q.route_id, q.cabin, q.depart, q.return_ or "one way", row.get("price") or row["status"] + " " + row.get("detail", ""))
+
+    # deal finder: the cheapest destinations from the home airports (Google Travel Explore)
+    wanted = slices(settings, today)
+    prune_deals(deals, wanted, today)
+    for q in [] if fatal else plan_explore(wanted, deals, explore_budget):
+        res = provider.explore(q)
+        if res.get("fatal"):
+            fatal = res["detail"]
+            log.error("%s. Stopping this run.", fatal)
+            break
+        if res["status"] != "ok":
+            log.warning("  explore %s: %s", q.key, res.get("detail"))
+            deals.setdefault("slices", {}).setdefault(q.key, {}).update(checked=now.isoformat(), error=res.get("detail", ""))
+            continue
+        dests = res["destinations"]
+        update_slice(deals, q, dests, now, provider.name)
+        log.info("  explore %s: %d destinations, cheapest %s", q.key, len(dests),
+                 f"{dests[0]['name']} {currency} {dests[0]['price']}" if dests else "-")
+        if res.get("raw_fields"):
+            log.info("    fields: %s", ", ".join(res["raw_fields"]))
+        if month_mismatch(q, dests):
+            log.warning("    most dates are outside month %d: the month filter may not be supported", q.month)
 
     sent = 0
     for route in routes:
@@ -149,6 +177,9 @@ def main() -> int:
     save(DATA / "latest.json", latest)
     save(DATA / "history.json", history)
     save(DATA / "alerts.json", alerts[:MAX_ALERTS])
+    deals |= {"updated": now.isoformat(), "source": provider.name, "demo": provider.demo, "currency": currency,
+              "origins": sorted({q.origin for q in wanted})}
+    save(DATA / "deals.json", deals)
     log.info("Done. %d notifications sent.", sent)
     if fatal:
         # a red run makes GitHub email you, and shows the reason in the Actions tab

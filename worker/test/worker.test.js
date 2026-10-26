@@ -138,3 +138,46 @@ test("diagnose reports SerpApi searches left and GitHub access", async () => {
   const res = await worker.fetch(req("/diagnose"), env, ctx);
   assert.deepEqual(await res.json(), { serpapi: { ok: true, plan: "Free Plan", searches_left: 87 }, github: { ok: true } });
 });
+
+import { normalizeExplore, exploreParams } from "../src/index.js";
+
+const EXPLORE = { destinations: [
+  { name: "Barcelona", country: "Spain", destination_airport: { code: "BCN" }, flight_price: 142, start_date: "2027-03-04", end_date: "2027-03-11",
+    number_of_stops: 0, flight_duration: 135, airline: "Vueling", gps_coordinates: { latitude: 41.38, longitude: 2.17 }, thumbnail: "https://img/bcn.jpg" },
+  { name: "Lisbon", country: "Portugal", destination_airport: { code: "lis" }, flight_price: "€98", start_date: "2027-03-10", number_of_stops: 1 },
+  { name: "No price" },
+] };
+
+test("normalizeExplore matches the Python parser", () => {
+  const out = normalizeExplore(EXPLORE);
+  assert.deepEqual(out.map(d => [d.name, d.code, d.price]), [["Lisbon", "LIS", 98], ["Barcelona", "BCN", 142]]);
+  assert.equal(out[1].lat, 41.38);
+  assert.equal(out[1].image, "https://img/bcn.jpg");
+});
+
+test("explore params are validated", () => {
+  const p = s => exploreParams(new URLSearchParams(s));
+  assert.equal(typeof p("from=AMS&month=3&duration=weekend&cabin=business"), "object");
+  assert.equal(typeof p("from=AMS,BRU"), "string");
+  assert.equal(typeof p("from=AMS&month=13"), "string");
+  assert.equal(typeof p("from=AMS&duration=month"), "string");
+});
+
+test("explore calls SerpApi Travel Explore", async () => {
+  let called;
+  globalThis.fetch = async u => { called = new URL(u); return new Response(JSON.stringify(EXPLORE)); };
+  const res = await worker.fetch(req("/explore?from=AMS&month=4&duration=2weeks&cabin=premium"), env, ctx);
+  const body = await res.json();
+  assert.equal(res.status, 200);
+  assert.equal(called.searchParams.get("engine"), "google_travel_explore");
+  assert.equal(called.searchParams.get("month"), "4");
+  assert.equal(called.searchParams.get("travel_duration"), "3");
+  assert.equal(called.searchParams.get("travel_class"), "2");
+  assert.equal(body.destinations.length, 2);
+});
+
+test("explore errors are explained", async () => {
+  globalThis.fetch = async () => new Response(JSON.stringify({ error: "Your account has run out of searches." }), { status: 429 });
+  const res = await worker.fetch(req("/explore?from=AMS"), env, ctx);
+  assert.equal((await res.json()).error, "serpapi-quota");
+});

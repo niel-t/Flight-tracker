@@ -1,33 +1,21 @@
 # Flight Tracker
 
-Finds the cheapest flights on the routes you care about, in **economy, premium economy, business and first class**,
-and sends a phone notification (ntfy) when a fare drops. Prices come from **Google Flights** (via [SerpApi](https://serpapi.com/google-flights-api)).
-Runs on GitHub Actions, so nothing has to run on your own computer.
+A flight comparison and deal-finding site for **economy, premium economy, business and first class**, with prices
+from **Google Flights** (via [SerpApi](https://serpapi.com)). It runs on GitHub Pages and GitHub Actions, so nothing
+has to run on your own computer.
 
-Unlike Google Flights, which shows one search at a time, Flight Tracker keeps watching a whole travel window
-(e.g. "leave any day between 1 Feb and 15 Mar, stay 14 nights") for every class, and remembers what it saw:
+**Site:** https://niel-t.github.io/Flight-tracker/
 
-- **Cheapest right now:** the lowest fare per route and class, ranked by how far below Google's typical price (or your target) it is.
-- **Price calendar:** every departure date in your window, coloured from cheap to pricey, per class.
-- **Trend:** the cheapest fare over time, with your target price as a line.
-- **Alerts:** a notification when the cheapest fare drops by 5% or more (adjustable), or falls below your target.
-- **Book:** every price links straight to that search on Google Flights.
-- **Flexible airports:** `AMS,BRU` → `NRT,HND` searches all combinations at once.
-
-**Dashboard:** https://niel-t.github.io/Flight-tracker/ (after enabling GitHub Pages, see below).
-
-## The dashboard
-
-Laid out like Google Flights, in a light/dark "glass" style that works on phone and desktop:
-
-- **Explore:** a search card (trip type, passengers, stops, classes, from/to by city, airport or country,
-  specific or flexible dates) that starts tracking a route,
-  the cheapest fares right now, and your routes.
-- **Tracked:** every route with its cheapest fare and trend per class.
-- **Route page** (`#/route/<id>/<class>`): Google's price verdict (low/typical/high) on a range bar, a price graph or
-  calendar of every departure date, a date grid (departure × return or nights) for flexible trips, the cheapest flights as expandable rows with a *Book on Google Flights* link,
-  and the price history against your target.
-- **Price drops:** recent alerts. The same alerts go to your phone through ntfy.
+- **Flights:** search any route on specific or flexible dates. Results are laid out like a comparison site:
+  filters (stops, airlines, departure time, travel time, price), *Best / Cheapest / Fastest* tabs, Google's price
+  verdict (low / typical / high), flight details with layovers, aircraft, legroom and CO₂, and *View deal* on Google Flights.
+  Leave **To** empty to search *Anywhere*.
+- **Explore:** the cheapest destinations from your home airport, any time or per month, for weekend, 1-week or
+  2-week trips, as cards or on a map, filtered by region and budget.
+- **Deals:** destinations that are cheaper than they usually are (measured against their own daily price history),
+  plus short getaways, long-haul for less, the cheapest destination per month, and your tracked routes.
+- **Tracked:** routes you watch. Every date in the travel window is checked automatically, with a price graph,
+  calendar, date grid, price history and a phone notification (ntfy) when a fare drops or goes below your target.
 
 ## Setup (10 minutes)
 
@@ -70,14 +58,19 @@ Each live search is one SerpApi credit per class and date. Flexible dates check 
 
 ## How searching works
 
-Each Google Flights query is **one route, one class, one departure date**, and costs one SerpApi search credit.
-A 45-day window in 4 classes is 180 queries, so instead of searching everything every time, each run does a small
-batch (`searches_per_run`, default 8) and picks the **stalest dates first**, rotating fairly over all routes and classes.
-New routes are sampled every 7th day first, so the whole window gets a rough picture quickly, then fills in.
+There are two kinds of scheduled searches, both run twice a day by the *Check flights* workflow:
 
-The workflow runs 4× a day, so the default uses about 8 × 4 × 30 ≈ **960 searches a month**. Pick a
-`searches_per_run` that fits your SerpApi plan (the free plan has a small monthly allowance, so start with 1–2
-per run; paid plans allow far more). The dashboard's Settings show the monthly total as you change it.
+- **Deal finder (Google Travel Explore).** One search lists dozens of destinations from a home airport with their
+  cheapest dates. The run refreshes one combination at a time (home airport × "any time" or one of the next six
+  months × trip length × class), stalest first, and keeps each destination's daily price. After a few days, a fare
+  can be compared with that destination's usual price, which is what the Deals page ranks on.
+- **Tracked routes (Google Flights).** One search is one route, class and departure date. Each run checks the
+  stalest dates first, rotating over all routes and classes, so the price calendars fill in over time.
+
+The budget is set in the dashboard's *Settings* (`explore_per_run` and `searches_per_run` in `routes.json`, 1 each
+by default). With 2 runs a day that is about **120 searches a month**, which leaves room on SerpApi's 250-search
+plan for the searches you run yourself (one credit per class and date; flexible dates check 5 dates; Explore is
+one credit). Settings shows the monthly total as you change it.
 
 Prices older than `stale_days` (default 14) don't count as "cheapest", and dates that have passed are dropped.
 
@@ -115,7 +108,17 @@ within that flexibility is tracked, and shown in a date grid like Google Flights
 ```
 
 One-way trips use `"trip": "oneway"` and leave out the return/nights fields. Settings:
-`{ "currency": "EUR", "searches_per_run": 8, "drop_threshold_pct": 5, "stale_days": 14 }`.
+
+```jsonc
+"settings": {
+ "currency": "EUR", "drop_threshold_pct": 5, "stale_days": 14,
+ "searches_per_run": 1,                      // tracked-route searches per run
+ "explore_per_run": 1,                       // deal-finder (Explore) searches per run
+ "home_airports": ["AMS"],                   // where deals are found from
+ "deal_cabins": ["economy"], "deal_durations": ["week"], "deal_months": 6   // weekend | week | 2weeks
+}
+```
+
 Each trip × class is one search, so check the trip count the dashboard shows when you save a route.
 
 ## Files
@@ -126,10 +129,13 @@ Each trip × class is one search, so check the trip count the dashboard shows wh
 | `data/latest.json` | price calendar per route and class, plus the current cheapest fare |
 | `data/history.json` | cheapest fare over time |
 | `data/alerts.json` | recent drops |
+| `data/deals.json` | Explore results per home airport, month, trip length and class, with each destination's price history |
 | `check.py` | one search run |
 | `flights/providers.py` | Google Flights (SerpApi) and demo data |
 | `flights/planner.py` | which dates to search within the budget |
-| `index.html` | the dashboard (static, no build step) |
+| `flights/explore.py` | the deal finder: Explore searches, planning and "below usual" measures |
+| `index.html`, `css/`, `js/` | the site (static, no build step); `js/views/` has one file per page |
+| `vendor/leaflet/` | Leaflet 1.9.4 (BSD-2) for the Explore map |
 | `worker/` | the live search API (Cloudflare Worker) |
 | `api.json` | the live search API's address (written by the *Deploy search API* workflow) |
 
@@ -140,7 +146,7 @@ python -m venv .venv
 .venv/bin/pip install -r requirements.txt pytest
 .venv/bin/python -m pytest -q tests
 SERPAPI_KEY=... .venv/bin/python check.py     # or: python check.py --demo
-python -m http.server                          # dashboard at http://localhost:8000
+python -m http.server                          # site at http://localhost:8000
 ```
 
 Switching between demo and real data (or changing currency) starts with fresh data automatically.
