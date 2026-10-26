@@ -34,7 +34,7 @@ function dealBadge(d) {
 function destCard(d, ctx, opts = {}) {
   const nights = d.start_date && d.end_date ? daysBetween(d.start_date, d.end_date) : null;
   const pic = d.image ? `background-image:url('${esc(d.image)}')` : `background:${placeGradient(d.name)}`;
-  return `<article class="dest" data-dest="${esc(d.code || d.name)}">
+  return `<article class="dest" data-i="${opts.i}">
     <div class="pic" style="${pic}"><span class="flag" aria-hidden="true">${flag(d.cc)}</span>${dealBadge(d) ? `<span class="tag">${dealBadge(d)}</span>` : ""}</div>
     <div class="body">
       <div class="city">${esc(d.name)}</div>
@@ -55,9 +55,9 @@ function destCard(d, ctx, opts = {}) {
 /** Wires the See flights / Track buttons of destination cards inside `root`. */
 function wireDestCards(root, list, ctx) {
   root.onclick = e => {
-    const b = e.target.closest("[data-act]"), card = e.target.closest("[data-dest]");
+    const b = e.target.closest("[data-act]"), card = e.target.closest("[data-i]");
     if (!card) return;
-    const d = list.find(x => (x.code || x.name) === card.dataset.dest);
+    const d = list[+card.dataset.i];
     if (!d) return;
     if (!b) return openDest(d, ctx);
     if (b.dataset.act === "flights") openDest(d, ctx);
@@ -142,7 +142,7 @@ function drawExplore() {
   const results = $("#ex-results");
   if (!shown.length) results.innerHTML = emptyState("🔎", "Nothing matches these filters", "Raise the maximum price or pick another region.");
   else if (ex.view === "map") drawExploreMap(results, shown);
-  else { results.innerHTML = `<div class="dest-grid">${shown.map(d => destCard(d, ex)).join("")}</div>`; wireDestCards(results, shown, { ...ex }); }
+  else { results.innerHTML = `<div class="dest-grid">${shown.map((d, i) => destCard(d, ex, { i })).join("")}</div>`; wireDestCards(results, shown, { ...ex }); }
   $("#ex-max").oninput = e => { $("#ex-max-v").textContent = money(+e.target.value); };
   $("#ex-max").onchange = e => { ex.maxPrice = +e.target.value; drawExplore(); };
   $("#ex-sort").onchange = e => { ex.sort = e.target.value; drawExplore(); };

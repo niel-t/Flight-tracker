@@ -47,7 +47,7 @@ def test_update_slice_measures_against_usual_price():
     update_slice(deals, q, today, datetime(2026, 10, 4, tzinfo=timezone.utc), "test")
     d = deals["slices"][q.key]["destinations"][0]
     assert d["usual"] == 200 and d["drop_pct"] == 25 and d["new_low"] is True
-    assert len(deals["history"]["AMS|3|week|economy|FCO"]) == 4
+    assert len(deals["history"]["AMS|3|week|economy|FCO|Rome"]) == 4
 
 
 def test_same_day_check_replaces_the_day_point():
@@ -55,7 +55,7 @@ def test_same_day_check_replaces_the_day_point():
     deals = {}
     update_slice(deals, q, [{"name": "Rome", "code": "FCO", "price": 200}], datetime(2026, 10, 1, 6, tzinfo=timezone.utc), "t")
     update_slice(deals, q, [{"name": "Rome", "code": "FCO", "price": 180}], datetime(2026, 10, 1, 18, tzinfo=timezone.utc), "t")
-    assert deals["history"]["AMS|0|week|economy|FCO"] == [["2026-10-01", 180]]
+    assert deals["history"]["AMS|0|week|economy|FCO|Rome"] == [["2026-10-01", 180]]
 
 
 def test_month_mismatch_detects_ignored_month_filter():
@@ -69,10 +69,11 @@ def test_month_mismatch_detects_ignored_month_filter():
 def test_prune_drops_unwanted_slices_and_old_history():
     wanted = slices({"home_airports": ["AMS"]}, TODAY)
     deals = {"slices": {"AMS|0|week|economy": {}, "XXX|0|week|economy": {}},
-             "history": {"AMS|0|week|economy|FCO": [["2026-01-01", 1], ["2026-10-20", 2]], "XXX|0|week|economy|FCO": [["2026-10-20", 1]]}}
+             "history": {"AMS|0|week|economy|FCO|Rome": [["2026-01-01", 1], ["2026-10-20", 2]], "XXX|0|week|economy|FCO|Rome": [["2026-10-20", 1]],
+                         "AMS|0|week|economy|FCO": [["2026-10-20", 3]]}}  # old key format
     prune_deals(deals, wanted, TODAY)
     assert list(deals["slices"]) == ["AMS|0|week|economy"]
-    assert deals["history"] == {"AMS|0|week|economy|FCO": [["2026-10-20", 2]]}
+    assert deals["history"] == {"AMS|0|week|economy|FCO|Rome": [["2026-10-20", 2]]}
 
 
 def test_demo_explore_is_stable_and_respects_month():

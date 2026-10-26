@@ -24,11 +24,11 @@ function afterHome() {
   body.innerHTML = `
     ${drops.length ? `<section class="section">
       <div class="section-head"><div><h2>Deals right now</h2><p class="small ink2">Below what these destinations usually cost from ${esc(airportLabel(origin))}.</p></div><a class="btn btn-sm" href="#/deals">All deals ${icon("next", "i xs")}</a></div>
-      <div class="scroller" id="home-drops">${drops.slice(0, 8).map(d => destCard(d, ctx, { actions: false })).join("")}</div></section>` : ""}
+      <div class="scroller" id="home-drops">${drops.slice(0, 8).map((d, i) => destCard(d, ctx, { actions: false, i })).join("")}</div></section>` : ""}
     <section class="section">
       <div class="section-head"><div><h2>Cheapest destinations from ${esc(airportLabel(origin))}</h2><p class="small ink2">${TRIP_LENGTH[duration]} round trips in ${CABIN_NAME[cabin].toLowerCase()}, any time in the next six months.</p></div>
         <a class="btn btn-sm" href="#/explore/${origin}/0/${duration}/${cabin}">Explore ${icon("next", "i xs")}</a></div>
-      ${cheapest.length ? `<div class="scroller" id="home-cheap">${cheapest.slice(0, 12).map(d => destCard(d, ctx, { actions: false })).join("")}</div>`
+      ${cheapest.length ? `<div class="scroller" id="home-cheap">${cheapest.slice(0, 12).map((d, i) => destCard(d, ctx, { actions: false, i })).join("")}</div>`
         : emptyState("🧭", "Destinations appear after the next scheduled run", `The tracker looks up the cheapest destinations from ${esc(homeAirports().join(", "))} twice a day. Change your home airports in Settings.`)}
     </section>
     <section class="section">

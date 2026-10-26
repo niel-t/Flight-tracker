@@ -100,7 +100,8 @@ def parse_explore(data: dict) -> list[dict]:
 
 
 def dest_key(q: ExploreQuery, d: dict) -> str:
-    return f"{q.key}|{d['code'] or d['name']}"
+    """Several places can share an airport (Dublin, Galway and Kilkenny all fly into DUB), so the name counts too."""
+    return f"{q.key}|{d['code']}|{d['name']}"
 
 
 def update_slice(deals: dict, q: ExploreQuery, dests: list[dict], now: datetime, source: str) -> None:
@@ -143,7 +144,7 @@ def prune_deals(deals: dict, wanted: list[ExploreQuery], today: date) -> None:
     deals["history"] = {
         k: [p for p in pts if p[0] >= cutoff]
         for k, pts in deals.get("history", {}).items()
-        if "|".join(k.split("|")[:4]) in keys and any(p[0] >= cutoff for p in pts)
+        if "|".join(k.split("|")[:4]) in keys and len(k.split("|")) >= 6 and any(p[0] >= cutoff for p in pts)
     }
 
 

@@ -134,9 +134,10 @@ const REGIONS = {
 const REGION_OF = Object.fromEntries(Object.entries(REGIONS).flatMap(([r, cs]) => cs.split(" ").map(c => [c, r])));
 const COUNTRY_CODE = (() => {
   const out = { usa: "US", "united states of america": "US", uk: "GB", "great britain": "GB", turkey: "TR", "czech republic": "CZ", holland: "NL", "south korea": "KR", "korea": "KR" };
-  const A = 65;
-  for (let i = 0; i < 26; i++) for (let j = 0; j < 26; j++) {
-    const cc = String.fromCharCode(A + i, A + j), name = regionName(cc);
+  // current codes first: the browser also names obsolete codes (DD = "Germany" in some versions)
+  const all = Array.from({ length: 676 }, (_, i) => String.fromCharCode(65 + Math.floor(i / 26), 65 + (i % 26)));
+  for (const cc of [...Object.keys(REGION_OF), ...all]) {
+    const name = regionName(cc);
     if (name && name !== cc) out[norm(name)] ||= cc;
   }
   return out;

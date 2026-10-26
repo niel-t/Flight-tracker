@@ -16,7 +16,7 @@ function collectedDeals(origin, cabin, duration) {
 function bestPerDestination(list, by = "price") {
   const best = new Map();
   for (const d of list) {
-    const k = d.code || d.name, cur = best.get(k);
+    const k = `${d.code}|${d.name}`, cur = best.get(k);
     const better = by === "drop" ? (d.drop_pct ?? -99) > (cur?.drop_pct ?? -99) || ((d.drop_pct ?? -99) === (cur?.drop_pct ?? -99) && d.price < cur.price) : !cur || d.price < cur.price;
     if (better) best.set(k, d);
   }
@@ -65,7 +65,7 @@ function afterDeals() {
   const hasHistory = all.some(d => d.usual != null);
   const row = (id, title, sub, list, more) => list.length ? `<section class="section">
       <div class="section-head"><div><h2>${title}</h2><p class="small ink2">${sub}</p></div>${more || ""}</div>
-      <div class="scroller" id="${id}">${list.slice(0, 12).map(d => destCard(d, ctx, { actions: false })).join("")}</div></section>` : "";
+      <div class="scroller" id="${id}">${list.slice(0, 12).map((d, i) => destCard(d, ctx, { actions: false, i })).join("")}</div></section>` : "";
   body.innerHTML = `
     ${drops.length ? row("dl-drops", "Biggest price drops", "Cheaper than these destinations usually cost, based on our own daily price history.", drops)
       : `<div class="banner info" style="margin-bottom:28px">${icon("clock", "i sm")} <span>${hasHistory ? "No destination is clearly below its usual price right now. Here are the cheapest ones." : "Deals are measured against each destination's usual price, which needs a few days of history. Until then, here are the cheapest destinations."}</span></div>`}
