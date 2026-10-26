@@ -26,7 +26,7 @@ def test_parse_explore_reads_fields_and_sorts_by_price():
 
 def test_slices_cover_any_time_and_next_six_months():
     assert upcoming_months(TODAY, 6) == [11, 12, 1, 2, 3, 4]
-    s = slices({"home_airports": ["ams", "BRU"], "deal_cabins": ["economy", "business"], "deal_durations": ["week", "bogus"]}, TODAY)
+    s = slices({"home_airports": ["ams", "BRU"], "deal_cabins": ["economy", "business"], "deal_durations": ["week", "bogus"], "deal_interests": []}, TODAY)
     assert len(s) == 2 * 2 * 1 * 7
     assert s[0].key == "AMS|0|week|economy"
 
@@ -82,3 +82,29 @@ def test_demo_explore_is_stable_and_respects_month():
     assert a == b and len(a) > 10
     assert all(d["start_date"][5:7] == "03" for d in a)
     assert a == sorted(a, key=lambda d: d["price"])
+
+
+def test_trip_type_slices_have_their_own_key_and_come_after_popular_ones():
+    s = slices({"home_airports": ["AMS"], "deal_interests": ["sun", "bogus"], "deal_interest_months": 2}, TODAY)
+    sun = [q for q in s if q.interest]
+    assert [q.key for q in sun] == ["AMS|0|week|economy|sun", "AMS|11|week|economy|sun", "AMS|12|week|economy|sun"]
+    assert all(not q.interest for q in plan_explore(s, {}, 7))
+    assert len(slices({"home_airports": ["AMS"], "deal_interests": []}, TODAY)) == 7
+
+
+def test_prune_keeps_trip_type_history():
+    q = ExploreQuery("AMS", 0, "week", "economy", interest="sun")
+    now = datetime(2026, 10, 26, tzinfo=timezone.utc)
+    deals = {}
+    update_slice(deals, q, demo_explore(q, TODAY), now, "demo")
+    assert deals["slices"][q.key]["interest"] == "sun"
+    n = len(deals["history"])
+    prune_deals(deals, [q], TODAY)
+    assert len(deals["history"]) == n > 0
+    prune_deals(deals, [ExploreQuery("AMS", 0, "week", "economy")], TODAY)
+    assert deals["history"] == {} and deals["slices"] == {}
+
+
+def test_demo_trip_types_only_list_matching_places():
+    names = {d["name"] for d in demo_explore(ExploreQuery("AMS", 0, "week", "economy", interest="adventure"), TODAY)}
+    assert names and names <= {"Reykjavik", "Tenerife", "Marrakesh", "Nairobi", "Cape Town", "Bali", "Oslo", "Sydney", "Mexico City", "Rio de Janeiro", "Toronto"}

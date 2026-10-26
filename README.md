@@ -64,6 +64,14 @@ There are two kinds of scheduled searches, both run twice a day by the *Check fl
   cheapest dates. The run refreshes one combination at a time (home airport × "any time" or one of the next six
   months × trip length × class), stalest first, and keeps each destination's daily price. After a few days, a fare
   can be compared with that destination's usual price, which is what the Deals page ranks on.
+  **Trip types** (sun & beach, city trip, adventure, sightseeing) are the same search filtered on one of Google's
+  travel interests: beaches, museums, outdoors and history. Google picks and ranks the places for each interest
+  from its own travel data (such as reviews of what there is to see and do); the tracker doesn't score reviews
+  itself. Trip types are collected for "any time" and the next 3 months (`deal_interest_months`), after the
+  popular picks. For other months, Explore shows that month's popular destinations that Google lists for the
+  trip type in another month.
+- **Photos.** Explore results come with Google's photo of each place. Places without one (and tracked routes) use
+  the lead image of the place's Wikipedia article, looked up once in your browser.
 - **Tracked routes (Google Flights).** One search is one route, class and departure date. Each run checks the
   stalest dates first, rotating over all routes and classes, so the price calendars fill in over time.
 
@@ -116,6 +124,7 @@ One-way trips use `"trip": "oneway"` and leave out the return/nights fields. Set
  "explore_per_run": 1,                       // deal-finder (Explore) searches per run
  "home_airports": ["AMS"],                   // where deals are found from
  "deal_cabins": ["economy"], "deal_durations": ["week"], "deal_months": 6   // weekend | week | 2weeks
+ "deal_interests": ["sun", "city", "adventure", "sightseeing"], "deal_interest_months": 3   // trip types
 }
 ```
 

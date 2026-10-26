@@ -84,7 +84,10 @@ def test_serpapi_explore_request_and_parse():
     assert "flight_price" in res["raw_fields"]
     seen.clear()
     p.explore(ExploreQuery("AMS", 0, "week", "economy"))
-    assert "month" not in seen  # "any time" sends no month
+    assert "month" not in seen and "interest" not in seen  # "any time" sends no month
+    seen.clear()
+    p.explore(ExploreQuery("AMS", 0, "week", "economy", interest="sun"))
+    assert seen["interest"] == "/m/0b3yr"
 
 
 def test_serpapi_explore_bad_key_is_fatal():

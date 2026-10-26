@@ -161,6 +161,8 @@ test("explore params are validated", () => {
   assert.equal(typeof p("from=AMS,BRU"), "string");
   assert.equal(typeof p("from=AMS&month=13"), "string");
   assert.equal(typeof p("from=AMS&duration=month"), "string");
+  assert.equal(p("from=AMS&interest=sun").interest, "sun");
+  assert.equal(typeof p("from=AMS&interest=beach"), "string");
 });
 
 test("explore calls SerpApi Travel Explore", async () => {
@@ -173,7 +175,10 @@ test("explore calls SerpApi Travel Explore", async () => {
   assert.equal(called.searchParams.get("month"), "4");
   assert.equal(called.searchParams.get("travel_duration"), "3");
   assert.equal(called.searchParams.get("travel_class"), "2");
+  assert.equal(called.searchParams.get("interest"), null);
   assert.equal(body.destinations.length, 2);
+  await worker.fetch(req("/explore?from=AMS&interest=adventure"), env, ctx);
+  assert.equal(called.searchParams.get("interest"), "/g/11bc58l13w");
 });
 
 test("explore errors are explained", async () => {

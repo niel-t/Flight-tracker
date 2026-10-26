@@ -1,6 +1,6 @@
 """Deal discovery with Google Travel Explore: one search lists the cheapest destinations from an airport.
 
-A "slice" is one Explore search: origin × month × trip length × class. Each run refreshes the stalest
+A "slice" is one Explore search: origin × month × trip length × class (× trip type). Each run refreshes the stalest
 slices (settings.explore_per_run), and every destination's price is kept per day, so a deal can be
 measured against that destination's usual price ("23% below usual") instead of just being cheap.
 """
@@ -12,6 +12,14 @@ from statistics import median
 
 DURATIONS = {"weekend": 1, "week": 2, "2weeks": 3}  # SerpApi travel_duration
 DURATION_LABEL = {"weekend": "weekend", "week": "1 week", "2weeks": "2 weeks"}
+# Trip types map to Google's own travel interests (Knowledge Graph ids for SerpApi's `interest`):
+# Google ranks destinations for an interest from its travel data, such as reviews of places to see there.
+INTERESTS = {
+    "sun": "/m/0b3yr",              # beaches
+    "city": "/m/09cmq",             # museums
+    "adventure": "/g/11bc58l13w",   # outdoors
+    "sightseeing": "/m/03g3w",      # history
+}
 MAX_HISTORY_DAYS = 90
 
 
@@ -22,10 +30,12 @@ class ExploreQuery:
     duration: str       # weekend | week | 2weeks
     cabin: str
     currency: str = "EUR"
+    interest: str = ""  # "" = Google's popular picks, else a key of INTERESTS
 
     @property
     def key(self) -> str:
-        return f"{self.origin}|{self.month}|{self.duration}|{self.cabin}"
+        base = f"{self.origin}|{self.month}|{self.duration}|{self.cabin}"
+        return f"{base}|{self.interest}" if self.interest else base
 
 
 def upcoming_months(today: date, count: int) -> list[int]:
@@ -39,13 +49,19 @@ def slices(settings: dict, today: date) -> list[ExploreQuery]:
     durations = [d for d in settings.get("deal_durations") or ["week"] if d in DURATIONS]
     months = [0] + upcoming_months(today, int(settings.get("deal_months", 6)))
     currency = settings.get("currency", "EUR")
-    return [ExploreQuery(o, m, d, c, currency) for o in origins for c in cabins for d in durations for m in months]
+    out = [ExploreQuery(o, m, d, c, currency) for o in origins for c in cabins for d in durations for m in months]
+    # trip types cover fewer months: each one is another search per slice
+    interests = [i for i in settings.get("deal_interests", list(INTERESTS)) if i in INTERESTS]
+    interest_months = months[:1 + int(settings.get("deal_interest_months", 3))]
+    out += [ExploreQuery(o, m, d, c, currency, i)
+            for o in origins for c in cabins for d in durations for i in interests for m in interest_months]
+    return out
 
 
 def plan_explore(all_slices: list[ExploreQuery], deals: dict, budget: int) -> list[ExploreQuery]:
-    """Stalest first; never-checked slices first of all, 'any time' before single months."""
+    """Stalest first; never-checked slices first of all, popular before trip types, 'any time' before single months."""
     checked = {k: s.get("checked", "") for k, s in deals.get("slices", {}).items()}
-    order = sorted(all_slices, key=lambda q: (checked.get(q.key, ""), q.month != 0))
+    order = sorted(all_slices, key=lambda q: (checked.get(q.key, ""), q.interest != "", q.month != 0))
     return order[:budget]
 
 
@@ -121,7 +137,7 @@ def update_slice(deals: dict, q: ExploreQuery, dests: list[dict], now: datetime,
             d["new_low"] = d["price"] < min(prices)
         history[dest_key(q, d)] = (earlier + [[day, d["price"]]])[-MAX_HISTORY_DAYS:]
     deals.setdefault("slices", {})[q.key] = {
-        "origin": q.origin, "month": q.month, "duration": q.duration, "cabin": q.cabin,
+        "origin": q.origin, "month": q.month, "duration": q.duration, "cabin": q.cabin, "interest": q.interest,
         "checked": now.isoformat(), "source": source, "destinations": dests,
     }
 
@@ -144,7 +160,7 @@ def prune_deals(deals: dict, wanted: list[ExploreQuery], today: date) -> None:
     deals["history"] = {
         k: [p for p in pts if p[0] >= cutoff]
         for k, pts in deals.get("history", {}).items()
-        if "|".join(k.split("|")[:4]) in keys and len(k.split("|")) >= 6 and any(p[0] >= cutoff for p in pts)
+        if k.rsplit("|", 2)[0] in keys and len(k.split("|")) >= 6 and any(p[0] >= cutoff for p in pts)
     }
 
 
@@ -167,6 +183,12 @@ DEMO_PLACES = [
     ("Nairobi", "Kenya", "NBO", -1.32, 36.93, 610), ("Sydney", "Australia", "SYD", -33.94, 151.18, 1250),
     ("Rio de Janeiro", "Brazil", "GIG", -22.81, -43.25, 820), ("Oslo", "Norway", "OSL", 60.19, 11.10, 130),
 ]
+DEMO_TAGS = {
+    "sun": "BCN LIS FCO ATH AGP TFS RAK DXB MIA CUR BKK DPS CPT SYD GIG MEX",
+    "city": "BCN LIS FCO LHR CDG PRG BUD CPH IST JFK NRT SIN YYZ OSL",
+    "adventure": "KEF TFS RAK NBO CPT DPS OSL SYD MEX GIG YYZ",
+    "sightseeing": "FCO ATH IST CAI PRG BUD CDG LHR RAK MEX NRT BKK",
+}
 DEMO_AIRLINES = ["KLM", "Transavia", "easyJet", "Vueling", "Lufthansa", "Turkish Airlines", "Emirates", "Delta", "Air France"]
 DEMO_FACTOR = {"economy": 1.0, "premium": 1.7, "business": 3.8, "first": 6.5}
 DEMO_DURATION = {"weekend": 0.85, "week": 1.0, "2weeks": 1.12}
@@ -179,6 +201,8 @@ def demo_explore(q: ExploreQuery, today: date) -> list[dict]:
 
     out = []
     for name, country, code, lat, lon, base in DEMO_PLACES:
+        if q.interest and code not in DEMO_TAGS[q.interest].split():
+            continue
         if rand(q.key, code, "skip") < 0.12:
             continue
         month = q.month or (today.month % 12) + 1 + int(rand(q.key, code, "m") * 5)

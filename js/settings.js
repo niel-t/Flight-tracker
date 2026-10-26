@@ -8,6 +8,7 @@ function openSettings() {
   initLoc($("[data-loc=home_airports]"));
   $("#s-cabins").innerHTML = CABINS.map(c => `<label><input type="checkbox" name="deal_cabin" value="${c}" ${(s.deal_cabins || ["economy"]).includes(c) ? "checked" : ""}>${CABIN_SHORT[c]}</label>`).join("");
   $("#s-durations").innerHTML = Object.entries(TRIP_LENGTH).map(([k, t]) => `<label><input type="checkbox" name="deal_duration" value="${k}" ${(s.deal_durations || ["week"]).includes(k) ? "checked" : ""}>${t}</label>`).join("");
+  $("#s-types").innerHTML = Object.entries(TRIP_TYPES).map(([k, t]) => `<label><input type="checkbox" name="deal_interest" value="${k}" ${(s.deal_interests || Object.keys(TRIP_TYPES)).includes(k) ? "checked" : ""}>${t.emoji} ${t.label}</label>`).join("");
   f.elements.explore_per_run.value = s.explore_per_run ?? 1;
   f.elements.searches_per_run.value = s.searches_per_run ?? 1;
   f.elements.currency.value = s.currency || "EUR";
@@ -41,7 +42,7 @@ $("#settings-form").addEventListener("submit", async e => {
   const checked = name => [...f.querySelectorAll(`input[name=${name}]:checked`)].map(x => x.value);
   const next = {
     home_airports: codes(el.home_airports.value).split(",").filter(Boolean),
-    deal_cabins: checked("deal_cabin"), deal_durations: checked("deal_duration"),
+    deal_cabins: checked("deal_cabin"), deal_durations: checked("deal_duration"), deal_interests: checked("deal_interest"),
     explore_per_run: Math.max(0, +el.explore_per_run.value || 0), searches_per_run: Math.max(0, +el.searches_per_run.value || 0),
     currency: el.currency.value, drop_threshold_pct: +el.drop_threshold_pct.value || 5,
   };

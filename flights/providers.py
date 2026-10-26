@@ -10,7 +10,7 @@ from urllib.parse import quote
 
 import httpx
 
-from flights.explore import DURATIONS, ExploreQuery, demo_explore, parse_explore
+from flights.explore import DURATIONS, INTERESTS, ExploreQuery, demo_explore, parse_explore
 
 CABINS = ["economy", "premium", "business", "first"]
 CABIN_LABEL = {"economy": "economy", "premium": "premium economy", "business": "business class", "first": "first class"}
@@ -139,6 +139,8 @@ class SerpApiProvider:
         }
         if q.month:
             params["month"] = q.month
+        if q.interest:
+            params["interest"] = INTERESTS[q.interest]
         try:
             r = self.client.get("https://serpapi.com/search.json", params=params)
         except httpx.HTTPError as e:

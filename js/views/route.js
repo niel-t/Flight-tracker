@@ -16,8 +16,8 @@ function viewRoute(params) {
   <section class="band band-tight"><div class="wrap">
     <a class="crumb" href="#/tracked">${icon("back", "i sm")} Tracked flights</a>
     <div class="row between" style="align-items:flex-end">
-      <div><h1>${esc(routeTitle(r))}</h1>
-        <p class="sub">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")}${r.max_stops != null ? ` · ${r.max_stops === 0 ? "non-stop" : `max ${plural(r.max_stops, "stop")}`}` : ""}</p></div>
+      <div class="with-thumb">${routeImg(r, "thumb lg")}<div><h1>${esc(routeTitle(r))}</h1>
+        <p class="sub">${esc(r.from)} → ${esc(r.to)} · ${tripTxt(r)} · ${datesTxt(r)} · ${plural(+r.adults || 1, "passenger")}${r.max_stops != null ? ` · ${r.max_stops === 0 ? "non-stop" : `max ${plural(r.max_stops, "stop")}`}` : ""}</p></div></div>
       <button class="btn" data-edit="${esc(r.id)}" style="background:transparent;color:var(--band-ink);border-color:var(--band-line)">${icon("edit", "i sm")} Edit</button>
     </div>
   </div></section>

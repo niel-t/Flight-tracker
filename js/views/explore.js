@@ -2,19 +2,44 @@
 // Scheduled runs collect these into data/deals.json; other combinations can be searched live (one credit).
 
 const upcomingMonths = (n = 6) => { const m = new Date().getUTCMonth() + 1; return Array.from({ length: n }, (_, i) => ((m - 1 + i + 1) % 12) + 1); };
-const sliceKey = q => `${q.origin}|${q.month}|${q.duration}|${q.cabin}`;
-const exDefaults = () => ({ origin: homeAirport(), month: 0, duration: (config.settings.deal_durations || ["week"])[0], cabin: (config.settings.deal_cabins || ["economy"])[0] });
+const sliceKey = q => `${q.origin}|${q.month}|${q.duration}|${q.cabin}${q.interest ? "|" + q.interest : ""}`;
+const exDefaults = () => ({ origin: homeAirport(), month: 0, duration: (config.settings.deal_durations || ["week"])[0], cabin: (config.settings.deal_cabins || ["economy"])[0], interest: "" });
+
+// Trip types are Google's travel interests (see flights/explore.py INTERESTS): Google ranks the places
+// for each one with its own travel data, such as reviews of beaches, museums, nature and sights.
+const TRIP_TYPES = {
+  sun: { label: "Sun & beach", emoji: "☀️", google: "beaches" },
+  city: { label: "City trip", emoji: "🏙️", google: "museums" },
+  adventure: { label: "Adventure", emoji: "🥾", google: "outdoors" },
+  sightseeing: { label: "Sightseeing", emoji: "🏛️", google: "history" },
+};
+const tripTypeChips = (id, value) => `<div class="chips" id="${id}" role="group" aria-label="Trip type">${[["", "✈️", "All trips"], ...Object.entries(TRIP_TYPES).map(([k, t]) => [k, t.emoji, t.label])]
+  .map(([k, e, t]) => `<button type="button" class="chip" data-type="${k}" aria-pressed="${(value || "") === k}"><span aria-hidden="true">${e}</span>${t}</button>`).join("")}</div>`;
+const onTripType = (el, fn) => el?.addEventListener("click", e => { const b = e.target.closest("[data-type]"); if (b) fn(b.dataset.type); });
 let ex = { ...store.get("explore", {}), view: store.get("exView", "list"), region: "all", sort: "price", maxPrice: null };
 
 function goExplore(q) {
-  location.hash = `#/explore/${q.origin}/${q.month ?? 0}/${q.duration || "week"}/${q.cabin || "economy"}`;
+  location.hash = `#/explore/${q.origin}/${q.month ?? 0}/${q.duration || "week"}/${q.cabin || "economy"}${q.interest ? "/" + q.interest : ""}`;
 }
 
-/** Destinations of a slice, with country code, region and flag added. Returns null if not collected. */
+/**
+ * Destinations of a slice, with country code, region and flag added. Returns null if not collected.
+ * A trip type that wasn't searched for this month falls back to the month's popular destinations that
+ * Google listed for that trip type in another month (marked `inferred`).
+ */
 function sliceDestinations(q) {
   const s = deals.slices?.[sliceKey(q)] || session.get("explore:" + sliceKey(q));
-  if (!s?.destinations) return null;
-  return { ...s, destinations: s.destinations.map(enrichDest) };
+  if (s?.destinations) return { ...s, destinations: s.destinations.map(enrichDest) };
+  if (!q.interest) return null;
+  const popular = deals.slices?.[sliceKey({ ...q, interest: "" })], kinds = typedPlaces(q.origin, q.interest);
+  const list = popular?.destinations?.filter(d => kinds.has(`${d.code}|${d.name}`));
+  return list?.length ? { ...popular, inferred: true, destinations: list.map(enrichDest) } : null;
+}
+/** code|name of every place Google listed for a trip type from this origin, in any month. */
+function typedPlaces(origin, interest) {
+  const out = new Set();
+  for (const s of Object.values(deals.slices || {})) if (s.origin === origin && s.interest === interest) for (const d of s.destinations || []) out.add(`${d.code}|${d.name}`);
+  return out;
 }
 function enrichDest(d) {
   const cc = d.cc || countryCode(d.country) || AP[d.code]?.cc || "";
@@ -33,9 +58,8 @@ function dealBadge(d) {
 /** A destination card. ctx = { origin, cabin } of the slice it came from. */
 function destCard(d, ctx, opts = {}) {
   const nights = d.start_date && d.end_date ? daysBetween(d.start_date, d.end_date) : null;
-  const pic = d.image ? `background-image:url('${esc(d.image)}')` : `background:${placeGradient(d.name)}`;
   return `<article class="dest" data-i="${opts.i}">
-    <div class="pic" style="${pic}"><span class="flag" aria-hidden="true">${flag(d.cc)}</span>${dealBadge(d) ? `<span class="tag">${dealBadge(d)}</span>` : ""}</div>
+    <div class="pic" style="background:${placeGradient(d.name)}">${placeImg(d)}<span class="flag" aria-hidden="true">${flag(d.cc)}</span>${dealBadge(d) ? `<span class="tag">${dealBadge(d)}</span>` : ""}</div>
     <div class="body">
       <div class="city">${esc(d.name)}</div>
       <div class="k">${esc(d.country)}${d.code ? ` · ${esc(d.code)}` : ""}</div>
@@ -84,15 +108,16 @@ function trackDest(d, ctx, btn) {
 
 // ---------- page ----------
 function viewExplore(params) {
-  const [origin, month, duration, cabin] = params;
-  ex = { ...ex, ...exDefaults(), ...store.get("explore", {}), ...(origin ? { origin, month: +month || 0, duration: duration || "week", cabin: cabin || "economy" } : {}) };
-  store.set("explore", { origin: ex.origin, month: ex.month, duration: ex.duration, cabin: ex.cabin });
+  const [origin, month, duration, cabin, interest] = params;
+  ex = { ...ex, ...exDefaults(), ...store.get("explore", {}), ...(origin ? { origin, month: +month || 0, duration: duration || "week", cabin: cabin || "economy", interest: interest in TRIP_TYPES ? interest : "" } : {}) };
+  store.set("explore", { origin: ex.origin, month: ex.month, duration: ex.duration, cabin: ex.cabin, interest: ex.interest });
+  const type = TRIP_TYPES[ex.interest];
   const months = [0, ...upcomingMonths()];
   return `
   <section class="band band-tight">
     <div class="wrap">
       <h1>Explore destinations</h1>
-      <p class="sub">The cheapest places to fly from ${esc(airportLabel(ex.origin))}, ${ex.month ? `in ${monthName(ex.month)}` : "any time in the next six months"}.</p>
+      <p class="sub">The cheapest ${type ? `${type.label.toLowerCase()} destinations` : "places to fly"} from ${esc(airportLabel(ex.origin))}, ${ex.month ? `in ${monthName(ex.month)}` : "any time in the next six months"}.</p>
       <div class="ex-controls" style="margin-top:18px">
         ${locPicker("ex-from", "From", ex.origin, "Airport")}
         <div class="field"><span class="label">When</span>${segmented("ex-month", months.map(m => [m, m ? monthName(m, "short") : "Any time"]), ex.month, "Month")}</div>
@@ -100,6 +125,7 @@ function viewExplore(params) {
           <div class="field"><span class="label">Trip length</span>${segmented("ex-duration", Object.entries(TRIP_LENGTH), ex.duration, "Trip length")}</div>
           <div class="field" style="width:200px"><span class="label">Class</span><select id="ex-cabin">${CABINS.map(c => `<option value="${c}" ${c === ex.cabin ? "selected" : ""}>${CABIN_NAME[c]}</option>`).join("")}</select></div>
         </div>
+        <div class="field" style="grid-column:1/-1"><span class="label">Trip type</span>${tripTypeChips("ex-type", ex.interest)}</div>
       </div>
     </div>
   </section>
@@ -117,6 +143,7 @@ function afterExplore() {
   onSeg($("#ex-month"), v => goExplore({ ...ex, month: +v }));
   onSeg($("#ex-duration"), v => goExplore({ ...ex, duration: v }));
   $("#ex-cabin").onchange = e => goExplore({ ...ex, cabin: e.target.value });
+  onTripType($("#ex-type"), v => goExplore({ ...ex, interest: v }));
   drawExplore();
 }
 
@@ -137,6 +164,9 @@ function drawExplore() {
       <select id="ex-sort" style="width:auto"><option value="price">Cheapest first</option><option value="deal" ${ex.sort === "deal" ? "selected" : ""}>Best deals first</option><option value="duration" ${ex.sort === "duration" ? "selected" : ""}>Shortest flight</option></select>
       ${segmented("ex-view", [["list", `${icon("list", "i sm")} List`], ["map", `${icon("map", "i sm")} Map`]], ex.view, "View")}
     </div>
+    ${ex.interest ? `<p class="small ink2" style="margin:-4px 0 14px">${TRIP_TYPES[ex.interest].emoji} ${slice.inferred
+      ? `Not searched for ${monthName(ex.month)} yet: these are this month's destinations that Google also lists for ${TRIP_TYPES[ex.interest].google} in other months.`
+      : `Destinations Google ranks for ${TRIP_TYPES[ex.interest].google}, based on its travel data such as reviews.`}</p>` : ""}
     <div class="chips" style="margin-bottom:18px">${[["all", "All regions"], ...regions.map(r => [r, r])].map(([v, t]) => `<button class="chip" data-region="${esc(v)}" aria-pressed="${ex.region === v}">${esc(t)}</button>`).join("")}</div>
     <div id="ex-results"></div>`;
   const results = $("#ex-results");
@@ -152,19 +182,26 @@ function drawExplore() {
 
 function notCollected() {
   const el = document.createElement("div"), isHome = homeAirports().includes(ex.origin);
-  el.innerHTML = emptyState("🧭", `${ex.month ? monthName(ex.month) : "Any time"} from ${esc(airportLabel(ex.origin))} hasn't been collected yet`,
-    isHome ? "The scheduled runs collect one combination at a time, so this one follows soon."
-           : `${esc(ex.origin)} isn't one of your home airports. Add it in Settings → Deal finder to collect it automatically.`,
+  el.innerHTML = emptyState(TRIP_TYPES[ex.interest]?.emoji || "🧭", `${TRIP_TYPES[ex.interest] ? TRIP_TYPES[ex.interest].label + " · " : ""}${ex.month ? monthName(ex.month) : "Any time"} from ${esc(airportLabel(ex.origin))} hasn't been collected yet`,
+    !isHome ? `${esc(ex.origin)} isn't one of your home airports. Add it in Settings → Deal finder to collect it automatically.`
+    : ex.interest && !collectsType(ex) ? `Trip types are collected for any time and the next ${plural(+(config.settings.deal_interest_months ?? 3), "month")}, to save search credits. Pick another month or search now.`
+    : "The scheduled runs collect one combination at a time, so this one follows soon.",
     liveApi ? `<button class="btn-primary" data-live>${icon("search", "i sm")} Search now (1 search credit)</button>` : "");
   el.querySelector("[data-live]")?.addEventListener("click", liveExplore);
   return el;
+}
+/** Whether the scheduled runs collect this trip type and month (see flights/explore.py slices). */
+function collectsType(q) {
+  const st = config.settings;
+  return (st.deal_interests || Object.keys(TRIP_TYPES)).includes(q.interest)
+    && [0, ...upcomingMonths(+(st.deal_interest_months ?? 3))].includes(q.month);
 }
 async function liveExplore() {
   const body = $("#ex-body"), q = { ...ex };
   if (liveStatus?.passcode && !store.get("passcode", "")) return askPasscode(liveExplore, null, body);
   body.innerHTML = `<div class="dest-grid">${`<div class="card" style="height:300px;padding:14px"><i class="sk" style="height:120px"></i><i class="sk" style="width:60%;margin-top:14px"></i><i class="sk" style="width:40%;margin-top:8px"></i></div>`.repeat(8)}</div>`;
   try {
-    const p = new URLSearchParams({ from: q.origin, month: q.month, duration: q.duration, cabin: q.cabin, currency: config.settings.currency || "EUR" });
+    const p = new URLSearchParams({ from: q.origin, month: q.month, duration: q.duration, cabin: q.cabin, currency: config.settings.currency || "EUR", ...(q.interest ? { interest: q.interest } : {}) });
     const res = await live(`/explore?${p}`);
     session.set("explore:" + sliceKey(q), { ...res, checked: res.searched_at });
     if (sliceKey(q) === sliceKey(ex)) drawExplore();

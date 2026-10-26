@@ -3,11 +3,11 @@
 
 let dl = { origin: null, cabin: null, duration: null };
 
-/** Every collected destination for an origin/cabin/trip length, each with the slice it came from. */
-function collectedDeals(origin, cabin, duration) {
+/** Every collected destination for an origin/cabin/trip length (popular picks, or one trip type), each with the slice it came from. */
+function collectedDeals(origin, cabin, duration, interest = "") {
   const out = [];
   for (const s of Object.values(deals.slices || {})) {
-    if (s.origin !== origin || s.cabin !== cabin || (duration && s.duration !== duration) || !s.destinations) continue;
+    if (s.origin !== origin || s.cabin !== cabin || (duration && s.duration !== duration) || (s.interest || "") !== interest || !s.destinations) continue;
     for (const d of s.destinations) out.push({ ...enrichDest(d), month: s.month, trip: s.duration, checked: s.checked });
   }
   return out;

@@ -20,7 +20,6 @@ function afterHome() {
   const all = collectedDeals(origin, cabin, duration);
   const cheapest = bestPerDestination(all).sort((a, b) => a.price - b.price);
   const drops = bestPerDestination(all.filter(d => d.drop_pct >= 10), "drop").sort((a, b) => b.drop_pct - a.drop_pct);
-  const months = upcomingMonths().map(m => ({ m, best: bestPerDestination(all.filter(d => d.month === m)).sort((a, b) => a.price - b.price)[0] }));
   body.innerHTML = `
     ${drops.length ? `<section class="section">
       <div class="section-head"><div><h2>Deals right now</h2><p class="small ink2">Below what these destinations usually cost from ${esc(airportLabel(origin))}.</p></div><a class="btn btn-sm" href="#/deals">All deals ${icon("next", "i xs")}</a></div>
@@ -32,16 +31,28 @@ function afterHome() {
         : emptyState("🧭", "Destinations appear after the next scheduled run", `The tracker looks up the cheapest destinations from ${esc(homeAirports().join(", "))} twice a day. Change your home airports in Settings.`)}
     </section>
     <section class="section">
-      <div class="section-head"><div><h2>Plan by month</h2><p class="small ink2">The lowest fare we found for each month.</p></div></div>
-      <div class="months-grid">${months.map(({ m, best }) => `
-        <a class="card month-tile" href="#/explore/${origin}/${m}/${duration}/${cabin}">
-          <span class="m">${monthName(m)}</span>
-          <span class="small ink2">${best ? `${flag(best.cc)} ${esc(best.name)}` : "Not collected yet"}</span>
-          <span class="p">${best ? `<span class="small muted" style="font-weight:500">from</span> ${money(best.price)}` : "–"}</span>
-        </a>`).join("")}</div>
+      <div class="section-head"><div><h2>Plan by month</h2><p class="small ink2" id="pm-sub"></p></div></div>
+      ${tripTypeChips("pm-type", store.get("tripType", ""))}
+      <div class="months-grid" id="pm-grid" style="margin-top:14px"></div>
     </section>
     ${homeTracked()}`;
   for (const [id, list] of [["home-drops", drops], ["home-cheap", cheapest]]) { const el = $("#" + id); if (el) wireDestCards(el, list, ctx); }
+  const drawMonths = type => {
+    const t = TRIP_TYPES[type];
+    $("#pm-sub").textContent = t ? `The cheapest ${t.label.toLowerCase()} destination for each month, from Google's ${t.google} picks (ranked with its travel data, such as reviews).`
+      : "The lowest fare we found for each month.";
+    $("#pm-grid").innerHTML = [0, ...upcomingMonths()].map(m => {
+      const best = sliceDestinations({ origin, month: m, duration, cabin, interest: type })?.destinations.slice().sort((a, b) => a.price - b.price)[0];
+      return `<a class="card month-tile" href="#/explore/${origin}/${m}/${duration}/${cabin}${type ? "/" + type : ""}">
+        <span class="pic" style="background:${placeGradient(best?.name || monthName(m || 1))}">${best ? placeImg(best) : ""}<span class="m">${m ? monthName(m) : "Any time"}</span></span>
+        <span class="txt"><span class="small ink2">${best ? `${flag(best.cc)} ${esc(best.name)}` : "Not collected yet"}</span>
+        <span class="p">${best ? `<span class="small muted" style="font-weight:500">from</span> ${money(best.price)}` : "–"}</span></span>
+      </a>`;
+    }).join("");
+    $("#pm-type").querySelectorAll("[data-type]").forEach(b => b.setAttribute("aria-pressed", b.dataset.type === type));
+  };
+  drawMonths(store.get("tripType", ""));
+  onTripType($("#pm-type"), v => { store.set("tripType", v); drawMonths(v); });
   body.querySelectorAll("[data-route]").forEach(tr => tr.onclick = () => location.hash = `#/route/${tr.dataset.route}`);
 }
 
@@ -56,7 +67,7 @@ function homeTracked() {
     <div class="section-head"><div><h2>Your tracked routes</h2><p class="small ink2">Checked automatically; you get a notification when a fare drops.</p></div><a class="btn btn-sm" href="#/tracked">All tracked ${icon("next", "i xs")}</a></div>
     <div class="card" style="overflow:hidden"><table class="list-table"><tbody>${rows.map(({ r, best }) => `
       <tr class="click" data-route="${esc(r.id)}${best ? "/" + best.c : ""}">
-        <td><b>${esc(routeTitle(r))}</b><br><span class="small ink2">${esc(r.from)} → ${esc(r.to)} · ${datesTxt(r)}</span></td>
+        <td><div class="with-thumb">${routeImg(r)}<div><b>${esc(routeTitle(r))}</b><br><span class="small ink2">${esc(r.from)} → ${esc(r.to)} · ${datesTxt(r)}</span></div></div></td>
         <td class="hide-sm small ink2">${best ? `${CABIN_NAME[best.c]} · ${fmtDate(best.b.date)}${best.b.return_date ? ` – ${fmtDate(best.b.return_date)}` : ""}` : "Waiting for the first check"}</td>
         <td class="r">${best ? `<span class="small muted">from</span> <b class="num" style="font-size:17px">${money(best.b.price)}</b>` : "–"}</td></tr>`).join("")}</tbody></table></div>
     ${recent.length ? `<div class="card" style="margin-top:12px;overflow:hidden"><table class="list-table"><tbody>${recent.map(a => `

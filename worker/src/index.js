@@ -3,7 +3,7 @@
  *
  *   GET  /status   what this worker can do: { search, write, passcode }
  *   GET  /search   one Google Flights search: from, to, depart, return?, cabin, adults, stops, currency
- *   GET  /explore  cheapest destinations from one airport (Google Travel Explore): from, month (0-12), duration, cabin, currency
+ *   GET  /explore  cheapest destinations from one airport (Google Travel Explore): from, month (0-12), duration, cabin, currency, interest
  *   GET  /config   routes.json from the repository: { content, sha }
  *   POST /config   save routes.json: { content, sha, message }
  *   POST /run      start the "Check flights" workflow
@@ -123,11 +123,15 @@ async function search(params, env, ctx) {
 }
 
 // ---------- explore ----------
+// Trip types as Google travel interests, the same as flights/explore.py INTERESTS
+export const INTERESTS = { sun: "/m/0b3yr", city: "/m/09cmq", adventure: "/g/11bc58l13w", sightseeing: "/m/03g3w" };
+
 export function exploreParams(p) {
   const q = {
     from: (p.get("from") || "").toUpperCase(), month: Number(p.get("month") || 0), duration: p.get("duration") || "week",
-    cabin: p.get("cabin") || "economy", currency: (p.get("currency") || "EUR").toUpperCase(),
+    cabin: p.get("cabin") || "economy", currency: (p.get("currency") || "EUR").toUpperCase(), interest: p.get("interest") || "",
   };
+  if (q.interest && !(q.interest in INTERESTS)) return "interest must be sun, city, adventure or sightseeing";
   if (!/^[A-Z]{3}$/.test(q.from)) return "from must be one airport code";
   if (!Number.isInteger(q.month) || q.month < 0 || q.month > 12) return "month must be 0-12";
   if (!(q.duration in DURATIONS) || !(q.cabin in CABINS) || !/^[A-Z]{3}$/.test(q.currency)) return "bad duration, cabin or currency";
@@ -142,6 +146,7 @@ async function explore(params, env, ctx) {
     travel_duration: String(DURATIONS[q.duration]), currency: q.currency, hl: "en",
   });
   if (q.month) serp.set("month", String(q.month));
+  if (q.interest) serp.set("interest", INTERESTS[q.interest]);
   const cacheKey = new Request(`https://cache.flight-tracker.local/explore?${serp}`);
   const cache = typeof caches !== "undefined" ? caches.default : null;
   const hit = cache && await cache.match(cacheKey);
