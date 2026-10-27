@@ -59,9 +59,13 @@ def slices(settings: dict, today: date) -> list[ExploreQuery]:
 
 
 def plan_explore(all_slices: list[ExploreQuery], deals: dict, budget: int) -> list[ExploreQuery]:
-    """Stalest first; never-checked slices first of all, popular before trip types, 'any time' before single months."""
+    """Stalest first; never-checked slices first of all, 'any time' before single months, popular before trip types.
+
+    'Any time' per trip type comes early because it tells which places suit a trip type, which the
+    dashboard also applies to months that weren't searched for that trip type.
+    """
     checked = {k: s.get("checked", "") for k, s in deals.get("slices", {}).items()}
-    order = sorted(all_slices, key=lambda q: (checked.get(q.key, ""), q.interest != "", q.month != 0))
+    order = sorted(all_slices, key=lambda q: (checked.get(q.key, ""), q.month != 0, q.interest != ""))
     return order[:budget]
 
 

@@ -4,6 +4,15 @@ on:
   schedule:
     - cron: "23 */12 * * *"  # 2x a day (GitHub may delay scheduled runs by some minutes)
   workflow_dispatch:        # "Run workflow" button, and "Search now" on the dashboard
+    inputs:
+      explore_budget:
+        description: "Deal-finder searches this run (empty = the setting)"
+        required: false
+        type: string
+      search_budget:
+        description: "Tracked-route searches this run (empty = the setting)"
+        required: false
+        type: string
   push:
     branches: [main]
     paths: [routes.json]    # search right away when you add or edit routes
@@ -35,7 +44,13 @@ jobs:
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: python check.py --demo-if-no-key
+          EXPLORE_BUDGET: ${{ inputs.explore_budget }}
+          SEARCH_BUDGET: ${{ inputs.search_budget }}
+        run: |
+          args=()
+          [[ "$EXPLORE_BUDGET" =~ ^[0-9]+$ ]] && args+=(--explore-budget "$EXPLORE_BUDGET")
+          [[ "$SEARCH_BUDGET" =~ ^[0-9]+$ ]] && args+=(--budget "$SEARCH_BUDGET")
+          python check.py --demo-if-no-key "${args[@]}"
 
       - name: Commit updated price data
         run: |

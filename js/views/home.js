@@ -41,8 +41,10 @@ function afterHome() {
     const t = TRIP_TYPES[type];
     $("#pm-sub").textContent = t ? `The cheapest ${t.label.toLowerCase()} destination for each month, from Google's ${t.google} picks (ranked with its travel data, such as reviews).`
       : "The lowest fare we found for each month.";
-    $("#pm-grid").innerHTML = [0, ...upcomingMonths()].map(m => {
-      const best = sliceDestinations({ origin, month: m, duration, cabin, interest: type })?.destinations.slice().sort((a, b) => a.price - b.price)[0];
+    const tiles = [0, ...upcomingMonths()].map(m => ({ m, best: sliceDestinations({ origin, month: m, duration, cabin, interest: type })?.destinations.slice().sort((a, b) => a.price - b.price)[0] }));
+    if (t && !tiles.some(x => x.best)) {
+      $("#pm-grid").innerHTML = `<div style="grid-column:1/-1">${emptyState(t.emoji, `${t.label} picks aren't collected yet`, `The scheduled runs fetch Google's ${t.google} picks from ${esc(airportLabel(origin))} soon; they then fill in every month.`)}</div>`;
+    } else $("#pm-grid").innerHTML = tiles.map(({ m, best }) => {
       return `<a class="card month-tile" href="#/explore/${origin}/${m}/${duration}/${cabin}${type ? "/" + type : ""}">
         <span class="pic" style="background:${placeGradient(best?.name || monthName(m || 1))}">${best ? placeImg(best) : ""}<span class="m">${m ? monthName(m) : "Any time"}</span></span>
         <span class="txt"><span class="small ink2">${best ? `${flag(best.cc)} ${esc(best.name)}` : "Not collected yet"}</span>

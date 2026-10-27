@@ -84,11 +84,11 @@ def test_demo_explore_is_stable_and_respects_month():
     assert a == sorted(a, key=lambda d: d["price"])
 
 
-def test_trip_type_slices_have_their_own_key_and_come_after_popular_ones():
+def test_trip_type_slices_have_their_own_key_and_any_time_comes_early():
     s = slices({"home_airports": ["AMS"], "deal_interests": ["sun", "bogus"], "deal_interest_months": 2}, TODAY)
     sun = [q for q in s if q.interest]
     assert [q.key for q in sun] == ["AMS|0|week|economy|sun", "AMS|11|week|economy|sun", "AMS|12|week|economy|sun"]
-    assert all(not q.interest for q in plan_explore(s, {}, 7))
+    assert [q.key for q in plan_explore(s, {}, 3)] == ["AMS|0|week|economy", "AMS|0|week|economy|sun", "AMS|11|week|economy"]
     assert len(slices({"home_airports": ["AMS"], "deal_interests": []}, TODAY)) == 7
 
 

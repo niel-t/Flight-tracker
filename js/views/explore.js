@@ -23,17 +23,33 @@ function goExplore(q) {
 }
 
 /**
- * Destinations of a slice, with country code, region and flag added. Returns null if not collected.
- * A trip type that wasn't searched for this month falls back to the month's popular destinations that
- * Google listed for that trip type in another month (marked `inferred`).
+ * Destinations of a slice, with country code, region and flag added. Returns null if nothing fits.
+ * When this exact search wasn't collected, it's put together from the searches that were (marked
+ * `inferred`): the places of that month, from the month's own search or from any search with dates in
+ * that month, and for a trip type only the places Google listed for that trip type in any search.
  */
 function sliceDestinations(q) {
   const s = deals.slices?.[sliceKey(q)] || session.get("explore:" + sliceKey(q));
   if (s?.destinations) return { ...s, destinations: s.destinations.map(enrichDest) };
-  if (!q.interest) return null;
-  const popular = deals.slices?.[sliceKey({ ...q, interest: "" })], kinds = typedPlaces(q.origin, q.interest);
-  const list = popular?.destinations?.filter(d => kinds.has(`${d.code}|${d.name}`));
-  return list?.length ? { ...popular, inferred: true, destinations: list.map(enrichDest) } : null;
+  const kinds = q.interest ? typedPlaces(q.origin, q.interest) : null;
+  if (kinds && !kinds.size) return null;
+  const best = new Map();
+  let checked = "";
+  for (const x of Object.values(deals.slices || {})) {
+    if (x.origin !== q.origin || x.duration !== q.duration || x.cabin !== q.cabin || !x.destinations) continue;
+    const same = x.month === q.month;
+    if (q.month && !same && x.month) continue; // other months' dates never fall in this month
+    for (const d of x.destinations) {
+      const k = `${d.code}|${d.name}`;
+      if (kinds && !kinds.has(k)) continue;
+      if (!same && !(q.month && d.start_date && +d.start_date.slice(5, 7) === q.month)) continue;
+      if (!best.has(k) || d.price < best.get(k).price) best.set(k, d);
+      if (x.checked > checked) checked = x.checked;
+    }
+  }
+  if (!best.size) return null;
+  return { origin: q.origin, month: q.month, duration: q.duration, cabin: q.cabin, interest: q.interest, checked, inferred: true,
+    destinations: [...best.values()].sort((a, b) => a.price - b.price).map(enrichDest) };
 }
 /** code|name of every place Google listed for a trip type from this origin, in any month. */
 function typedPlaces(origin, interest) {
@@ -166,8 +182,8 @@ function drawExplore() {
       ${segmented("ex-stops", [["any", "Any stops"], ["0", "Non-stop"], ["1", "≤ 1 stop"]], ex.stops, "Stops")}
       ${segmented("ex-view", [["list", `${icon("list", "i sm")} List`], ["map", `${icon("map", "i sm")} Map`]], ex.view, "View")}
     </div>
-    ${ex.interest ? `<p class="small ink2" style="margin:-4px 0 14px">${TRIP_TYPES[ex.interest].emoji} ${slice.inferred
-      ? `Not searched for ${monthName(ex.month)} yet: these are this month's destinations that Google also lists for ${TRIP_TYPES[ex.interest].google} in other months.`
+    ${ex.interest || slice.inferred ? `<p class="small ink2" style="margin:-4px 0 14px">${TRIP_TYPES[ex.interest]?.emoji || "🧭"} ${slice.inferred
+      ? `${ex.month ? monthName(ex.month) : "This"} isn't searched on its own${ex.interest ? " for this trip type" : ""} yet, so these come from the other searches${ex.month ? ` with dates in ${monthName(ex.month)}` : ""}${ex.interest ? `, limited to places Google lists for ${TRIP_TYPES[ex.interest].google}` : ""}. More appear as the scheduled runs collect it.`
       : `Destinations Google ranks for ${TRIP_TYPES[ex.interest].google}, based on its travel data such as reviews.`}</p>` : ""}
     <div class="chips" style="margin-bottom:18px">${[["all", "All regions"], ...regions.map(r => [r, r])].map(([v, t]) => `<button class="chip" data-region="${esc(v)}" aria-pressed="${ex.region === v}">${esc(t)}</button>`).join("")}</div>
     <div id="ex-results"></div>`;
