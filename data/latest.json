@@ -338,35 +338,40 @@
      "2027-02-23": {
       "status": "ok",
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTIzKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wOSgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
-      "level": "typical",
-      "typical": [
-       650,
-       990
-      ],
-      "price": 769,
+      "level": null,
+      "typical": null,
+      "price": 709,
       "airlines": [
-       "Korean Air"
+       "XiamenAir"
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MF.png",
       "stops": 1,
-      "duration": 1075,
-      "depart_time": "2027-02-23 20:55",
-      "arrive_time": "2027-02-24 22:50",
+      "duration": 1995,
+      "depart_time": "2027-02-23 20:30",
+      "arrive_time": "2027-02-25 13:45",
+      "layovers": [
+       {
+        "id": "XMN",
+        "name": "Xiamen Gaoqi International Airport",
+        "duration": 1140,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "ICN",
-        "flight": "KE 926",
-        "airline": "Korean Air"
+        "to": "XMN",
+        "flight": "MF 812",
+        "airline": "XiamenAir"
        },
        {
-        "from": "ICN",
-        "to": "HND",
-        "flight": "KE 751",
-        "airline": "Korean Air"
+        "from": "XMN",
+        "to": "NRT",
+        "flight": "MF 815",
+        "airline": "XiamenAir"
        }
       ],
-      "checked": "2026-10-22T01:01:41+00:00",
+      "checked": "2026-10-27T01:13:00+00:00",
       "return_date": "2027-03-09"
      },
      "2027-03-02": {
@@ -6203,7 +6208,7 @@
    }
   }
  },
- "updated": "2026-10-26T21:45:38+00:00",
+ "updated": "2026-10-27T01:13:00+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
