@@ -463,7 +463,7 @@
        650,
        990
       ],
-      "price": 850,
+      "price": 851,
       "airlines": [
        "Finnair"
       ],
@@ -472,6 +472,14 @@
       "duration": 1130,
       "depart_time": "2027-02-03 11:20",
       "arrive_time": "2027-02-04 14:10",
+      "layovers": [
+       {
+        "id": "HEL",
+        "name": "Helsinki Airport",
+        "duration": 180,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
@@ -486,7 +494,7 @@
         "airline": "Finnair"
        }
       ],
-      "checked": "2026-10-22T07:07:21+00:00",
+      "checked": "2026-10-28T13:25:34+00:00",
       "return_date": "2027-02-17"
      },
      "2027-02-10": {
@@ -6224,7 +6232,7 @@
    }
   }
  },
- "updated": "2026-10-28T01:26:51+00:00",
+ "updated": "2026-10-28T13:25:34+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
