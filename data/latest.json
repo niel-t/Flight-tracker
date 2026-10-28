@@ -416,32 +416,43 @@
      "2027-03-09": {
       "status": "ok",
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTA5KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0yMygBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
-      "level": null,
-      "typical": null,
-      "price": 823,
-      "airlines": [
-       "XiamenAir"
+      "level": "typical",
+      "typical": [
+       750,
+       1400
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MF.png",
+      "price": 831,
+      "airlines": [
+       "China Southern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
       "stops": 1,
-      "duration": 1995,
-      "depart_time": "2027-03-09 20:30",
-      "arrive_time": "2027-03-11 13:45",
+      "duration": 1915,
+      "depart_time": "2027-03-09 21:40",
+      "arrive_time": "2027-03-11 13:35",
+      "layovers": [
+       {
+        "id": "CAN",
+        "name": "Guangzhou Baiyun International Airport",
+        "duration": 1010,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "XMN",
-        "flight": "MF 812",
-        "airline": "XiamenAir"
+        "to": "CAN",
+        "flight": "CZ 308",
+        "airline": "China Southern"
        },
        {
-        "from": "XMN",
-        "to": "NRT",
-        "flight": "MF 815",
-        "airline": "XiamenAir"
+        "from": "CAN",
+        "to": "HND",
+        "flight": "CZ 385",
+        "airline": "China Southern"
        }
       ],
-      "checked": "2026-10-22T07:07:21+00:00",
+      "checked": "2026-10-28T01:26:51+00:00",
       "return_date": "2027-03-23"
      },
      "2027-02-03": {
@@ -6213,7 +6224,7 @@
    }
   }
  },
- "updated": "2026-10-27T13:15:26+00:00",
+ "updated": "2026-10-28T01:26:51+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
