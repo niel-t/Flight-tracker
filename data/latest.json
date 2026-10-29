@@ -500,32 +500,43 @@
      "2027-02-10": {
       "status": "ok",
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTEwKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMi0yNCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
-      "level": null,
-      "typical": null,
-      "price": 831,
-      "airlines": [
-       "China Eastern"
+      "level": "typical",
+      "typical": [
+       650,
+       990
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MU.png",
+      "price": 848,
+      "airlines": [
+       "Etihad"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/EY.png",
       "stops": 1,
-      "duration": 1015,
-      "depart_time": "2027-02-10 20:00",
-      "arrive_time": "2027-02-11 20:55",
+      "duration": 1080,
+      "depart_time": "2027-02-10 09:40",
+      "arrive_time": "2027-02-11 11:40",
+      "layovers": [
+       {
+        "id": "AUH",
+        "name": "Zayed International Airport",
+        "duration": 100,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "PVG",
-        "flight": "MU 772",
-        "airline": "China Eastern"
+        "to": "AUH",
+        "flight": "EY 44",
+        "airline": "Etihad"
        },
        {
-        "from": "PVG",
+        "from": "AUH",
         "to": "NRT",
-        "flight": "MU 271",
-        "airline": "China Eastern"
+        "flight": "EY 800",
+        "airline": "Etihad"
        }
       ],
-      "checked": "2026-10-22T13:04:24+00:00",
+      "checked": "2026-10-29T01:26:32+00:00",
       "return_date": "2027-02-24"
      },
      "2027-02-17": {
@@ -6232,7 +6243,7 @@
    }
   }
  },
- "updated": "2026-10-28T13:25:34+00:00",
+ "updated": "2026-10-29T01:26:32+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"

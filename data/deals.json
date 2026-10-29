@@ -8148,6 +8148,10 @@
      "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI3LTAzLTI5agcIARIDQU1TGhUSCjIwMjctMDQtMDdyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA3MHQ5"
     }
    ]
+  },
+  "AMS|4|week|economy": {
+   "checked": "2026-10-29T01:26:32+00:00",
+   "error": "`month` must be within the next 6 months: October (10) to March (3)."
   }
  },
  "history": {
@@ -10690,7 +10694,7 @@
    ]
   ]
  },
- "updated": "2026-10-28T13:25:34+00:00",
+ "updated": "2026-10-29T01:26:32+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR",
