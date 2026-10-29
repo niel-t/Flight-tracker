@@ -542,32 +542,43 @@
      "2027-02-17": {
       "status": "ok",
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAyLTE3KAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0wMygBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
-      "level": null,
-      "typical": null,
-      "price": 831,
-      "airlines": [
-       "China Eastern"
+      "level": "typical",
+      "typical": [
+       650,
+       990
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MU.png",
+      "price": 888,
+      "airlines": [
+       "China Southern"
+      ],
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
       "stops": 1,
-      "duration": 1010,
-      "depart_time": "2027-02-17 20:00",
-      "arrive_time": "2027-02-18 20:50",
+      "duration": 1915,
+      "depart_time": "2027-02-17 21:40",
+      "arrive_time": "2027-02-19 13:35",
+      "layovers": [
+       {
+        "id": "CAN",
+        "name": "Guangzhou Baiyun International Airport",
+        "duration": 1010,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "PVG",
-        "flight": "MU 772",
-        "airline": "China Eastern"
+        "to": "CAN",
+        "flight": "CZ 308",
+        "airline": "China Southern"
        },
        {
-        "from": "PVG",
+        "from": "CAN",
         "to": "HND",
-        "flight": "MU 575",
-        "airline": "China Eastern"
+        "flight": "CZ 385",
+        "airline": "China Southern"
        }
       ],
-      "checked": "2026-10-22T13:04:24+00:00",
+      "checked": "2026-10-29T13:27:40+00:00",
       "return_date": "2027-03-03"
      },
      "2027-02-24": {
@@ -6243,7 +6254,7 @@
    }
   }
  },
- "updated": "2026-10-29T01:26:32+00:00",
+ "updated": "2026-10-29T13:27:40+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
