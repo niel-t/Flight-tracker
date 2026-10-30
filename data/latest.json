@@ -628,15 +628,23 @@
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTAzKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0xNygBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
       "level": null,
       "typical": null,
-      "price": 830,
+      "price": 829,
       "airlines": [
        "China Eastern"
       ],
       "logo": "https://www.gstatic.com/flights/airline_logos/70px/MU.png",
       "stops": 1,
-      "duration": 1010,
+      "duration": 1015,
       "depart_time": "2027-03-03 20:00",
-      "arrive_time": "2027-03-04 20:50",
+      "arrive_time": "2027-03-04 20:55",
+      "layovers": [
+       {
+        "id": "PVG",
+        "name": "Shanghai Pudong International Airport",
+        "duration": 190,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
@@ -646,12 +654,12 @@
        },
        {
         "from": "PVG",
-        "to": "HND",
-        "flight": "MU 575",
+        "to": "NRT",
+        "flight": "MU 271",
         "airline": "China Eastern"
        }
       ],
-      "checked": "2026-10-22T18:59:47+00:00",
+      "checked": "2026-10-30T13:23:45+00:00",
       "return_date": "2027-03-17"
      },
      "2027-03-10": {
@@ -6262,7 +6270,7 @@
    }
   }
  },
- "updated": "2026-10-30T01:29:04+00:00",
+ "updated": "2026-10-30T13:23:45+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
