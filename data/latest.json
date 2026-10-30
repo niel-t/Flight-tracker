@@ -589,30 +589,38 @@
        650,
        990
       ],
-      "price": 830,
+      "price": 888,
       "airlines": [
        "China Southern"
       ],
       "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
       "stops": 1,
-      "duration": 2010,
-      "depart_time": "2027-02-24 20:35",
-      "arrive_time": "2027-02-26 14:05",
+      "duration": 1895,
+      "depart_time": "2027-02-24 21:40",
+      "arrive_time": "2027-02-26 13:15",
+      "layovers": [
+       {
+        "id": "CAN",
+        "name": "Guangzhou Baiyun International Airport",
+        "duration": 970,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "PKX",
-        "flight": "CZ 346",
+        "to": "CAN",
+        "flight": "CZ 308",
         "airline": "China Southern"
        },
        {
-        "from": "PKX",
-        "to": "HND",
-        "flight": "CZ 647",
+        "from": "CAN",
+        "to": "NRT",
+        "flight": "CZ 8101",
         "airline": "China Southern"
        }
       ],
-      "checked": "2026-10-22T18:59:47+00:00",
+      "checked": "2026-10-30T01:29:04+00:00",
       "return_date": "2027-03-10"
      },
      "2027-03-03": {
@@ -6254,7 +6262,7 @@
    }
   }
  },
- "updated": "2026-10-29T13:27:40+00:00",
+ "updated": "2026-10-30T01:29:04+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"

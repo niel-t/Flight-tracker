@@ -8979,6 +8979,782 @@
      "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTExLTI2agcIARIDQU1TGhUSCjIwMjYtMTItMDJyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxanBqcA"
     }
    ]
+  },
+  "AMS|12|week|economy|sun": {
+   "origin": "AMS",
+   "month": 12,
+   "duration": "week",
+   "cabin": "economy",
+   "interest": "sun",
+   "checked": "2026-10-30T01:29:04+00:00",
+   "source": "Google Flights (SerpApi)",
+   "destinations": [
+    {
+     "name": "Dublin",
+     "country": "Ireland",
+     "code": "DUB",
+     "id": "/m/02cft",
+     "price": 58,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 100,
+     "airline": "Ryanair",
+     "airline_code": "FR",
+     "lat": 53.3498053,
+     "lon": -6.2603097,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTiz5cZhXTS9dYUr9KO7QUM_EDf9vHP8Q28NGy74YaI9mynGtMyhnaEGTS4jmsE-uFX6t_EmHtRNI6dHpafRWZs5-H_KnLwv_WGC5mAmQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzAyY2Z0"
+    },
+    {
+     "name": "Bath",
+     "country": "United Kingdom",
+     "code": "BRS",
+     "id": "/m/0bdg5",
+     "price": 88,
+     "start_date": "2026-12-28",
+     "end_date": "2027-01-06",
+     "stops": 0,
+     "duration": 80,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 51.3781018,
+     "lon": -2.3596827,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcR2eb8a2qnz1VBDR2AM10ux9KYymSYDrqMQYEUTm0AMw3jv7m6hH4k3j1obOzcBDJbNKh6KTj5KqYgz18l3OmmS5VN5bKSwpzXfXA6888A",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTI4agcIARIDQU1TGhUSCjIwMjctMDEtMDZyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBiZGc1"
+    },
+    {
+     "name": "London",
+     "country": "United Kingdom",
+     "code": "LGW",
+     "id": "/m/04jpl",
+     "price": 92,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-06",
+     "stops": 0,
+     "duration": 75,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 51.5072178,
+     "lon": -0.1275862,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRaJSljRL1mpLZOVTBsSpMcpgcF62fjhyKouuo7cTl3tivqKHOQhN3PNpi52xUi4NIlhfDU5RqxCb5MsZySSueHCh5jcETyBc7_5mQf2g",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDZyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA0anBs"
+    },
+    {
+     "name": "València",
+     "country": "Spain",
+     "code": "VLC",
+     "id": "/m/0h3tv",
+     "price": 99,
+     "start_date": "2026-12-12",
+     "end_date": "2026-12-21",
+     "stops": 0,
+     "duration": 155,
+     "airline": "easyJet and Vueling",
+     "airline_code": "multi",
+     "lat": 39.4738338,
+     "lon": -0.3756348,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQaVSjXQIyS6PeddqLTzz-38sBOtNQlYWwVR8hHD_17BOunqyvRHi5IEEWHvnoI853_aIbmz1OvHEE2oXgRUL-7X5yKCMhmdCeMweIvfg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEyagcIARIDQU1TGhUSCjIwMjYtMTItMjFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBoM3R2"
+    },
+    {
+     "name": "Nice",
+     "country": "France",
+     "code": "NCE",
+     "id": "/m/0cp6w",
+     "price": 112,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-11",
+     "stops": 0,
+     "duration": 120,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 43.7101728,
+     "lon": 7.2619532,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTWxUHgFYUZEqEWiPDTc3YzxPXcw1Vx-F7SrrSDYVs5DTn8Sw5Z1RdpaxdfMVfLZ564c17WqYFB1bOTaMyZUtdxKidCtOrW-2jNd_a7og",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBjcDZ3"
+    },
+    {
+     "name": "Barcelona",
+     "country": "Spain",
+     "code": "BCN",
+     "id": "/m/01f62",
+     "price": 115,
+     "start_date": "2026-12-14",
+     "end_date": "2026-12-20",
+     "stops": 0,
+     "duration": 139,
+     "airline": "Transavia and Vueling",
+     "airline_code": "multi",
+     "lat": 41.3874374,
+     "lon": 2.1686496,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTjTe22vsVNyAXP9NVn51mmpsvUupjRCnJRi5wkA3PfXn3RPakQET5Bl68KxcgIacFHfQiVcup_nEizdmPL0ry50tAdh6ROc75R1Yrkvg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTE0agcIARIDQU1TGhUSCjIwMjYtMTItMjByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzAxZjYy"
+    },
+    {
+     "name": "Venice",
+     "country": "Italy",
+     "code": "VCE",
+     "id": "/m/07_pf",
+     "price": 120,
+     "start_date": "2026-12-14",
+     "end_date": "2026-12-20",
+     "stops": 0,
+     "duration": 105,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 45.440379,
+     "lon": 12.3159547,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQIMStytzEFdRSlIizL1yh1c4WDtrqh3ks7GDLbM7lSv1DZOYMJkXKjk5nIGSn87S-lo3XsJWtktn6meqQTCfhSiFkEoG5QuBRYkjqbZA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTE0agcIARIDQU1TGhUSCjIwMjYtMTItMjByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA3X3Bm"
+    },
+    {
+     "name": "Prague",
+     "country": "Czechia",
+     "code": "PRG",
+     "id": "/m/05ywg",
+     "price": 122,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-08",
+     "stops": 0,
+     "duration": 90,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 50.0755381,
+     "lon": 14.4378005,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQ4kLaS3rq6bLCRkBgwkSXzP9e_QlvYYMtVziTtYuLIvNedEyF54GwMvdngSrOaw4EMuvv_108W2steGgw1GOkDx4MuQDs7ZZvxnHLd42U",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDhyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA1eXdn"
+    },
+    {
+     "name": "Alicante",
+     "country": "Spain",
+     "code": "ALC",
+     "id": "/m/0zc6",
+     "price": 123,
+     "start_date": "2026-12-06",
+     "end_date": "2026-12-13",
+     "stops": 0,
+     "duration": 160,
+     "airline": "Transavia and Vueling",
+     "airline_code": "multi",
+     "lat": 38.3457685,
+     "lon": -0.4909444,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcS4tzXMkxKjVmDEss_M-POq3Bk0xPRMNR5GkW6NChXM1r4mymp7B7G-cO5w-a51h0fO3rMgo1VbwbeNR1f9gWPSSql7dJHpE29rXoG6QAQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA2agcIARIDQU1TGhUSCjIwMjYtMTItMTNyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDSoLCAMSBy9tLzB6YzY"
+    },
+    {
+     "name": "Porto",
+     "country": "Portugal",
+     "code": "OPO",
+     "id": "/m/0pmn7",
+     "price": 125,
+     "start_date": "2026-12-10",
+     "end_date": "2026-12-17",
+     "stops": 0,
+     "duration": 165,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 41.1579438,
+     "lon": -8.6291053,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcSNElhD5W_xAWmGsFMwHuGp6_QH34VpLPmr7rXSTmKrgX2zW9RMiOacBjw4uDVxe_vnRWxjN8KZ6llA-fzFESOBnz2uhqsKbaH1IWlynA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEwagcIARIDQU1TGhUSCjIwMjYtMTItMTdyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBwbW43"
+    },
+    {
+     "name": "Palma",
+     "country": "Spain",
+     "code": "PMI",
+     "id": "/m/0jwz5",
+     "price": 126,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-08",
+     "stops": 0,
+     "duration": 145,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 39.5726541,
+     "lon": 2.6568551,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTQeqbIPGFj7LITziECS2kSeHKjkXYvDz076NXAqmEG0heOQKRL7bb46J8fafbM_Q-NsHBgnzmv41qlfRNkFkDznfBPsYvR_ml0gcK6fQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDhyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBqd3o1"
+    },
+    {
+     "name": "Eivissa",
+     "country": "Spain",
+     "code": "IBZ",
+     "id": "/m/021n7_",
+     "price": 128,
+     "start_date": "2026-12-13",
+     "end_date": "2026-12-19",
+     "stops": 0,
+     "duration": 155,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 38.9066099,
+     "lon": 1.4207403,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcTlDKzIFVRy-HOUibpt1Rk7fX5idR2TIELsOlAzExqn83PCu5g7z37OeZr4ZCC_iCNOMplW76pHIACEVEIk8XKpkQqZXtnUSLS9rBO3Rg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEzagcIARIDQU1TGhUSCjIwMjYtMTItMTlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAyMW43Xw"
+    },
+    {
+     "name": "Lisbon",
+     "country": "Portugal",
+     "code": "LIS",
+     "id": "/m/04llb",
+     "price": 129,
+     "start_date": "2026-12-05",
+     "end_date": "2026-12-11",
+     "stops": 0,
+     "duration": 180,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 38.7222524,
+     "lon": -9.1393366,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcRBV0iUYi9yXVDqlNccq9nCf81A0pgRE1Y2qTAXoiuUz4khj3-LxznqNGz6QaZdVkY31cyZQjNI1LX7a-xH24Yd_ATDMOb9TCHihXb6Iw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA1agcIARIDQU1TGhUSCjIwMjYtMTItMTFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA0bGxi"
+    },
+    {
+     "name": "Naples",
+     "country": "Italy",
+     "code": "NAP",
+     "id": "/g/1233f22n",
+     "price": 132,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-13",
+     "stops": 0,
+     "duration": 145,
+     "airline": "easyJet",
+     "airline_code": "U2",
+     "lat": 40.8517746,
+     "lon": 14.2681244,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcTWjU-Ct3W7j_JvHmwoDncPV6aZw2sYcK5gXXEE75A9MbOZWc1grL3ax9H_8rc6vZWFZOlCydQPVL5DNdFqkTiTNbHHZ73sZQLyeqQfjA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTNyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBESoPCAMSCy9nLzEyMzNmMjJu"
+    },
+    {
+     "name": "Faro",
+     "country": "Portugal",
+     "code": "FAO",
+     "id": "/m/029v4j",
+     "price": 133,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-10",
+     "stops": 0,
+     "duration": 185,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 37.0164626,
+     "lon": -7.9351983,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcRGRlVFfQeZ-I0iKEIRM-NPeH5VPOrykHPEO81boHgXPIqId5Kw1FHQBmihQfGwxO2QR9UdgPh-MKOdy4txlF0byZ1_hCUOVpnat1v8zQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAyOXY0ag"
+    },
+    {
+     "name": "Athens",
+     "country": "Greece",
+     "code": "ATH",
+     "id": "/m/0n2z",
+     "price": 144,
+     "start_date": "2026-12-05",
+     "end_date": "2026-12-11",
+     "stops": 0,
+     "duration": 200,
+     "airline": "Transavia",
+     "airline_code": "HV",
+     "lat": 37.9838096,
+     "lon": 23.7275388,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcT0F1BYu088IYKEntslvDSd62cfZKfvvSD44xYeWivglANvwu61MqTi0Z0Ofo-mdcK_cbXHEI9K3XrRoJxZBm1mvPAy2MO4M6nErQJRCQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA1agcIARIDQU1TGhUSCjIwMjYtMTItMTFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDSoLCAMSBy9tLzBuMno"
+    },
+    {
+     "name": "Istanbul",
+     "country": "Türkiye",
+     "code": "SAW",
+     "id": "/m/09949m",
+     "price": 148,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 210,
+     "airline": "Pegasus",
+     "airline_code": "PC",
+     "lat": 41.0082376,
+     "lon": 28.9783589,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTTGeWYI48c_5VeEmKTTc_11T2S2oMkuS0rjpmyP5TKi_h7DdbgtIfX0NKIW8N7kt5xIB-Q-Ot9eeqW2x5fH31NzypxXu2dIsdxvInIN7s",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzA5OTQ5bQ"
+    },
+    {
+     "name": "Madrid",
+     "country": "Spain",
+     "code": "MAD",
+     "id": "/m/056_y",
+     "price": 156,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 155,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 40.4167279,
+     "lon": -3.7032905,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTAXiXORlnGmaDoTfB9ebTONxXKIwJ7yxNLStFUpcaKQxFD5qRK88lWheicpP26heylRIq1RFWOhvef7xBwyl7kzlWFqyoil8ixVmPLYQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA1Nl95"
+    },
+    {
+     "name": "Berlin",
+     "country": "Germany",
+     "code": "BER",
+     "id": "/m/0156q",
+     "price": 160,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 80,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 52.5200066,
+     "lon": 13.404954,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcR_dCzRAxsUacLV9TmwLLKsFApWXhm-jX9D_JcNcQREkk1iu5WkHPmDmdrtWbdZLH9c_1s-u-71JssMZnjycODt4RLVIi299kHqoZHXtg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzAxNTZx"
+    },
+    {
+     "name": "Paris",
+     "country": "France",
+     "code": "CDG",
+     "id": "/m/05qtj",
+     "price": 175,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 75,
+     "airline": "Air France and KLM",
+     "airline_code": "multi",
+     "lat": 48.8575475,
+     "lon": 2.3513765,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcRpsi4lLYl3MAVdIyDJNjVZjKRn2aq1QJSPF3aAbY3sdpnwzLtLutYs924kB2UZULZRXLdgaXwu4FjslAiLnajOXWMtpyeqcxKtkZ65fw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA1cXRq"
+    },
+    {
+     "name": "Budapest",
+     "country": "Hungary",
+     "code": "BUD",
+     "id": "/m/095w_",
+     "price": 176,
+     "start_date": "2026-12-12",
+     "end_date": "2026-12-18",
+     "stops": 0,
+     "duration": 120,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 47.497912,
+     "lon": 19.040235,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcRMvvbAn3cOslR7ZNOgdoQ4IaZQZsnPglauP6WqYcMUMl3m0AOMnLl1dCL0qfYgzyDbLQfA--a5PJjpDzbVJqgHo0QdwQB--YjEG9g9oQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEyagcIARIDQU1TGhUSCjIwMjYtMTItMThyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA5NXdf"
+    },
+    {
+     "name": "Rome",
+     "country": "Italy",
+     "code": "FCO",
+     "id": "/m/06c62",
+     "price": 179,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 130,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 41.8967068,
+     "lon": 12.4822025,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcS2D3XJqrNCByduxum-WWdBPkC3WSG5zXbn_Firyl4fArSmuqnEzGwizatWWNu36Iy0mXsrxfVmHpm-0TQAo76VkqTSQ5WLVCY-WmogSA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA2YzYy"
+    },
+    {
+     "name": "Bodrum",
+     "country": "Türkiye",
+     "code": "BJV",
+     "id": "/m/01skxx",
+     "price": 183,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 1,
+     "duration": 940,
+     "airline": "AJet",
+     "airline_code": "VF",
+     "lat": 37.034407,
+     "lon": 27.43054,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSXS-bjSclq_OEmk-CK6xcT5TlVi2SxmojpWOdwLnVJsXHfpAwF2IobGn1m0szPgAh1q9EQOnsqX0w1byoEHCfviHCJei7M-P3LE6ITKg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxc2t4eA"
+    },
+    {
+     "name": "Hamburg",
+     "country": "Germany",
+     "code": "HAM",
+     "id": "/m/03hrz",
+     "price": 192,
+     "start_date": "2026-12-24",
+     "end_date": "2027-01-01",
+     "stops": 0,
+     "duration": 60,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 53.5488282,
+     "lon": 9.9871703,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcTaDzNPhkFHZL75Nah-TiVp1MIJBnjXeyrUvN6fbl88vTgydzApREPCUqpXwuYFJMk3PG8wjII9m7e9E3xy3deGnIAcHArXA8B449Zn_g",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTI0agcIARIDQU1TGhUSCjIwMjctMDEtMDFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzAzaHJ6"
+    },
+    {
+     "name": "Florence",
+     "country": "Italy",
+     "code": "FLR",
+     "id": "/m/031y2",
+     "price": 194,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 0,
+     "duration": 115,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 43.7699685,
+     "lon": 11.2576706,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcS76u42HJ_iEWOYJVzWeJ2X0AEzsOxN0JeYZMMTiaOCHFvakjg7wlBIGpEN1lnzHA1AI8wZ3sbFPii8RJsAVQtjnDuPErPaqLgDJ3bXgA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzAzMXky"
+    },
+    {
+     "name": "Munich",
+     "country": "Germany",
+     "code": "MUC",
+     "id": "/m/02h6_6p",
+     "price": 194,
+     "start_date": "2026-12-10",
+     "end_date": "2026-12-16",
+     "stops": 0,
+     "duration": 85,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 48.1351253,
+     "lon": 11.5819806,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcROGLkO-AQu3aN7TaEI18iyfV6ps2l6qKeA5Rn9-vk7pKR1gtZU6gl7JT8OfZRWcZbFU3bAtHLhx34Y_iRboxnF0DHEkmdiJC5JXgHUWw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEwagcIARIDQU1TGhUSCjIwMjYtMTItMTZyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBECoOCAMSCi9tLzAyaDZfNnA"
+    },
+    {
+     "name": "Menorca",
+     "country": "Spain",
+     "code": "MAH",
+     "id": "/m/0g87v",
+     "price": 196,
+     "start_date": "2026-12-06",
+     "end_date": "2026-12-15",
+     "stops": 1,
+     "duration": 470,
+     "airline": "Vueling",
+     "airline_code": "VY",
+     "lat": 39.9496287,
+     "lon": 4.1104449,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQPipp8pCZ1YZ1m4qQwm0jBmN6biGIg-wiDPvuKhfVxrsWnwt_xc0urmeCxEfxnqkKfO3TFMnwNSK5w5XPAvw2VZRiLuUDdx8qZbiAhlg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA2agcIARIDQU1TGhUSCjIwMjYtMTItMTVyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBnODd2"
+    },
+    {
+     "name": "Split",
+     "country": "Croatia",
+     "code": "SPU",
+     "id": "/m/01g_k3",
+     "price": 199,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-13",
+     "stops": 1,
+     "duration": 275,
+     "airline": "Air Serbia",
+     "airline_code": "JU",
+     "lat": 43.5147118,
+     "lon": 16.4435148,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRLLtkXb8WRFpdp0cPctAL8RTqK7e1YgnM6SkdxzAjjT0cktN3kv5U2_dmpxyat57cF8vDoyogj6fSeaLfCsT9nN5KEUi9Uyw-dKoS9HOE",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTNyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxZ19rMw"
+    },
+    {
+     "name": "Vienna",
+     "country": "Austria",
+     "code": "VIE",
+     "id": "/m/0fhp9",
+     "price": 200,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-06",
+     "stops": 0,
+     "duration": 100,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 48.2080696,
+     "lon": 16.3713095,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcR_xzug-ZCzWAhrEOauvQABqacb6v2WZI53o-fsUQMJKS870AAJwS5CCR94sxh8eSLbhEAvUtaDn8y854_RrjeWZTsQiu4iGHGJvYYrIw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDZyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBmaHA5"
+    },
+    {
+     "name": "Chișinău",
+     "country": "Moldova",
+     "code": "RMO",
+     "id": "/m/0fn77",
+     "price": 201,
+     "start_date": "2026-12-05",
+     "end_date": "2026-12-11",
+     "stops": 1,
+     "duration": 170,
+     "airline": "FLYONE and TAROM",
+     "airline_code": "multi",
+     "lat": 47.0104529,
+     "lon": 28.8638103,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcSidg8D8gBQOKEAShm4RdM2Uxs13jbmyR_SiPhzrCrmAE-VXLlU4PUd7yyMedMht77pTbUqx2ONXiKAtNnkJEhsCTUMuAETWh0I1iDNZQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA1agcIARIDQU1TGhUSCjIwMjYtMTItMTFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBmbjc3"
+    },
+    {
+     "name": "Antalya",
+     "country": "Türkiye",
+     "code": "AYT",
+     "id": "/m/01_hhp",
+     "price": 203,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 1,
+     "duration": 735,
+     "airline": "AJet",
+     "airline_code": "VF",
+     "lat": 36.8968908,
+     "lon": 30.7133233,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcS-l3F6kI5-cy2r-t8p3jixqQFrHPtG4bbq91NRPDtnESfed2x7vGK2wpP4IWYvwrWtVEq8vJllliGrnPU9Ylv4mbgJzcO3tdpRn5QpmA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxX2hocA"
+    },
+    {
+     "name": "Dubrovnik",
+     "country": "Croatia",
+     "code": "DBV",
+     "id": "/m/0fbwq",
+     "price": 204,
+     "start_date": "2026-12-10",
+     "end_date": "2026-12-17",
+     "stops": 1,
+     "duration": 270,
+     "airline": "Air Serbia",
+     "airline_code": "JU",
+     "lat": 42.6506606,
+     "lon": 18.0944238,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSX98JGd6i8M5MhmRJLKO27QdQN3HW2bU8VHSNvPfJoM6VJdby1Xhn6oLMQZxYOk72TizMSvvbiwi3_cKSYJnaCYq49DcA49CRQ87-Luw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTEwagcIARIDQU1TGhUSCjIwMjYtMTItMTdyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBmYndx"
+    },
+    {
+     "name": "Marseille",
+     "country": "France",
+     "code": "MRS",
+     "id": "/m/0jdtt",
+     "price": 208,
+     "start_date": "2026-12-06",
+     "end_date": "2026-12-13",
+     "stops": 1,
+     "duration": 405,
+     "airline": "Iberia and Vueling",
+     "airline_code": "multi",
+     "lat": 43.3025742,
+     "lon": 5.3690743,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSkM313Ye63I1oLJN2zkwFHSUN3IQPrwgM85K2rXhZ123V2fS3sKostDVDopLwIHlpHAB_stelSnCrLBKtZfvrfMih7j7lANhPKnbeja50",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA2agcIARIDQU1TGhUSCjIwMjYtMTItMTNyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBqZHR0"
+    },
+    {
+     "name": "Cork",
+     "country": "Ireland",
+     "code": "ORK",
+     "id": "/m/0clz7",
+     "price": 208,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-06",
+     "stops": 0,
+     "duration": 105,
+     "airline": "KLM",
+     "airline_code": "KL",
+     "lat": 51.8985143,
+     "lon": -8.4756035,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcRVxfn-u25RVV5cEHlLVZv1jQO8Vs7WDSMrfId-hz2Bllszmq107NfviaVA7pu5JcQiPlh1y-HrBE6rMDvI-0cuTuPRa2lVTmOaBIG39w",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDZyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBjbHo3"
+    },
+    {
+     "name": "Samsun",
+     "country": "Türkiye",
+     "code": "SZF",
+     "id": "/m/0302hx",
+     "price": 218,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-10",
+     "stops": 1,
+     "duration": 375,
+     "airline": "Pegasus",
+     "airline_code": "PC",
+     "lat": 41.2797031,
+     "lon": 36.3360667,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcSbY4m6Q6zIdBI7424q5kp6NfDHPBSC1rKA5lQrgxqUZKKyLW86zgpafdXEn3S74CSEORNQ80ZwYqR54j63ugd5SZMurLh7UMXMbUkuMQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMTByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAzMDJoeA"
+    },
+    {
+     "name": "Mersin",
+     "country": "Türkiye",
+     "code": "COV",
+     "id": "/m/04b8ty",
+     "price": 219,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 1,
+     "duration": 410,
+     "airline": "Pegasus",
+     "airline_code": "PC",
+     "lat": 36.8121041,
+     "lon": 34.6414811,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcQF5llxxA_S6k7CT-aoF1DVgeBnXFi-ikCTX-E1gJ9BWXAZ7QOjnKr13aX_2f6D-CZoeSGBbAfKflvT4n20j-6wc1obPbppmvoR_rnDwA",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzA0Yjh0eQ"
+    },
+    {
+     "name": "Biarritz",
+     "country": "France",
+     "code": "BIQ",
+     "id": "/m/01h3tl",
+     "price": 226,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 1,
+     "duration": 385,
+     "airline": "Air France and KLM",
+     "airline_code": "multi",
+     "lat": 43.4831519,
+     "lon": -1.558626,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQiCrb8pjlH2ihgbZrK9ySQFuP6GoPfSrDx7StxQVCAdd1Oa9LX5y9OWRvHppvmFWPZXs4yM0q07PJ5r4PIgD_46TaKN820wXU8tnhxiCg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxaDN0bA"
+    },
+    {
+     "name": "Donostia / San Sebastián",
+     "country": "Spain",
+     "code": "EAS",
+     "id": "/m/02l6l8",
+     "price": 226,
+     "start_date": "2026-12-31",
+     "end_date": "2027-01-08",
+     "stops": 1,
+     "duration": 395,
+     "airline": "Vueling",
+     "airline_code": "VY",
+     "lat": 43.318237,
+     "lon": -1.9817051,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQqgPb8n4OCbSIp6KfQpPm8WBPtVLw2jBhAt-SV4yDKD7cFIOgE3I2Smp6mWxP_pXsA2ZAYI7AJB0wY9bnIrgQ8mgepvOGv81EdNRng3A",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTMxagcIARIDQU1TGhUSCjIwMjctMDEtMDhyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAybDZsOA"
+    },
+    {
+     "name": "Kos",
+     "country": "Greece",
+     "code": "KGS",
+     "id": "/m/01kv_0",
+     "price": 280,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-10",
+     "stops": 1,
+     "duration": 365,
+     "airline": "SKY express",
+     "airline_code": "GQ",
+     "lat": 36.8915064,
+     "lon": 27.2877228,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSMMv2tbxDL7Pad5w6UUWf0bG-ZoBK5K-BSw5MrCt1W1rDnkstxrh56BzhhtAkZmal-UPk1W5_meeshVFB2gWoWCD3uaMtUTOBG3HOISg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxa3ZfMA"
+    },
+    {
+     "name": "Santorini",
+     "country": "Greece",
+     "code": "JTR",
+     "id": "/m/070t9",
+     "price": 290,
+     "start_date": "2026-12-04",
+     "end_date": "2026-12-10",
+     "stops": 1,
+     "duration": 1045,
+     "airline": "SKY express",
+     "airline_code": "GQ",
+     "lat": 36.3931562,
+     "lon": 25.4615092,
+     "image": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSzjIOMqfswz1uuMwpL2HhnzVlXPUwxHniTfosxKUNlb0hG5NXomJZIOOV-nckd3CzmSC1JwQFn76sC4RbMeoOFIG9wtkz7Efh_sMULt9M",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA0agcIARIDQU1TGhUSCjIwMjYtMTItMTByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzA3MHQ5"
+    },
+    {
+     "name": "Mykonos",
+     "country": "Greece",
+     "code": "JMK",
+     "id": "/m/02gtbh",
+     "price": 290,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-09",
+     "stops": 1,
+     "duration": 1175,
+     "airline": "Aegean",
+     "airline_code": "A3",
+     "lat": 37.4414601,
+     "lon": 25.3667218,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcSm9puIGAxxi3hrMHvumebix7BdO8ov99wqbT2o1Bk8BJdtqcUHwBv87yXO1-5s1u8y4-szUiB7UgoQX0j7jw-dDph5UJx04HBtvbp5-BM",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMDlyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAyZ3RiaA"
+    },
+    {
+     "name": "Cephalonia",
+     "country": "Greece",
+     "code": "EFL",
+     "id": "/m/01f2_c",
+     "price": 335,
+     "start_date": "2026-12-11",
+     "end_date": "2026-12-18",
+     "stops": 1,
+     "duration": 365,
+     "airline": "Aegean",
+     "airline_code": "A3",
+     "lat": 38.1731674,
+     "lon": 20.4899695,
+     "image": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcRFdaiV8yaHHZMl-uQkrGQcUjpxl8iVMzQ6bs0jIAkj2rBevQCTI3gZO6lFkpuBR3I6DadNaqx0PapDgvMRrTMNA6S8HBcqxI44sSLHdQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTExagcIARIDQU1TGhUSCjIwMjYtMTItMThyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxZjJfYw"
+    },
+    {
+     "name": "Zakynthos",
+     "country": "Greece",
+     "code": "ZTH",
+     "id": "/m/01t0n2",
+     "price": 369,
+     "start_date": "2026-12-05",
+     "end_date": "2026-12-11",
+     "stops": 1,
+     "duration": 1490,
+     "airline": "Aegean, SKY express, and Olympic",
+     "airline_code": "multi",
+     "lat": 37.7870331,
+     "lon": 20.8998759,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQYwZgXIj1o9YvMcpjkfyHPizF0M24wJ8qwSKqBQHCZR8K3lnvmENnvU-p-dNbtWTP9Q5hCkMREp6YedCMTVElqSSF1Lp_V__d9fWIArg",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTA1agcIARIDQU1TGhUSCjIwMjYtMTItMTFyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDyoNCAMSCS9tLzAxdDBuMg"
+    },
+    {
+     "name": "Newquay",
+     "country": "United Kingdom",
+     "code": "NQY",
+     "id": "/m/0hc84",
+     "price": 798,
+     "start_date": "2026-12-03",
+     "end_date": "2026-12-10",
+     "stops": 2,
+     "duration": 635,
+     "airline": "British Airways and Loganair",
+     "airline_code": "multi",
+     "lat": 50.415497,
+     "lon": -5.073719,
+     "image": "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcQ4Fkz3tNAorxlk6PSbnB6LHYW7jLXfZx_Sk50ZhEW7KYhzmpDMf8WXiIFpo1YQ0S0Afi4j1HfxDHB8PhFhkJiFWh6FCPt4mb5gIwChiQ",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTAzagcIARIDQU1TGhUSCjIwMjYtMTItMTByBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBoYzg0"
+    },
+    {
+     "name": "Minsk",
+     "country": "Belarus",
+     "code": "MSQ",
+     "id": "/m/0dlxj",
+     "price": 801,
+     "start_date": "2026-12-11",
+     "end_date": "2026-12-17",
+     "stops": 1,
+     "duration": 1140,
+     "airline": "Turkish Airlines",
+     "airline_code": "TK",
+     "lat": 53.9006011,
+     "lon": 27.558972,
+     "image": "https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQ2KN1hS7JAq8x3zKx-ip-qamEK-_b19LJdnR4Ctzr7W8VZXgSqlrprUt0LNiHW7kHVCXBLFzFwHJ8uMtZrYJgvUZPRpZ9CtAR5UB11dw",
+     "link": "https://www.google.com/travel/explore?hl=en&gl=us&curr=EUR&tfs=CBwQAxoVEgoyMDI2LTEyLTExagcIARIDQU1TGhUSCjIwMjYtMTItMTdyBwgBEgNBTVNAAUgBcAGCAQsI____________AZgBAbIBDioMCAMSCC9tLzBkbHhq"
+    }
+   ]
   }
  },
  "history": {
@@ -11807,9 +12583,279 @@
     "2026-10-29",
     683
    ]
+  ],
+  "AMS|12|week|economy|sun|DUB|Dublin": [
+   [
+    "2026-10-30",
+    58
+   ]
+  ],
+  "AMS|12|week|economy|sun|BRS|Bath": [
+   [
+    "2026-10-30",
+    88
+   ]
+  ],
+  "AMS|12|week|economy|sun|LGW|London": [
+   [
+    "2026-10-30",
+    92
+   ]
+  ],
+  "AMS|12|week|economy|sun|VLC|València": [
+   [
+    "2026-10-30",
+    99
+   ]
+  ],
+  "AMS|12|week|economy|sun|NCE|Nice": [
+   [
+    "2026-10-30",
+    112
+   ]
+  ],
+  "AMS|12|week|economy|sun|BCN|Barcelona": [
+   [
+    "2026-10-30",
+    115
+   ]
+  ],
+  "AMS|12|week|economy|sun|VCE|Venice": [
+   [
+    "2026-10-30",
+    120
+   ]
+  ],
+  "AMS|12|week|economy|sun|PRG|Prague": [
+   [
+    "2026-10-30",
+    122
+   ]
+  ],
+  "AMS|12|week|economy|sun|ALC|Alicante": [
+   [
+    "2026-10-30",
+    123
+   ]
+  ],
+  "AMS|12|week|economy|sun|OPO|Porto": [
+   [
+    "2026-10-30",
+    125
+   ]
+  ],
+  "AMS|12|week|economy|sun|PMI|Palma": [
+   [
+    "2026-10-30",
+    126
+   ]
+  ],
+  "AMS|12|week|economy|sun|IBZ|Eivissa": [
+   [
+    "2026-10-30",
+    128
+   ]
+  ],
+  "AMS|12|week|economy|sun|LIS|Lisbon": [
+   [
+    "2026-10-30",
+    129
+   ]
+  ],
+  "AMS|12|week|economy|sun|NAP|Naples": [
+   [
+    "2026-10-30",
+    132
+   ]
+  ],
+  "AMS|12|week|economy|sun|FAO|Faro": [
+   [
+    "2026-10-30",
+    133
+   ]
+  ],
+  "AMS|12|week|economy|sun|ATH|Athens": [
+   [
+    "2026-10-30",
+    144
+   ]
+  ],
+  "AMS|12|week|economy|sun|SAW|Istanbul": [
+   [
+    "2026-10-30",
+    148
+   ]
+  ],
+  "AMS|12|week|economy|sun|MAD|Madrid": [
+   [
+    "2026-10-30",
+    156
+   ]
+  ],
+  "AMS|12|week|economy|sun|BER|Berlin": [
+   [
+    "2026-10-30",
+    160
+   ]
+  ],
+  "AMS|12|week|economy|sun|CDG|Paris": [
+   [
+    "2026-10-30",
+    175
+   ]
+  ],
+  "AMS|12|week|economy|sun|BUD|Budapest": [
+   [
+    "2026-10-30",
+    176
+   ]
+  ],
+  "AMS|12|week|economy|sun|FCO|Rome": [
+   [
+    "2026-10-30",
+    179
+   ]
+  ],
+  "AMS|12|week|economy|sun|BJV|Bodrum": [
+   [
+    "2026-10-30",
+    183
+   ]
+  ],
+  "AMS|12|week|economy|sun|HAM|Hamburg": [
+   [
+    "2026-10-30",
+    192
+   ]
+  ],
+  "AMS|12|week|economy|sun|FLR|Florence": [
+   [
+    "2026-10-30",
+    194
+   ]
+  ],
+  "AMS|12|week|economy|sun|MUC|Munich": [
+   [
+    "2026-10-30",
+    194
+   ]
+  ],
+  "AMS|12|week|economy|sun|MAH|Menorca": [
+   [
+    "2026-10-30",
+    196
+   ]
+  ],
+  "AMS|12|week|economy|sun|SPU|Split": [
+   [
+    "2026-10-30",
+    199
+   ]
+  ],
+  "AMS|12|week|economy|sun|VIE|Vienna": [
+   [
+    "2026-10-30",
+    200
+   ]
+  ],
+  "AMS|12|week|economy|sun|RMO|Chișinău": [
+   [
+    "2026-10-30",
+    201
+   ]
+  ],
+  "AMS|12|week|economy|sun|AYT|Antalya": [
+   [
+    "2026-10-30",
+    203
+   ]
+  ],
+  "AMS|12|week|economy|sun|DBV|Dubrovnik": [
+   [
+    "2026-10-30",
+    204
+   ]
+  ],
+  "AMS|12|week|economy|sun|MRS|Marseille": [
+   [
+    "2026-10-30",
+    208
+   ]
+  ],
+  "AMS|12|week|economy|sun|ORK|Cork": [
+   [
+    "2026-10-30",
+    208
+   ]
+  ],
+  "AMS|12|week|economy|sun|SZF|Samsun": [
+   [
+    "2026-10-30",
+    218
+   ]
+  ],
+  "AMS|12|week|economy|sun|COV|Mersin": [
+   [
+    "2026-10-30",
+    219
+   ]
+  ],
+  "AMS|12|week|economy|sun|BIQ|Biarritz": [
+   [
+    "2026-10-30",
+    226
+   ]
+  ],
+  "AMS|12|week|economy|sun|EAS|Donostia / San Sebastián": [
+   [
+    "2026-10-30",
+    226
+   ]
+  ],
+  "AMS|12|week|economy|sun|KGS|Kos": [
+   [
+    "2026-10-30",
+    280
+   ]
+  ],
+  "AMS|12|week|economy|sun|JTR|Santorini": [
+   [
+    "2026-10-30",
+    290
+   ]
+  ],
+  "AMS|12|week|economy|sun|JMK|Mykonos": [
+   [
+    "2026-10-30",
+    290
+   ]
+  ],
+  "AMS|12|week|economy|sun|EFL|Cephalonia": [
+   [
+    "2026-10-30",
+    335
+   ]
+  ],
+  "AMS|12|week|economy|sun|ZTH|Zakynthos": [
+   [
+    "2026-10-30",
+    369
+   ]
+  ],
+  "AMS|12|week|economy|sun|NQY|Newquay": [
+   [
+    "2026-10-30",
+    798
+   ]
+  ],
+  "AMS|12|week|economy|sun|MSQ|Minsk": [
+   [
+    "2026-10-30",
+    801
+   ]
   ]
  },
- "updated": "2026-10-29T13:27:40+00:00",
+ "updated": "2026-10-30T01:29:04+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR",
