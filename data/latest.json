@@ -665,35 +665,40 @@
      "2027-03-10": {
       "status": "ok",
       "url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=EUR&tfs=CBwQAhopEgoyMDI3LTAzLTEwKAFqBwgBEgNBTVNyBwgBEgNOUlRyBwgBEgNITkQaKRIKMjAyNy0wMy0yNCgBagcIARIDTlJUagcIARIDSE5EcgcIARIDQU1TQAFIAXABmAEB&tfu=EgIIAQ",
-      "level": "typical",
-      "typical": [
-       750,
-       1400
-      ],
+      "level": null,
+      "typical": null,
       "price": 886,
       "airlines": [
-       "China Southern"
+       "XiamenAir"
       ],
-      "logo": "https://www.gstatic.com/flights/airline_logos/70px/CZ.png",
+      "logo": "https://www.gstatic.com/flights/airline_logos/70px/MF.png",
       "stops": 1,
-      "duration": 1895,
-      "depart_time": "2027-03-10 21:40",
-      "arrive_time": "2027-03-12 13:15",
+      "duration": 1990,
+      "depart_time": "2027-03-10 20:30",
+      "arrive_time": "2027-03-12 13:40",
+      "layovers": [
+       {
+        "id": "FOC",
+        "name": "Fuzhou Changle International Airport",
+        "duration": 1140,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
-        "to": "CAN",
-        "flight": "CZ 308",
-        "airline": "China Southern"
+        "to": "FOC",
+        "flight": "MF 814",
+        "airline": "XiamenAir"
        },
        {
-        "from": "CAN",
+        "from": "FOC",
         "to": "NRT",
-        "flight": "CZ 8101",
-        "airline": "China Southern"
+        "flight": "MF 809",
+        "airline": "XiamenAir"
        }
       ],
-      "checked": "2026-10-23T01:05:57+00:00",
+      "checked": "2026-10-31T01:27:32+00:00",
       "return_date": "2027-03-24"
      },
      "2027-02-04": {
@@ -6270,7 +6275,7 @@
    }
   }
  },
- "updated": "2026-10-30T13:23:45+00:00",
+ "updated": "2026-10-31T01:27:32+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
