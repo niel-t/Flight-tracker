@@ -709,7 +709,7 @@
        650,
        1050
       ],
-      "price": 845,
+      "price": 878,
       "airlines": [
        "Etihad"
       ],
@@ -718,6 +718,14 @@
       "duration": 1080,
       "depart_time": "2027-02-04 09:40",
       "arrive_time": "2027-02-05 11:40",
+      "layovers": [
+       {
+        "id": "AUH",
+        "name": "Zayed International Airport",
+        "duration": 100,
+        "overnight": false
+       }
+      ],
       "legs": [
        {
         "from": "AMS",
@@ -732,7 +740,7 @@
         "airline": "Etihad"
        }
       ],
-      "checked": "2026-10-23T01:05:57+00:00",
+      "checked": "2026-10-31T13:15:50+00:00",
       "return_date": "2027-02-18"
      },
      "2027-02-11": {
@@ -6275,7 +6283,7 @@
    }
   }
  },
- "updated": "2026-10-31T01:27:32+00:00",
+ "updated": "2026-10-31T13:15:50+00:00",
  "source": "Google Flights (SerpApi)",
  "demo": false,
  "currency": "EUR"
